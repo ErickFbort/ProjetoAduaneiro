@@ -9,7 +9,9 @@
 <body class="login-body">
   <main class="login-container">
     <section class="login-box">
-      <img src="assets/img/logo_paclog_branco.png" alt="Logo Paclog" class="logo">
+      <a href="login.html">
+        <img src="assets/img/logo_paclog_branco.png" alt="Logo Paclog" class="logo">
+      </a>
       <form class="login-form">
         <label for="email">E-mail</label>
         <input type="email" id="email" name="email" required placeholder="Digite seu e-mail">
@@ -19,6 +21,7 @@
 
         <button type="submit" class="btn-primary">Entrar</button>
       </form>
+      <span id="error-message" class="error-message"></span>
     </section>
   </main>
   <script src="assets/js/script.js"></script>
