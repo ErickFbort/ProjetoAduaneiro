@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paclog - Sistema</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="icons.css">
+</head>
+
+<body>
+    <div class="top-bar">
+        <div class="title">
+            <a href="#" class="home-link">Paclog - Home</a>
+        </div>
+        <div class="logout">
+            <a href="login.html">Logout <i class="fas fa-sign-out-alt"></i></a>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <aside id="sidebar" class="sidebar">
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="nav-item active" data-content="dashboard" data-title="Home">
+                        <i class="fas fa-home nav-icon"></i>
+                        <span>Home</span>
+                    </li>
+                    <li class="nav-item" data-content="cadastro-main" data-title="Cadastro">
+                        <i class="fas fa-user-plus nav-icon"></i>
+                        <span>Cadastro</span>
+                    </li>
+                    <li class="nav-item" data-content="faturamento" data-title="Faturamento">
+                        <i class="fas fa-file-invoice-dollar nav-icon"></i>
+                        <span>Faturamento</span>
+                    </li>
+                    <li class="nav-item" data-content="web-cliente" data-title="Web Cliente">
+                        <i class="fas fa-globe nav-icon"></i>
+                        <span>Web Cliente</span>
+                    </li>
+                    <li class="nav-item" data-content="portal-adm" data-title="Portal ADM">
+                        <i class="fas fa-tools nav-icon"></i>
+                        <span>Portal ADM</span>
+                    </li>
+                    <li class="nav-item" data-content="operacional" data-title="Operacional">
+                        <i class="fas fa-cogs nav-icon"></i>
+                        <span>Operacional</span>
+                    </li>
+                    <li class="nav-item" data-content="relatorios" data-title="Relatórios">
+                        <i class="fas fa-chart-line nav-icon"></i>
+                        <span>Relatórios</span>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="content">
+            <div id="dashboard-content" class="content-section active">
+                <h2>Bem-vindo ao sistema Paclog!</h2>
+                <p>Selecione um módulo na barra lateral para começar.</p>
+            </div>
+
+            <div id="cadastro-main-content" class="content-section">
+                <div class="sub-menu-container">
+                    <button class="sub-menu-btn active" data-sub-content="users">Usuário</button>
+                    <button class="sub-menu-btn" data-sub-content="vehicles">Veículos</button>
+                    <button class="sub-menu-btn" data-sub-content="entities">Entidades</button>
+                </div>
+
+                <div id="users-content" class="sub-content-section active">
+                </div>
+
+                <div id="vehicles-content" class="sub-content-section">
+                </div>
+
+                <div id="entities-content" class="sub-content-section">
+                </div>
+            </div>
+
+            <div id="faturamento-content" class="content-section">
+                <h2>Faturamento</h2>
+                <p>Conteúdo do módulo de faturamento aqui...</p>
+            </div>
+            <div id="web-cliente-content" class="content-section">
+                <h2>Web Cliente</h2>
+                <p>Conteúdo do portal do cliente aqui...</p>
+            </div>
+            <div id="portal-adm-content" class="content-section">
+                <h2>Portal ADM</h2>
+                <p>Conteúdo do portal administrativo aqui...</p>
+            </div>
+            <div id="operacional-content" class="content-section">
+                <h2>Operacional</h2>
+                <p>Conteúdo do módulo operacional aqui...</p>
+            </div>
+            <div id="relatorios-content" class="content-section">
+                <h2>Relatórios</h2>
+                <p>Conteúdo do módulo de relatórios aqui...</p>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
