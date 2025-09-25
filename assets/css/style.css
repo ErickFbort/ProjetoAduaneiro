@@ -101,11 +101,10 @@ body {
    Main Page
 ====================== */
 .main-body {
-  background: url("../img/background.jpg") no-repeat center center fixed;
-  background-size: cover;
+  background: var(--light-color); /* Alterado para uma cor sólida ou removido */
   margin: 0;
   font-family: var(--font-family);
-  color: #fff;
+  color: var(--dark-color);
 }
 
 .main-header {
