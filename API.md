@@ -187,3 +187,4 @@ A aplicação usa Flask-Login para gerenciamento de sessões. As rotas protegida
 
 Para acessar as APIs, é necessário estar autenticado através do sistema de login da aplicação web.
 
+
