@@ -154,7 +154,7 @@ body {
 }
 
 /* Conteúdo principal ajustado para a barra lateral */
-.main-content {
+.main-content--shifted { /* CLASSE CORRIGIDA: de .main-content para .main-content--shifted */
   margin-left: var(--sidebar-width);
   padding: 5rem 2rem; /* Ajustado para 5rem no topo para evitar que o conteúdo seja cortado. */
   text-align: center;
