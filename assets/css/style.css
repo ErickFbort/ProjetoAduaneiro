@@ -156,7 +156,7 @@ body {
 /* Conteúdo principal ajustado para a barra lateral */
 .main-content {
   margin-left: var(--sidebar-width);
-  padding: 3rem 2rem;
+  padding: 5rem 2rem; /* Ajustado para 5rem no topo para evitar que o conteúdo seja cortado. */
   text-align: center;
 }
 
