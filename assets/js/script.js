@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return new Promise((resolve, reject) => {
           setTimeout(() => {
             if (userEmail === validUser && userPassword === validPassword) {
-              resolve({ success: true, user: userEmail });
+              resolve({ success: true, user: userEmail, name: "ADM" }); // Retorna o nome do usuário
             } else {
               reject({ success: false, message: "Usuário ou senha inválidos!" });
             }
@@ -46,6 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const response = await simulatedLogin(email, password);
         if (response.success) {
           localStorage.setItem("usuarioLogado", response.user);
+          localStorage.setItem("nomeUsuario", response.name); // Salva o nome do usuário no localStorage
           window.location.href = "main.html";
         }
       } catch (error) {
@@ -57,25 +58,16 @@ document.addEventListener("DOMContentLoaded", () => {
   // Se estiver na tela principal
   if (window.location.pathname.includes("main.html")) {
     const usuario = localStorage.getItem("usuarioLogado");
+    const nomeUsuario = localStorage.getItem("nomeUsuario");
 
     if (!usuario) {
       window.location.href = "login.html";
     }
 
-    // Lógica para o menu hambúrguer
-    const hamburgerMenu = document.querySelector(".hamburger-menu");
-    const sidebar = document.querySelector(".sidebar");
-    
-    hamburgerMenu.addEventListener("click", () => {
-      sidebar.classList.toggle("open");
-    });
-
-    // Lógica de logout para a barra de navegação superior
-    const logoutBtn = document.querySelector("#logout");
-    if (logoutBtn) {
-      logoutBtn.addEventListener("click", () => {
-        localStorage.removeItem("usuarioLogado");
-      });
+    // Exibe a mensagem de boas-vindas com o nome do usuário
+    const userGreetingEl = document.querySelector("#user-greeting");
+    if (userGreetingEl && nomeUsuario) {
+      userGreetingEl.textContent = `Bem-vindo(a), ${nomeUsuario}!`;
     }
 
     // Lógica de logout para a barra lateral
@@ -83,6 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (logoutSidebarBtn) {
       logoutSidebarBtn.addEventListener("click", () => {
         localStorage.removeItem("usuarioLogado");
+        localStorage.removeItem("nomeUsuario"); // Remove o nome do usuário ao fazer logout
       });
     }
   }
