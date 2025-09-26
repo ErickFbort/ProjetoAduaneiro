@@ -62,9 +62,26 @@ document.addEventListener("DOMContentLoaded", () => {
       window.location.href = "login.html";
     }
 
+    // Lógica para o menu hambúrguer
+    const hamburgerMenu = document.querySelector(".hamburger-menu");
+    const sidebar = document.querySelector(".sidebar");
+    
+    hamburgerMenu.addEventListener("click", () => {
+      sidebar.classList.toggle("open");
+    });
+
+    // Lógica de logout para a barra de navegação superior
     const logoutBtn = document.querySelector("#logout");
     if (logoutBtn) {
       logoutBtn.addEventListener("click", () => {
+        localStorage.removeItem("usuarioLogado");
+      });
+    }
+
+    // Lógica de logout para a barra lateral
+    const logoutSidebarBtn = document.querySelector("#logout-sidebar");
+    if (logoutSidebarBtn) {
+      logoutSidebarBtn.addEventListener("click", () => {
         localStorage.removeItem("usuarioLogado");
       });
     }

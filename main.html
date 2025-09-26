@@ -11,7 +11,10 @@
 
   <header class="main-header">
     <nav class="navbar">
-      <img src="assets/img/logo_paclog_branco.png" alt="Logo Paclog" class="logo-sm">
+      <div class="hamburger-menu">
+        <i class="fas fa-bars"></i>
+      </div>
+      <img src="assets/img/logo_paclog_branco_tela_principal.png" alt="Logo Paclog" class="logo-sm">
       <ul class="nav-links">
         <li><a href="#home">Home</a></li>
         <li><a href="#cadastros">Cadastros</a></li>
@@ -21,6 +24,18 @@
       </ul>
     </nav>
   </header>
+
+  <aside class="sidebar">
+    <nav>
+      <ul class="sidebar-links">
+        <li><a href="#home"><i class="fas fa-home"></i> Home</a></li>
+        <li><a href="#cadastros"><i class="fas fa-edit"></i> Cadastros</a></li>
+        <li><a href="#relatorios"><i class="fas fa-chart-line"></i> Relatórios</a></li>
+        <li><a href="#configuracoes"><i class="fas fa-cog"></i> Configurações</a></li>
+        <li><a href="login.html" id="logout-sidebar"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+      </ul>
+    </nav>
+  </aside>
 
   <main class="main-content">
     <section id="home">
@@ -48,5 +63,6 @@
     <p>&copy; 2023 Projeto Aduaneiro. Todos os direitos reservados.</p>
   </footer>
 
+  <script src="assets/js/script.js"></script>
 </body>
 </html>
