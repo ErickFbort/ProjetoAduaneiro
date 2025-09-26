@@ -73,9 +73,11 @@ document.addEventListener("DOMContentLoaded", () => {
     // Lógica de logout para a barra lateral
     const logoutSidebarBtn = document.querySelector("#logout-sidebar");
     if (logoutSidebarBtn) {
-      logoutSidebarBtn.addEventListener("click", () => {
+      logoutSidebarBtn.addEventListener("click", (e) => {
+        e.preventDefault(); // Impede o comportamento padrão do link (navegação)
         localStorage.removeItem("usuarioLogado");
         localStorage.removeItem("nomeUsuario"); // Remove o nome do usuário ao fazer logout
+        window.location.href = "login.html"; // Redireciona manualmente para a página de login
       });
     }
 
