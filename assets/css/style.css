@@ -160,8 +160,8 @@ body {
   text-align: center;
 }
 
-/* Regra para alinhar apenas o título de boas-vindas à esquerda */
-#user-greeting {
+/* Regra para alinhar todo o conteúdo da seção Home à esquerda (incluindo o parágrafo de boas-vindas) */
+#home {
   text-align: left;
 }
 
