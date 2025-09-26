@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Login - Projeto Aduaneiro{% endblock %}
+
+{% block body_class %}login-body{% endblock %}
+
+{% block content %}
+<main class="login-container">
+    <section class="login-box">
+        <a href="{{ url_for('login') }}">
+            <img src="{{ url_for('static', filename='img/logo_paclog_escuro_login.png') }}" alt="Logo Paclog" class="logo">
+        </a>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <form method="POST" class="login-form">
+            <div class="mb-3">
+                <label for="email" class="form-label">E-mail</label>
+                <input type="email" class="form-control" id="email" name="email" required placeholder="Digite seu e-mail">
+            </div>
+            
+            <div class="mb-3">
+                <label for="password" class="form-label">Senha</label>
+                <input type="password" class="form-control" id="password" name="password" required placeholder="Digite sua senha">
+            </div>
+            
+            <button type="submit" class="btn btn-primary w-100">Entrar</button>
+        </form>
+    </section>
+</main>
+{% endblock %}
+

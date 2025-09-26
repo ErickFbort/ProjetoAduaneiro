@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Cadastros Debug - Sistema Aduaneiro{% endblock %}
+
+{% block body_class %}main-body{% endblock %}
+
+{% block content %}
+<aside class="sidebar">
+    <nav>
+        <img src="{{ url_for('static', filename='img/logo_paclog_branco_tela_principal.png') }}" alt="Logo Paclog" class="logo-sidebar">
+        <ul class="sidebar-links">
+            <li><a href="{{ url_for('dashboard') }}" class="nav-link"><i class="fas fa-home"></i> <span>Home</span></a></li>
+            <li><a href="{{ url_for('cadastros') }}" class="nav-link active"><i class="fas fa-edit"></i> <span>Cadastros</span></a></li>
+            <li><a href="#" class="nav-link" onclick="logoutUser()"><i class="fas fa-sign-out-alt"></i> <span>Sair</span></a></li>
+        </ul>
+    </nav>
+</aside>
+
+<main class="content main-content--shifted">
+    <div class="content-section active">
+        <div class="container-fluid">
+            <h2>Cadastro de Usuário - Debug</h2>
+            
+            <div class="alert alert-info">
+                <h4>Debug Info:</h4>
+                <p><strong>Total de usuários:</strong> {{ users|length if users else 'N/A' }}</p>
+                <p><strong>Tipo de users:</strong> {{ users.__class__.__name__ if users else 'N/A' }}</p>
+                <p><strong>Search:</strong> {{ search if search else 'Nenhuma' }}</p>
+            </div>
+
+            {% if users %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nome</th>
+                                <th>Sobrenome</th>
+                                <th>Email</th>
+                                <th>CPF</th>
+                                <th>Grupo</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                            <tr>
+                                <td>{{ user.id }}</td>
+                                <td>{{ user.name }}</td>
+                                <td>{{ user.lastname }}</td>
+                                <td>{{ user.email }}</td>
+                                <td>{{ user.cpf }}</td>
+                                <td>{{ user.group }}</td>
+                                <td>
+                                    <span class="badge bg-{{ 'success' if user.status == 'active' else 'danger' }}">
+                                        {{ 'Ativo' if user.status == 'active' else 'Bloqueado' }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="alert alert-warning">
+                    <h4>Nenhum usuário encontrado</h4>
+                    <p>Não há usuários cadastrados no sistema.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</main>
+{% endblock %}
