@@ -78,5 +78,50 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.removeItem("nomeUsuario"); // Remove o nome do usuário ao fazer logout
       });
     }
+
+    // Lógica para alternar entre as seções de conteúdo
+    const navLinks = document.querySelectorAll(".sidebar-links a");
+    const contentSections = document.querySelectorAll(".content-section");
+    
+    const showContent = (targetId) => {
+      contentSections.forEach(section => {
+        if (section.id === targetId) {
+          section.style.display = 'block';
+        } else {
+          section.style.display = 'none';
+        }
+      });
+    };
+
+    navLinks.forEach(link => {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        const targetId = e.target.getAttribute("href").substring(1);
+        showContent(targetId);
+
+        navLinks.forEach(item => item.classList.remove('active'));
+        e.target.classList.add('active');
+      });
+    });
+
+    // Lógica para o formulário de Adicionar Usuário
+    const addUserBtn = document.querySelector("#add-user-btn");
+    const cancelAddBtn = document.querySelector("#cancel-add-btn");
+    const userListView = document.querySelector("#user-list-view");
+    const addUserForm = document.querySelector("#add-user-form");
+
+    if (addUserBtn) {
+      addUserBtn.addEventListener("click", () => {
+        userListView.style.display = 'none';
+        addUserForm.style.display = 'block';
+      });
+    }
+
+    if (cancelAddBtn) {
+      cancelAddBtn.addEventListener("click", () => {
+        userListView.style.display = 'block';
+        addUserForm.style.display = 'none';
+      });
+    }
   }
 });
