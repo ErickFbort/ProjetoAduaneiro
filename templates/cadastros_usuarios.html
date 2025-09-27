@@ -5,21 +5,7 @@
 {% block body_class %}main-body{% endblock %}
 
 {% block content %}
-<aside class="sidebar">
-    <nav>
-        <img src="{{ url_for('static', filename='img/logo_paclog_branco_tela_principal.png') }}" alt="Logo Paclog" class="logo-sidebar">
-        <ul class="sidebar-links">
-            <li><a href="{{ url_for('dashboard') }}" class="nav-link"><i class="fas fa-home"></i> <span>Home</span></a></li>
-            <li><a href="#operacional" class="nav-link"><i class="fas fa-tasks"></i> <span>Operacional</span></a></li>
-            <li><a href="#faturamento" class="nav-link"><i class="fas fa-file-invoice-dollar"></i> <span>Faturamento</span></a></li>
-            <li><a href="#web-cliente" class="nav-link"><i class="fas fa-user-tie"></i> <span>Web Cliente</span></a></li>
-            <li><a href="#portal-adm" class="nav-link"><i class="fas fa-user-shield"></i> <span>Portal ADM</span></a></li>
-            <li><a href="{{ url_for('cadastros') }}" class="nav-link active"><i class="fas fa-edit"></i> <span>Cadastros</span></a></li>
-            <li><a href="#relatorios" class="nav-link"><i class="fas fa-chart-line"></i> <span>Relatórios</span></a></li>
-            <li><a href="#" class="nav-link" onclick="logoutUser()"><i class="fas fa-sign-out-alt"></i> <span>Sair</span></a></li>
-        </ul>
-    </nav>
-</aside>
+{% include 'partials/sidebar.html' %}
 
 <main class="content main-content--shifted">
     <div class="content-section active">
@@ -32,7 +18,7 @@
                         <input type="text" name="search" value="{{ search }}" class="form-control" placeholder="Pesquisar por nome, sobrenome, email ou CPF...">
                         <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Pesquisar</button>
                         {% if search %}
-                        <a href="{{ url_for('cadastros') }}" class="btn btn-secondary"><i class="fas fa-times"></i> Limpar</a>
+                        <a href="{{ url_for('cadastros.cadastros') }}" class="btn btn-secondary"><i class="fas fa-times"></i> Limpar</a>
                         {% endif %}
                     </form>
                     <button id="add-user-btn" class="btn btn-success"><i class="fas fa-plus"></i> Adicionar Usuário</button>
@@ -106,7 +92,7 @@
                         <ul class="pagination justify-content-center">
                             {% if users.has_prev %}
                             <li class="page-item">
-                                <a class="page-link" href="{{ url_for('cadastros', page=users.prev_num, search=search) }}">Anterior</a>
+                                <a class="page-link" href="{{ url_for('cadastros.cadastros_usuarios', page=users.prev_num, search=search) }}">Anterior</a>
                             </li>
                             {% endif %}
                             
@@ -114,7 +100,7 @@
                                 {% if page_num %}
                                     {% if page_num != users.page %}
                                     <li class="page-item">
-                                        <a class="page-link" href="{{ url_for('cadastros', page=page_num, search=search) }}">{{ page_num }}</a>
+                                        <a class="page-link" href="{{ url_for('cadastros.cadastros_usuarios', page=page_num, search=search) }}">{{ page_num }}</a>
                                     </li>
                                     {% else %}
                                     <li class="page-item active">
@@ -130,7 +116,7 @@
                             
                             {% if users.has_next %}
                             <li class="page-item">
-                                <a class="page-link" href="{{ url_for('cadastros', page=users.next_num, search=search) }}">Próximo</a>
+                                <a class="page-link" href="{{ url_for('cadastros.cadastros_usuarios', page=users.next_num, search=search) }}">Próximo</a>
                             </li>
                             {% endif %}
                         </ul>
@@ -267,18 +253,49 @@
 <script>
 let currentUserId = null;
 
+// Validação de CPF
+function validarCPFInput(input) {
+    const cpf = input.value.replace(/[^\d]/g, '');
+    if (cpf.length === 11) {
+        if (!Validators.validarCPF(cpf)) {
+            input.setCustomValidity('CPF inválido');
+            input.classList.add('is-invalid');
+        } else {
+            input.setCustomValidity('');
+            input.classList.remove('is-invalid');
+        }
+    } else {
+        input.setCustomValidity('');
+        input.classList.remove('is-invalid');
+    }
+}
+
 // Event listeners
 document.getElementById('add-user-btn').addEventListener('click', () => {
     currentUserId = null;
-            document.getElementById('modalTitle').textContent = 'Adicionar Novo Usuário';
-            document.getElementById('user-form').reset();
-            document.getElementById('password').required = true;
-            document.getElementById('password').placeholder = 'Digite a senha';
-            new bootstrap.Modal(document.getElementById('userModal')).show();
+    document.getElementById('modalTitle').textContent = 'Adicionar Novo Usuário';
+    document.getElementById('user-form').reset();
+    document.getElementById('password').required = true;
+    document.getElementById('password').placeholder = 'Digite a senha';
+    new bootstrap.Modal(document.getElementById('userModal')).show();
+});
+
+// Validação de CPF em tempo real
+document.getElementById('cpf').addEventListener('input', function() {
+    validarCPFInput(this);
 });
 
 document.getElementById('user-form').addEventListener('submit', async (e) => {
     e.preventDefault();
+    
+    // Validar CPF antes de enviar
+    const cpfInput = document.getElementById('cpf');
+    validarCPFInput(cpfInput);
+    
+    if (!cpfInput.checkValidity()) {
+        FeedbackManager.showError('Por favor, corrija os erros no formulário');
+        return;
+    }
     
     const formData = new FormData(e.target);
     const data = Object.fromEntries(formData.entries());
@@ -287,27 +304,16 @@ document.getElementById('user-form').addEventListener('submit', async (e) => {
     const permissions = Array.from(document.querySelectorAll('input[name="permission"]:checked')).map(cb => cb.value);
     data.permissions = JSON.stringify(permissions);
     
-    try {
-        const url = currentUserId ? `/api/users/${currentUserId}` : '/api/users';
-        const method = currentUserId ? 'PUT' : 'POST';
-        
-        const response = await fetch(url, {
-            method: method,
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data)
-        });
-        
-        if (response.ok) {
-            location.reload();
-        } else {
-            const error = await response.json();
-            alert(error.error || 'Erro ao salvar usuário');
-        }
-    } catch (error) {
-        alert('Erro ao salvar usuário');
-    }
+    const url = currentUserId ? `/api/users/${currentUserId}` : '/api/users';
+    const method = currentUserId ? 'PUT' : 'POST';
+    
+    await FormManager.submitForm(e.target, {
+        url: url,
+        method: method,
+        processData: (data) => data,
+        successMessage: currentUserId ? 'Usuário atualizado com sucesso!' : 'Usuário criado com sucesso!',
+        reload: true
+    });
 });
 
 // Edit user
@@ -333,14 +339,14 @@ document.addEventListener('click', async (e) => {
             document.querySelector(`input[name="status"][value="${user.status}"]`).checked = true;
             
             // Set permissions
-            const permissions = JSON.parse(user.permissions);
+            const permissions = JSON.parse(user.permissions || '[]');
             document.querySelectorAll('input[name="permission"]').forEach(cb => {
                 cb.checked = permissions.includes(cb.value);
             });
             
             new bootstrap.Modal(document.getElementById('userModal')).show();
         } catch (error) {
-            alert('Erro ao carregar dados do usuário');
+            FeedbackManager.showError('Erro ao carregar dados do usuário');
         }
     }
 });
@@ -357,12 +363,13 @@ document.addEventListener('click', async (e) => {
                 });
                 
                 if (response.ok) {
-                    location.reload();
+                    FeedbackManager.showSuccess('Usuário excluído com sucesso!');
+                    setTimeout(() => location.reload(), 1000);
                 } else {
-                    alert('Erro ao excluir usuário');
+                    FeedbackManager.showError('Erro ao excluir usuário');
                 }
             } catch (error) {
-                alert('Erro ao excluir usuário');
+                FeedbackManager.showError('Erro ao excluir usuário');
             }
         }
     }
@@ -390,12 +397,14 @@ document.addEventListener('click', async (e) => {
             });
             
             if (updateResponse.ok) {
-                location.reload();
+                const statusText = newStatus === 'active' ? 'ativado' : 'bloqueado';
+                FeedbackManager.showSuccess(`Usuário ${statusText} com sucesso!`);
+                setTimeout(() => location.reload(), 1000);
             } else {
-                alert('Erro ao alterar status do usuário');
+                FeedbackManager.showError('Erro ao alterar status do usuário');
             }
         } catch (error) {
-            alert('Erro ao alterar status do usuário');
+            FeedbackManager.showError('Erro ao alterar status do usuário');
         }
     }
 });

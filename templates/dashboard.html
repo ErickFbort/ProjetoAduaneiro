@@ -5,21 +5,7 @@
 {% block body_class %}main-body{% endblock %}
 
 {% block content %}
-<aside class="sidebar">
-    <nav>
-        <img src="{{ url_for('static', filename='img/logo_paclog_branco_tela_principal.png') }}" alt="Logo Paclog" class="logo-sidebar">
-        <ul class="sidebar-links">
-            <li><a href="{{ url_for('dashboard') }}" class="nav-link active"><i class="fas fa-home"></i> <span>Home</span></a></li>
-            <li><a href="#operacional" class="nav-link"><i class="fas fa-tasks"></i> <span>Operacional</span></a></li>
-            <li><a href="#faturamento" class="nav-link"><i class="fas fa-file-invoice-dollar"></i> <span>Faturamento</span></a></li>
-            <li><a href="#web-cliente" class="nav-link"><i class="fas fa-user-tie"></i> <span>Web Cliente</span></a></li>
-            <li><a href="#portal-adm" class="nav-link"><i class="fas fa-user-shield"></i> <span>Portal ADM</span></a></li>
-            <li><a href="{{ url_for('cadastros') }}" class="nav-link"><i class="fas fa-edit"></i> <span>Cadastros</span></a></li>
-            <li><a href="#relatorios" class="nav-link"><i class="fas fa-chart-line"></i> <span>Relatórios</span></a></li>
-            <li><a href="#" class="nav-link" onclick="logoutUser()"><i class="fas fa-sign-out-alt"></i> <span>Sair</span></a></li>
-        </ul>
-    </nav>
-</aside>
+{% include 'partials/sidebar.html' %}
 
 <main class="content main-content--shifted">
     <div id="home" class="content-section active">

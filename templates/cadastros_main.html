@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Cadastros - Sistema Aduaneiro{% endblock %}
+
+{% block body_class %}main-body{% endblock %}
+
+{% block content %}
+{% include 'partials/sidebar.html' %}
+
+<main class="content main-content--shifted">
+    <div class="content-section active">
+        <div class="container-fluid">
+            <h2>Módulo de Cadastros</h2>
+            <p class="lead">Gerencie os cadastros do sistema</p>
+            
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-users fa-3x text-primary mb-3"></i>
+                            <h5 class="card-title">Usuários</h5>
+                            <p class="card-text">Gerencie usuários do sistema, permissões e grupos de acesso.</p>
+                            <a href="{{ url_for('cadastros_usuarios') }}" class="btn btn-primary">
+                                <i class="fas fa-arrow-right"></i> Acessar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-truck fa-3x text-success mb-3"></i>
+                            <h5 class="card-title">Veículos</h5>
+                            <p class="card-text">Cadastre e gerencie veículos, motoristas e informações de transporte.</p>
+                            <a href="{{ url_for('cadastros_veiculos') }}" class="btn btn-success">
+                                <i class="fas fa-arrow-right"></i> Acessar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-building fa-3x text-info mb-3"></i>
+                            <h5 class="card-title">Entidades</h5>
+                            <p class="card-text">Gerencie clientes, fornecedores e outras entidades do sistema.</p>
+                            <a href="{{ url_for('cadastros_entidades') }}" class="btn btn-info">
+                                <i class="fas fa-arrow-right"></i> Acessar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+{% block extra_js %}
+<!-- JavaScript gerenciado pelo utils.js -->
+{% endblock %}
+{% endblock %}

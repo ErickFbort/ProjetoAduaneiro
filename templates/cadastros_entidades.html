@@ -1,0 +1,626 @@
+{% extends "base.html" %}
+
+{% block title %}Cadastros - Entidades{% endblock %}
+
+{% block body_class %}main-body{% endblock %}
+
+{% block content %}
+{% include 'partials/sidebar.html' %}
+
+<main class="content main-content--shifted">
+    <div class="content-section active">
+        <div class="container-fluid">
+            <h2>Cadastro de Entidades</h2>
+
+            <div id="entidade-list-view">
+                <div class="actions-container">
+                    <form method="GET" class="search-form">
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="search" placeholder="Buscar por razão social, nome fantasia, CPF/CNPJ ou email..." value="{{ search }}">
+                            <button class="btn btn-outline-secondary" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                    <button id="add-entidade-btn" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Adicionar Entidade
+                    </button>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Razão Social</th>
+                                <th>Nome Fantasia</th>
+                                <th>CPF/CNPJ</th>
+                                <th>Tipo Cliente</th>
+                                <th>Pagamento</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for entidade in entidades.items %}
+                            <tr>
+                                <td>{{ entidade.razao_social }}</td>
+                                <td>{{ entidade.nome_fantasia }}</td>
+                                <td>{{ entidade.cpf_cnpj }}</td>
+                                <td>{{ entidade.tipo_cliente }}</td>
+                                <td>
+                                    {% if entidade.pagamento == '001' %}Vista
+                                    {% elif entidade.pagamento == '002' %}Correntista
+                                    {% elif entidade.pagamento == '003' %}Express
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge {% if entidade.status == 'active' %}bg-success{% else %}bg-danger{% endif %}">
+                                        {% if entidade.status == 'active' %}Ativo{% else %}Bloqueado{% endif %}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                            <i class="fas fa-ellipsis-v"></i>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item edit-entidade" href="#" data-entidade-id="{{ entidade.id }}">
+                                                <i class="fas fa-edit"></i> Editar
+                                            </a></li>
+                                            <li><a class="dropdown-item toggle-status" href="#" data-entidade-id="{{ entidade.id }}">
+                                                <i class="fas fa-{% if entidade.status == 'active' %}ban{% else %}check{% endif %}"></i>
+                                                {% if entidade.status == 'active' %}Bloquear{% else %}Desbloquear{% endif %}
+                                            </a></li>
+                                            <li><a class="dropdown-item delete-entidade" href="#" data-entidade-id="{{ entidade.id }}">
+                                                <i class="fas fa-trash"></i> Excluir
+                                            </a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="7" class="text-center">Nenhuma entidade encontrada</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Paginação -->
+                {% if entidades.pages > 1 %}
+                <nav aria-label="Paginação">
+                    <ul class="pagination justify-content-center">
+                        {% if entidades.has_prev %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ entidades.prev_num }}">Anterior</a>
+                        </li>
+                        {% endif %}
+                        
+                        {% for page_num in entidades.iter_pages() %}
+                        <li class="page-item {% if page_num == entidades.page %}active{% endif %}">
+                            <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+                        </li>
+                        {% endfor %}
+                        
+                        {% if entidades.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ entidades.next_num }}">Próximo</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Modal para Adicionar/Editar Entidade -->
+<div class="modal fade" id="entidadeModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Adicionar Nova Entidade</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="entidade-form">
+                <div class="modal-body">
+                    <!-- Informações Básicas -->
+                    <h6 class="mb-3 text-primary">Informações Básicas</h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="razao_social" class="form-label">Razão Social *</label>
+                                <input type="text" class="form-control" id="razao_social" name="razao_social" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="nome_fantasia" class="form-label">Nome Fantasia *</label>
+                                <input type="text" class="form-control" id="nome_fantasia" name="nome_fantasia" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="cpf_cnpj" class="form-label">CPF/CNPJ *</label>
+                                <input type="text" class="form-control" id="cpf_cnpj" name="cpf_cnpj" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="inscricao_estadual" class="form-label">Inscrição Estadual</label>
+                                <input type="text" class="form-control" id="inscricao_estadual" name="inscricao_estadual">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="tipo_cliente" class="form-label">Tipo de Cliente *</label>
+                                <select class="form-control" id="tipo_cliente" name="tipo_cliente" required>
+                                    <option value="">Selecione o tipo</option>
+                                    <option value="Pessoa Fisica">Pessoa Física</option>
+                                    <option value="Juridica">Jurídica</option>
+                                    <option value="Estrangeira">Estrangeira</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="telefone" class="form-label">Telefone</label>
+                                <input type="text" class="form-control" id="telefone" name="telefone">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <!-- Informações de Pagamento -->
+                    <h6 class="mb-3 text-primary">Informações de Pagamento</h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="pagamento" class="form-label">Pagamento *</label>
+                                <select class="form-control" id="pagamento" name="pagamento" required>
+                                    <option value="">Selecione o tipo de pagamento</option>
+                                    <option value="001">001 - Vista</option>
+                                    <option value="002">002 - Correntista</option>
+                                    <option value="003">003 - Express</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="retencao" name="retencao">
+                                    <label class="form-check-label" for="retencao">
+                                        Retenção
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row" id="retencao-fields" style="display: none;">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="valor_retencao" class="form-label">Valor da Retenção</label>
+                                <input type="number" class="form-control" id="valor_retencao" name="valor_retencao" step="0.01">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="prazo_retencao" class="form-label">Prazo da Retenção (dias)</label>
+                                <select class="form-control" id="prazo_retencao" name="prazo_retencao">
+                                    <option value="">Selecione o prazo</option>
+                                    <option value="5">5 dias</option>
+                                    <option value="7">7 dias</option>
+                                    <option value="10">10 dias</option>
+                                    <option value="15">15 dias</option>
+                                    <option value="21">21 dias</option>
+                                    <option value="30">30 dias</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="relatorio_nd" name="relatorio_nd">
+                                    <label class="form-check-label" for="relatorio_nd">
+                                        Relatório ND
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <!-- Contatos -->
+                    <h6 class="mb-3 text-primary">Contatos</h6>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="email_faturamento" class="form-label">Email Faturamento/Financeiro *</label>
+                                <input type="email" class="form-control" id="email_faturamento" name="email_faturamento" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="email_operacional" class="form-label">Email Operacional *</label>
+                                <input type="email" class="form-control" id="email_operacional" name="email_operacional" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="email_despachante" class="form-label">Email Despachante *</label>
+                                <input type="email" class="form-control" id="email_despachante" name="email_despachante" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <!-- Notificações por Email -->
+                    <h6 class="mb-3 text-primary">Enviar Notificação por Email</h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="notif_processo_aberto" name="notificacoes" value="processo_aberto">
+                                <label class="form-check-label" for="notif_processo_aberto">
+                                    Processo em Aberto
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="notif_processo_aprovado" name="notificacoes" value="processo_aprovado">
+                                <label class="form-check-label" for="notif_processo_aprovado">
+                                    Processo Aprovado
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="notif_processo_cancelado" name="notificacoes" value="processo_cancelado">
+                                <label class="form-check-label" for="notif_processo_cancelado">
+                                    Processo Cancelado
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="notif_carga_entregue" name="notificacoes" value="carga_entregue">
+                                <label class="form-check-label" for="notif_carga_entregue">
+                                    Processo Carga Entregue
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="notif_processo_encerrado" name="notificacoes" value="processo_encerrado">
+                                <label class="form-check-label" for="notif_processo_encerrado">
+                                    Processo Encerrado
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="notif_pendencia_documental" name="notificacoes" value="pendencia_documental">
+                                <label class="form-check-label" for="notif_pendencia_documental">
+                                    Processo em Pendência Documental
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <!-- Tipos -->
+                    <h6 class="mb-3 text-primary">Tipo</h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="tipo_adquirente" name="tipos" value="adquirente_importador">
+                                <label class="form-check-label" for="tipo_adquirente">
+                                    Adquirente/Importador
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="tipo_cliente" name="tipos" value="cliente">
+                                <label class="form-check-label" for="tipo_cliente">
+                                    Cliente
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="tipo_companhia_area" name="tipos" value="companhia_area">
+                                <label class="form-check-label" for="tipo_companhia_area">
+                                    Companhia Aérea
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="tipo_despachante" name="tipos" value="despachante">
+                                <label class="form-check-label" for="tipo_despachante">
+                                    Despachante
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="tipo_exportador" name="tipos" value="exportador">
+                                <label class="form-check-label" for="tipo_exportador">
+                                    Exportador
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="tipo_fiscal_receita" name="tipos" value="fiscal_receita">
+                                <label class="form-check-label" for="tipo_fiscal_receita">
+                                    Fiscal Receita
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="tipo_prestador_servico" name="tipos" value="prestador_servico">
+                                <label class="form-check-label" for="tipo_prestador_servico">
+                                    Prestador de Serviço
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="tipo_trading" name="tipos" value="trading">
+                                <label class="form-check-label" for="tipo_trading">
+                                    Trading
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="tipo_transportador" name="tipos" value="transportador_credenciado">
+                                <label class="form-check-label" for="tipo_transportador">
+                                    Transportador Credenciado
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+let currentEntidadeId = null;
+
+// Validação de CPF/CNPJ
+function validarCPFCNPJ(input) {
+    const valor = input.value.replace(/[^\d]/g, '');
+    if (valor.length === 11) {
+        // CPF
+        if (!Validators.validarCPF(valor)) {
+            input.setCustomValidity('CPF inválido');
+            input.classList.add('is-invalid');
+        } else {
+            input.setCustomValidity('');
+            input.classList.remove('is-invalid');
+        }
+    } else if (valor.length === 14) {
+        // CNPJ
+        if (!Validators.validarCNPJ(valor)) {
+            input.setCustomValidity('CNPJ inválido');
+            input.classList.add('is-invalid');
+        } else {
+            input.setCustomValidity('');
+            input.classList.remove('is-invalid');
+        }
+    } else {
+        input.setCustomValidity('');
+        input.classList.remove('is-invalid');
+    }
+}
+
+// Validação de email
+function validarEmail(input) {
+    if (input.value && !Validators.validarEmail(input.value)) {
+        input.setCustomValidity('Email inválido');
+        input.classList.add('is-invalid');
+    } else {
+        input.setCustomValidity('');
+        input.classList.remove('is-invalid');
+    }
+}
+
+// Event listeners
+document.getElementById('add-entidade-btn').addEventListener('click', () => {
+    currentEntidadeId = null;
+    document.getElementById('modalTitle').textContent = 'Adicionar Nova Entidade';
+    document.getElementById('entidade-form').reset();
+    new bootstrap.Modal(document.getElementById('entidadeModal')).show();
+});
+
+// Mostrar/ocultar campos de retenção
+document.getElementById('retencao').addEventListener('change', function() {
+    const retencaoFields = document.getElementById('retencao-fields');
+    if (this.checked) {
+        retencaoFields.style.display = 'block';
+    } else {
+        retencaoFields.style.display = 'none';
+    }
+});
+
+// Validações em tempo real
+document.getElementById('cpf_cnpj').addEventListener('input', function() {
+    validarCPFCNPJ(this);
+});
+
+document.getElementById('email_faturamento').addEventListener('input', function() {
+    validarEmail(this);
+});
+
+document.getElementById('email_operacional').addEventListener('input', function() {
+    validarEmail(this);
+});
+
+document.getElementById('email_despachante').addEventListener('input', function() {
+    validarEmail(this);
+});
+
+document.getElementById('entidade-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    // Validar campos antes de enviar
+    const cpfCnpjInput = document.getElementById('cpf_cnpj');
+    const emailFaturamentoInput = document.getElementById('email_faturamento');
+    const emailOperacionalInput = document.getElementById('email_operacional');
+    const emailDespachanteInput = document.getElementById('email_despachante');
+    
+    validarCPFCNPJ(cpfCnpjInput);
+    validarEmail(emailFaturamentoInput);
+    validarEmail(emailOperacionalInput);
+    validarEmail(emailDespachanteInput);
+    
+    if (!cpfCnpjInput.checkValidity() || !emailFaturamentoInput.checkValidity() || 
+        !emailOperacionalInput.checkValidity() || !emailDespachanteInput.checkValidity()) {
+        FeedbackManager.showError('Por favor, corrija os erros no formulário');
+        return;
+    }
+    
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData.entries());
+    
+    // Processar notificações
+    const notificacoes = Array.from(document.querySelectorAll('input[name="notificacoes"]:checked')).map(cb => cb.value);
+    data.notificacoes = JSON.stringify(notificacoes);
+    
+    // Processar tipos
+    const tipos = Array.from(document.querySelectorAll('input[name="tipos"]:checked')).map(cb => cb.value);
+    data.tipos = JSON.stringify(tipos);
+    
+    // Converter retenção para boolean
+    data.retencao = document.getElementById('retencao').checked;
+    data.relatorio_nd = document.getElementById('relatorio_nd').checked;
+    
+    const url = currentEntidadeId ? `/api/entidades/${currentEntidadeId}` : '/api/entidades';
+    const method = currentEntidadeId ? 'PUT' : 'POST';
+    
+    await FormManager.submitForm(e.target, {
+        url: url,
+        method: method,
+        processData: (data) => data,
+        successMessage: currentEntidadeId ? 'Entidade atualizada com sucesso!' : 'Entidade criada com sucesso!',
+        reload: true
+    });
+});
+
+// Edit entidade
+document.addEventListener('click', async (e) => {
+    if (e.target.closest('.edit-entidade')) {
+        const entidadeId = e.target.closest('.edit-entidade').dataset.entidadeId;
+        currentEntidadeId = entidadeId;
+        
+        try {
+            const response = await fetch(`/api/entidades/${entidadeId}`);
+            const entidade = await response.json();
+            
+            document.getElementById('modalTitle').textContent = 'Editar Entidade';
+            document.getElementById('razao_social').value = entidade.razao_social;
+            document.getElementById('nome_fantasia').value = entidade.nome_fantasia;
+            document.getElementById('cpf_cnpj').value = entidade.cpf_cnpj;
+            document.getElementById('inscricao_estadual').value = entidade.inscricao_estadual || '';
+            document.getElementById('tipo_cliente').value = entidade.tipo_cliente;
+            document.getElementById('telefone').value = entidade.telefone || '';
+            document.getElementById('pagamento').value = entidade.pagamento;
+            document.getElementById('email_faturamento').value = entidade.email_faturamento;
+            document.getElementById('email_operacional').value = entidade.email_operacional;
+            document.getElementById('email_despachante').value = entidade.email_despachante;
+            
+            // Retenção
+            document.getElementById('retencao').checked = entidade.retencao;
+            if (entidade.retencao) {
+                document.getElementById('retencao-fields').style.display = 'block';
+                document.getElementById('valor_retencao').value = entidade.valor_retencao || '';
+                document.getElementById('prazo_retencao').value = entidade.prazo_retencao || '';
+            }
+            
+            // Relatório ND
+            document.getElementById('relatorio_nd').checked = entidade.relatorio_nd;
+            
+            // Notificações
+            const notificacoes = JSON.parse(entidade.notificacoes || '[]');
+            document.querySelectorAll('input[name="notificacoes"]').forEach(cb => {
+                cb.checked = notificacoes.includes(cb.value);
+            });
+            
+            // Tipos
+            const tipos = JSON.parse(entidade.tipos || '[]');
+            document.querySelectorAll('input[name="tipos"]').forEach(cb => {
+                cb.checked = tipos.includes(cb.value);
+            });
+            
+            new bootstrap.Modal(document.getElementById('entidadeModal')).show();
+        } catch (error) {
+            FeedbackManager.showError('Erro ao carregar dados da entidade');
+        }
+    }
+});
+
+// Delete entidade
+document.addEventListener('click', async (e) => {
+    if (e.target.closest('.delete-entidade')) {
+        if (confirm('Tem certeza que deseja excluir esta entidade?')) {
+            const entidadeId = e.target.closest('.delete-entidade').dataset.entidadeId;
+            
+            try {
+                const response = await fetch(`/api/entidades/${entidadeId}`, {
+                    method: 'DELETE'
+                });
+                
+                if (response.ok) {
+                    FeedbackManager.showSuccess('Entidade excluída com sucesso!');
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    FeedbackManager.showError('Erro ao excluir entidade');
+                }
+            } catch (error) {
+                FeedbackManager.showError('Erro ao excluir entidade');
+            }
+        }
+    }
+});
+
+// Toggle status
+document.addEventListener('click', async (e) => {
+    if (e.target.closest('.toggle-status')) {
+        const entidadeId = e.target.closest('.toggle-status').dataset.entidadeId;
+        
+        try {
+            const response = await fetch(`/api/entidades/${entidadeId}`);
+            const entidade = await response.json();
+            const newStatus = entidade.status === 'active' ? 'blocked' : 'active';
+            
+            const updateResponse = await fetch(`/api/entidades/${entidadeId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    ...entidade,
+                    status: newStatus
+                })
+            });
+            
+            if (updateResponse.ok) {
+                const statusText = newStatus === 'active' ? 'ativada' : 'bloqueada';
+                FeedbackManager.showSuccess(`Entidade ${statusText} com sucesso!`);
+                setTimeout(() => location.reload(), 1000);
+            } else {
+                FeedbackManager.showError('Erro ao alterar status da entidade');
+            }
+        } catch (error) {
+            FeedbackManager.showError('Erro ao alterar status da entidade');
+        }
+    }
+});
+</script>
+{% endblock %}
+{% endblock %}

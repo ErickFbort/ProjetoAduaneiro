@@ -1,0 +1,3 @@
+"""
+APIs REST da aplicação
+"""

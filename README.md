@@ -1,117 +1,137 @@
-# Projeto Aduaneiro - Flask
+# Sistema Aduaneiro
 
-Sistema de gestão aduaneira desenvolvido em Python Flask com Bootstrap.
+Sistema web para gestão de processos aduaneiros desenvolvido em Flask.
 
-## Características
+## 🏗️ Estrutura do Projeto
 
-- **Backend**: Python Flask com SQLAlchemy
-- **Frontend**: Bootstrap 5 + HTML5 + CSS3 + JavaScript
-- **Autenticação**: Flask-Login
-- **Banco de Dados**: SQLite (desenvolvimento)
-- **Interface Responsiva**: Bootstrap para design moderno
-
-## Funcionalidades
-
-- Sistema de login seguro
-- Dashboard principal
-- Cadastro e gerenciamento de usuários
-- Interface responsiva
-- Sistema de permissões
-- Navegação lateral colapsável
-
-## Instalação
-
-1. Clone o repositório:
-```bash
-git clone <url-do-repositorio>
-cd ProjetoAduaneiro
+```
+ProjetoAduaneiro/
+├── app/                    # Aplicação principal
+│   ├── __init__.py        # Factory da aplicação
+│   ├── models/            # Modelos do banco de dados
+│   │   ├── __init__.py
+│   │   ├── user.py        # Modelo de usuário
+│   │   ├── veiculo.py     # Modelo de veículo
+│   │   └── entidade.py    # Modelo de entidade
+│   ├── routes/            # Rotas da aplicação
+│   │   ├── __init__.py
+│   │   ├── auth.py        # Autenticação
+│   │   ├── main.py        # Rotas principais
+│   │   └── cadastros.py   # Cadastros
+│   ├── api/               # APIs REST
+│   │   ├── __init__.py
+│   │   ├── users.py       # API de usuários
+│   │   ├── veiculos.py    # API de veículos
+│   │   └── entidades.py   # API de entidades
+│   └── utils/             # Utilitários
+│       ├── __init__.py
+│       └── database.py    # Inicialização do banco
+├── templates/             # Templates HTML
+├── static/               # Arquivos estáticos (CSS, JS, imagens)
+├── instance/             # Banco de dados SQLite
+├── main.py              # Arquivo principal
+├── config.py            # Configurações
+└── requirements.txt     # Dependências Python
 ```
 
-2. Crie um ambiente virtual:
-```bash
-python -m venv venv
-```
+## 🚀 Instalação e Execução
 
-3. Ative o ambiente virtual:
-```bash
-# Windows
-venv\Scripts\activate
-
-# Linux/Mac
-source venv/bin/activate
-```
-
-4. Instale as dependências:
+### 1. Instalar dependências
 ```bash
 pip install -r requirements.txt
 ```
 
-5. Execute a aplicação:
+### 2. Executar aplicação
 ```bash
-python app.py
+python main.py
 ```
 
-6. Acesse no navegador: `http://localhost:5000`
+### 3. Acessar sistema
+- URL: http://localhost:5000
+- Login: admin@teste.com
+- Senha: 1234
 
-## Credenciais Padrão
+## 📋 Funcionalidades
 
-- **Email**: admin@teste.com
-- **Senha**: 1234
+### 🔐 Autenticação
+- Login/logout seguro
+- Gerenciamento de sessões
+- Proteção de rotas
 
-## Estrutura do Projeto
+### 👥 Gestão de Usuários
+- Cadastro de usuários
+- Grupos: Paclog Faturamento, Paclog ADM, Paclog Operacional
+- Busca e filtros
+- Edição e exclusão
 
-```
-ProjetoAduaneiro/
-├── app.py                 # Aplicação Flask principal
-├── requirements.txt       # Dependências Python
-├── templates/            # Templates Jinja2
-│   ├── base.html         # Template base
-│   ├── login.html        # Página de login
-│   ├── dashboard.html    # Dashboard principal
-│   └── cadastros.html    # Página de cadastros
-├── static/               # Arquivos estáticos
-│   ├── css/              # Estilos CSS
-│   ├── js/               # Scripts JavaScript
-│   └── img/              # Imagens
-└── README.md             # Este arquivo
-```
+### 🚛 Gestão de Veículos
+- Cadastro de veículos
+- Dados do motorista responsável
+- Tipos: Reboque, Carreta, Cavalo, Truck, Outros
+- Busca por placa, CPF, motorista
 
-## Tecnologias Utilizadas
+### 🏢 Gestão de Entidades
+- Cadastro de entidades (clientes, fornecedores)
+- Dados fiscais completos
+- Configuração de notificações por email
+- Tipos de entidade configuráveis
 
-- **Python 3.8+**
-- **Flask 2.3.3**
-- **Bootstrap 5.3.0**
-- **Font Awesome 6.0.0**
-- **SQLAlchemy**
-- **Flask-Login**
+### 🎨 Interface
+- Design responsivo com Bootstrap 5
+- Barra lateral dinâmica
+- Navegação intuitiva
+- Formulários validados
 
-## Desenvolvimento
+## 🛠️ Tecnologias
 
-Para desenvolvimento, execute:
-```bash
-python app.py
-```
+- **Backend**: Python 3.13, Flask 3.0
+- **Banco de Dados**: SQLite (desenvolvimento)
+- **Frontend**: HTML5, CSS3, JavaScript, Bootstrap 5
+- **Autenticação**: Flask-Login
+- **ORM**: SQLAlchemy
 
-A aplicação será executada em modo debug com recarga automática.
+## 📝 APIs Disponíveis
 
-## Banco de Dados
+### Usuários
+- `GET /api/users` - Listar usuários
+- `POST /api/users` - Criar usuário
+- `GET /api/users/<id>` - Obter usuário
+- `PUT /api/users/<id>` - Atualizar usuário
+- `DELETE /api/users/<id>` - Excluir usuário
 
-O banco de dados SQLite será criado automaticamente na primeira execução. Um usuário administrador padrão será criado com as credenciais mencionadas acima.
+### Veículos
+- `GET /api/veiculos` - Listar veículos
+- `POST /api/veiculos` - Criar veículo
+- `GET /api/veiculos/<id>` - Obter veículo
+- `PUT /api/veiculos/<id>` - Atualizar veículo
+- `DELETE /api/veiculos/<id>` - Excluir veículo
 
-## Contribuição
+### Entidades
+- `GET /api/entidades` - Listar entidades
+- `POST /api/entidades` - Criar entidade
+- `GET /api/entidades/<id>` - Obter entidade
+- `PUT /api/entidades/<id>` - Atualizar entidade
+- `DELETE /api/entidades/<id>` - Excluir entidade
 
-1. Faça um fork do projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
-4. Push para a branch (`git push origin feature/AmazingFeature`)
-5. Abra um Pull Request
+## 🔧 Desenvolvimento
 
-Este projeto é uma aplicação web de exemplo para um sistema aduaneiro.
+### Estrutura Modular
+O projeto foi organizado seguindo o padrão de **Blueprints** do Flask, separando:
+- **Models**: Definições do banco de dados
+- **Routes**: Rotas da aplicação web
+- **API**: Endpoints REST
+- **Utils**: Utilitários e helpers
 
-## Funcionalidades
-- **Login:** Autenticação de usuário simulada.
-- **Página Principal:** Navegação para diferentes seções do sistema.
-- **Responsivo:** Layout adaptável para dispositivos móveis.
+### Banco de Dados
+- SQLite para desenvolvimento
+- Migração automática na inicialização
+- Dados de exemplo incluídos
 
-## Como Usar
-Para executar o projeto, basta abrir o arquivo `login.html` no seu navegador.
+### Configuração
+- Configurações por ambiente (dev/prod/test)
+- Variáveis de ambiente suportadas
+- Configuração centralizada em `config.py`
+
+## 📄 Licença
+
+Este projeto é de uso interno da empresa.

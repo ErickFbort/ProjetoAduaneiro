@@ -1,0 +1,686 @@
+{% extends "base.html" %}
+
+{% block title %}Cadastros - Veículos{% endblock %}
+
+{% block body_class %}main-body{% endblock %}
+
+{% block content %}
+{% include 'partials/sidebar.html' %}
+
+<main class="content main-content--shifted">
+    <div class="content-section active">
+        <div class="container-fluid">
+            <div id="veiculo-list-view">
+                <!-- Header com título e estatísticas -->
+                <div class="page-header">
+                    <div class="header-content">
+                        <div class="title-section">
+                            <h2 class="page-title">Cadastro de Veículos</h2>
+                            <p class="page-subtitle">Gerencie a frota de veículos do sistema</p>
+                        </div>
+                        <div class="stats-section">
+                            <div class="stat-card">
+                                <div class="stat-number">{{ veiculos.total }}</div>
+                                <div class="stat-label">Total</div>
+                            </div>
+                            <div class="stat-card active">
+                                <div class="stat-number">{{ veiculos.items | selectattr('status', 'equalto', 'active') | list | length }}</div>
+                                <div class="stat-label">Ativos</div>
+                            </div>
+                            <div class="stat-card blocked">
+                                <div class="stat-number">{{ veiculos.items | selectattr('status', 'equalto', 'blocked') | list | length }}</div>
+                                <div class="stat-label">Bloqueados</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Barra de ações e filtros -->
+                <div class="actions-container">
+                    <div class="search-section">
+                        <form method="GET" class="search-form">
+                            <div class="search-input-group">
+                                <input type="text" class="form-control search-input" name="search" placeholder="Buscar por motorista, CPF, placa ou RENAVAM..." value="{{ search }}">
+                                <button class="btn btn-primary search-btn" type="submit">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                                {% if search %}
+                                <a href="{{ url_for('cadastros.cadastros_veiculos') }}" class="btn btn-outline-secondary clear-btn">
+                                    <i class="fas fa-times"></i>
+                                </a>
+                                {% endif %}
+                            </div>
+                        </form>
+                        
+                        <!-- Filtros Avançados -->
+                        <div class="advanced-filters">
+                            <button class="btn btn-outline-info filter-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#filterCollapse" aria-expanded="false">
+                                <i class="fas fa-filter"></i> Filtros Avançados
+                            </button>
+                            <div class="collapse" id="filterCollapse">
+                                <div class="filter-content">
+                                    <div class="row g-3">
+                                        <div class="col-md-3">
+                                            <label class="form-label">Tipo de Veículo</label>
+                                            <select class="form-select" name="tipo_filter" id="tipoFilter">
+                                                <option value="">Todos os tipos</option>
+                                                <option value="Cavalo">Cavalo</option>
+                                                <option value="Carreta">Carreta</option>
+                                                <option value="Truck">Truck</option>
+                                                <option value="Outros">Outros</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">Estado</label>
+                                            <select class="form-select" name="estado_filter" id="estadoFilter">
+                                                <option value="">Todos os estados</option>
+                                                <option value="SP">São Paulo</option>
+                                                <option value="RJ">Rio de Janeiro</option>
+                                                <option value="MG">Minas Gerais</option>
+                                                <option value="PR">Paraná</option>
+                                                <option value="RS">Rio Grande do Sul</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">Status</label>
+                                            <select class="form-select" name="status_filter" id="statusFilter">
+                                                <option value="">Todos os status</option>
+                                                <option value="active">Ativo</option>
+                                                <option value="blocked">Bloqueado</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">&nbsp;</label>
+                                            <button type="button" class="btn btn-primary w-100" onclick="applyFilters()">
+                                                <i class="fas fa-search"></i> Aplicar Filtros
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button id="add-veiculo-btn" class="btn btn-success btn-lg">
+                            <i class="fas fa-plus"></i> Adicionar Veículo
+                        </button>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-outline-secondary" onclick="exportVehicles()" title="Exportar dados">
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary" onclick="importVehicles()" title="Importar dados">
+                                <i class="fas fa-upload"></i>
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary" onclick="refreshTable()" title="Atualizar">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabela de Veículos -->
+                <div class="table-container">
+                    <div class="table-responsive">
+                        <table class="table table-hover vehicles-table">
+                            <thead class="table-header">
+                                <tr>
+                                    <th class="sortable" data-sort="motorista_responsavel">
+                                        <span>Motorista</span>
+                                        <i class="fas fa-sort sort-icon"></i>
+                                    </th>
+                                    <th class="sortable" data-sort="cpf_motorista">
+                                        <span>CPF</span>
+                                        <i class="fas fa-sort sort-icon"></i>
+                                    </th>
+                                    <th class="sortable" data-sort="placa">
+                                        <span>Placa</span>
+                                        <i class="fas fa-sort sort-icon"></i>
+                                    </th>
+                                    <th class="sortable" data-sort="renavam">
+                                        <span>RENAVAM</span>
+                                        <i class="fas fa-sort sort-icon"></i>
+                                    </th>
+                                    <th class="sortable" data-sort="tipo">
+                                        <span>Tipo</span>
+                                        <i class="fas fa-sort sort-icon"></i>
+                                    </th>
+                                    <th class="sortable" data-sort="estado">
+                                        <span>Estado</span>
+                                        <i class="fas fa-sort sort-icon"></i>
+                                    </th>
+                                    <th class="sortable" data-sort="status">
+                                        <span>Status</span>
+                                        <i class="fas fa-sort sort-icon"></i>
+                                    </th>
+                                    <th class="text-center">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for veiculo in veiculos.items %}
+                                <tr class="vehicle-row" data-veiculo-id="{{ veiculo.id }}">
+                                    <td class="driver-cell">
+                                        <div class="driver-info">
+                                            <div class="driver-name">{{ veiculo.motorista_responsavel }}</div>
+                                            <div class="driver-details">
+                                                <small class="text-muted">{{ veiculo.municipio or 'N/A' }}</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="cpf-cell">
+                                        <span class="cpf-formatted">{{ veiculo.cpf_motorista }}</span>
+                                    </td>
+                                    <td class="placa-cell">
+                                        <span class="placa-badge">{{ veiculo.placa }}</span>
+                                    </td>
+                                    <td class="renavam-cell">
+                                        <span class="renavam-text">{{ veiculo.renavam or '-' }}</span>
+                                    </td>
+                                    <td class="tipo-cell">
+                                        <span class="tipo-badge tipo-{{ veiculo.tipo.lower() }}">
+                                            {% if veiculo.tipo == 'Outros' and veiculo.tipo_outros %}
+                                                {{ veiculo.tipo_outros }}
+                                            {% else %}
+                                                {{ veiculo.tipo }}
+                                            {% endif %}
+                                        </span>
+                                    </td>
+                                    <td class="estado-cell">
+                                        <span class="estado-badge">{{ veiculo.estado or '-' }}</span>
+                                    </td>
+                                    <td class="status-cell">
+                                        <span class="status-badge status-{{ veiculo.status }}">
+                                            <i class="fas fa-{{ 'check-circle' if veiculo.status == 'active' else 'ban' }}"></i>
+                                            {{ 'Ativo' if veiculo.status == 'active' else 'Bloqueado' }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="dropdown">
+                                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="fas fa-bars"></i>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <button class="dropdown-item edit-veiculo" data-veiculo-id="{{ veiculo.id }}">
+                                                        <i class="fas fa-edit me-2"></i>Editar
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button class="dropdown-item toggle-status" data-veiculo-id="{{ veiculo.id }}">
+                                                        <i class="fas fa-{{ 'ban' if veiculo.status == 'active' else 'check' }} me-2"></i>
+                                                        {{ 'Bloquear' if veiculo.status == 'active' else 'Ativar' }}
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button class="dropdown-item" onclick="viewVehicle({{ veiculo.id }})">
+                                                        <i class="fas fa-eye me-2"></i>Visualizar
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button class="dropdown-item" onclick="duplicateVehicle({{ veiculo.id }})">
+                                                        <i class="fas fa-copy me-2"></i>Duplicar
+                                                    </button>
+                                                </li>
+                                                <li><hr class="dropdown-divider"></li>
+                                                <li>
+                                                    <button class="dropdown-item text-danger delete-veiculo" data-veiculo-id="{{ veiculo.id }}">
+                                                        <i class="fas fa-trash me-2"></i>Excluir
+                                                    </button>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="8" class="text-center py-5">
+                                        <div class="empty-state">
+                                            <i class="fas fa-truck fa-3x text-muted mb-3"></i>
+                                            <h5 class="text-muted">Nenhum veículo encontrado</h5>
+                                            <p class="text-muted">Comece adicionando seu primeiro veículo</p>
+                                            <button id="add-veiculo-btn-empty" class="btn btn-primary">
+                                                <i class="fas fa-plus"></i> Adicionar Veículo
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Paginação -->
+                {% if veiculos.pages > 1 %}
+                <nav aria-label="Paginação">
+                    <ul class="pagination justify-content-center">
+                        {% if veiculos.has_prev %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ veiculos.prev_num }}">Anterior</a>
+                        </li>
+                        {% endif %}
+                        
+                        {% for page_num in veiculos.iter_pages() %}
+                        <li class="page-item {% if page_num == veiculos.page %}active{% endif %}">
+                            <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+                        </li>
+                        {% endfor %}
+                        
+                        {% if veiculos.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ veiculos.next_num }}">Próximo</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Modal para Adicionar/Editar Veículo -->
+<div class="modal fade" id="veiculoModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Adicionar Novo Veículo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="veiculo-form">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="motorista_responsavel" class="form-label">Nome do Motorista *</label>
+                                <input type="text" class="form-control" id="motorista_responsavel" name="motorista_responsavel" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="cpf_motorista" class="form-label">CPF do Motorista *</label>
+                                <input type="text" class="form-control" id="cpf_motorista" name="cpf_motorista" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="placa" class="form-label">Placa *</label>
+                                <input type="text" class="form-control" id="placa" name="placa" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="renavam" class="form-label">RENAVAM</label>
+                                <input type="text" class="form-control" id="renavam" name="renavam">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="tipo" class="form-label">Tipo *</label>
+                                <select class="form-control" id="tipo" name="tipo" required>
+                                    <option value="">Selecione o tipo</option>
+                                    <option value="Reboque">Reboque</option>
+                                    <option value="Carreta">Carreta</option>
+                                    <option value="Cavalo">Cavalo</option>
+                                    <option value="Truck">Truck</option>
+                                    <option value="Outros">Outros</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3" id="tipo-outros-container" style="display: none;">
+                                <label for="tipo_outros" class="form-label">Especificar Tipo</label>
+                                <input type="text" class="form-control" id="tipo_outros" name="tipo_outros">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="estado" class="form-label">Estado</label>
+                                <select class="form-control" id="estado" name="estado">
+                                    <option value="">Selecione o estado</option>
+                                    <option value="AC">Acre</option>
+                                    <option value="AL">Alagoas</option>
+                                    <option value="AP">Amapá</option>
+                                    <option value="AM">Amazonas</option>
+                                    <option value="BA">Bahia</option>
+                                    <option value="CE">Ceará</option>
+                                    <option value="DF">Distrito Federal</option>
+                                    <option value="ES">Espírito Santo</option>
+                                    <option value="GO">Goiás</option>
+                                    <option value="MA">Maranhão</option>
+                                    <option value="MT">Mato Grosso</option>
+                                    <option value="MS">Mato Grosso do Sul</option>
+                                    <option value="MG">Minas Gerais</option>
+                                    <option value="PA">Pará</option>
+                                    <option value="PB">Paraíba</option>
+                                    <option value="PR">Paraná</option>
+                                    <option value="PE">Pernambuco</option>
+                                    <option value="PI">Piauí</option>
+                                    <option value="RJ">Rio de Janeiro</option>
+                                    <option value="RN">Rio Grande do Norte</option>
+                                    <option value="RS">Rio Grande do Sul</option>
+                                    <option value="RO">Rondônia</option>
+                                    <option value="RR">Roraima</option>
+                                    <option value="SC">Santa Catarina</option>
+                                    <option value="SP">São Paulo</option>
+                                    <option value="SE">Sergipe</option>
+                                    <option value="TO">Tocantins</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="municipio" class="form-label">Município</label>
+                                <input type="text" class="form-control" id="municipio" name="municipio">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="observacoes" class="form-label">Observações</label>
+                        <textarea class="form-control" id="observacoes" name="observacoes" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+let currentVeiculoId = null;
+
+// Validação de CPF do motorista
+function validarCPFMotorista(input) {
+    const cpf = input.value.replace(/[^\d]/g, '');
+    if (cpf.length === 11) {
+        if (!Validators.validarCPF(cpf)) {
+            input.setCustomValidity('CPF inválido');
+            input.classList.add('is-invalid');
+        } else {
+            input.setCustomValidity('');
+            input.classList.remove('is-invalid');
+        }
+    } else {
+        input.setCustomValidity('');
+        input.classList.remove('is-invalid');
+    }
+}
+
+// Validação de placa
+function validarPlaca(input) {
+    const placa = input.value.toUpperCase();
+    if (placa.length >= 7) {
+        if (!Validators.validarPlaca(placa)) {
+            input.setCustomValidity('Formato de placa inválido');
+            input.classList.add('is-invalid');
+        } else {
+            input.setCustomValidity('');
+            input.classList.remove('is-invalid');
+        }
+    } else {
+        input.setCustomValidity('');
+        input.classList.remove('is-invalid');
+    }
+}
+
+// Event listeners
+document.getElementById('add-veiculo-btn').addEventListener('click', () => {
+    currentVeiculoId = null;
+    document.getElementById('modalTitle').textContent = 'Adicionar Novo Veículo';
+    document.getElementById('veiculo-form').reset();
+    new bootstrap.Modal(document.getElementById('veiculoModal')).show();
+});
+
+// Mostrar/ocultar campo "Outros" baseado no tipo selecionado
+document.getElementById('tipo').addEventListener('change', function() {
+    const outrosContainer = document.getElementById('tipo-outros-container');
+    if (this.value === 'Outros') {
+        outrosContainer.style.display = 'block';
+    } else {
+        outrosContainer.style.display = 'none';
+    }
+});
+
+// Validações em tempo real
+document.getElementById('cpf_motorista').addEventListener('input', function() {
+    validarCPFMotorista(this);
+});
+
+document.getElementById('placa').addEventListener('input', function() {
+    validarPlaca(this);
+});
+
+document.getElementById('veiculo-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    // Validar campos antes de enviar
+    const cpfInput = document.getElementById('cpf_motorista');
+    const placaInput = document.getElementById('placa');
+    
+    validarCPFMotorista(cpfInput);
+    validarPlaca(placaInput);
+    
+    if (!cpfInput.checkValidity() || !placaInput.checkValidity()) {
+        FeedbackManager.showError('Por favor, corrija os erros no formulário');
+        return;
+    }
+    
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData.entries());
+    
+    const url = currentVeiculoId ? `/api/veiculos/${currentVeiculoId}` : '/api/veiculos';
+    const method = currentVeiculoId ? 'PUT' : 'POST';
+    
+    await FormManager.submitForm(e.target, {
+        url: url,
+        method: method,
+        processData: (data) => data,
+        successMessage: currentVeiculoId ? 'Veículo atualizado com sucesso!' : 'Veículo criado com sucesso!',
+        reload: true
+    });
+});
+
+// Edit veiculo
+document.addEventListener('click', async (e) => {
+    if (e.target.closest('.edit-veiculo')) {
+        const veiculoId = e.target.closest('.edit-veiculo').dataset.veiculoId;
+        currentVeiculoId = veiculoId;
+        
+        try {
+            const response = await fetch(`/api/veiculos/${veiculoId}`);
+            const veiculo = await response.json();
+            
+            document.getElementById('modalTitle').textContent = 'Editar Veículo';
+            document.getElementById('motorista_responsavel').value = veiculo.motorista_responsavel;
+            document.getElementById('cpf_motorista').value = veiculo.cpf_motorista;
+            document.getElementById('placa').value = veiculo.placa;
+            document.getElementById('renavam').value = veiculo.renavam || '';
+            document.getElementById('tipo').value = veiculo.tipo;
+            document.getElementById('estado').value = veiculo.estado || '';
+            document.getElementById('municipio').value = veiculo.municipio || '';
+            document.getElementById('observacoes').value = veiculo.observacoes || '';
+            
+            // Mostrar campo "Outros" se necessário
+            if (veiculo.tipo === 'Outros') {
+                document.getElementById('tipo-outros-container').style.display = 'block';
+                document.getElementById('tipo_outros').value = veiculo.tipo_outros || '';
+            }
+            
+            new bootstrap.Modal(document.getElementById('veiculoModal')).show();
+        } catch (error) {
+            FeedbackManager.showError('Erro ao carregar dados do veículo');
+        }
+    }
+});
+
+// Delete veiculo
+document.addEventListener('click', async (e) => {
+    if (e.target.closest('.delete-veiculo')) {
+        if (confirm('Tem certeza que deseja excluir este veículo?')) {
+            const veiculoId = e.target.closest('.delete-veiculo').dataset.veiculoId;
+            
+            try {
+                const response = await fetch(`/api/veiculos/${veiculoId}`, {
+                    method: 'DELETE'
+                });
+                
+                if (response.ok) {
+                    FeedbackManager.showSuccess('Veículo excluído com sucesso!');
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    FeedbackManager.showError('Erro ao excluir veículo');
+                }
+            } catch (error) {
+                FeedbackManager.showError('Erro ao excluir veículo');
+            }
+        }
+    }
+});
+
+// Toggle status
+document.addEventListener('click', async (e) => {
+    if (e.target.closest('.toggle-status')) {
+        const veiculoId = e.target.closest('.toggle-status').dataset.veiculoId;
+        
+        try {
+            const response = await fetch(`/api/veiculos/${veiculoId}`);
+            const veiculo = await response.json();
+            const newStatus = veiculo.status === 'active' ? 'blocked' : 'active';
+            
+            const updateResponse = await fetch(`/api/veiculos/${veiculoId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    ...veiculo,
+                    status: newStatus
+                })
+            });
+            
+            if (updateResponse.ok) {
+                const statusText = newStatus === 'active' ? 'ativado' : 'bloqueado';
+                FeedbackManager.showSuccess(`Veículo ${statusText} com sucesso!`);
+                setTimeout(() => location.reload(), 1000);
+            } else {
+                FeedbackManager.showError('Erro ao alterar status do veículo');
+            }
+        } catch (error) {
+            FeedbackManager.showError('Erro ao alterar status do veículo');
+        }
+    }
+});
+
+// Funcionalidades adicionais
+function applyFilters() {
+    const tipoFilter = document.getElementById('tipoFilter').value;
+    const estadoFilter = document.getElementById('estadoFilter').value;
+    const statusFilter = document.getElementById('statusFilter').value;
+    
+    const params = new URLSearchParams();
+    if (tipoFilter) params.append('tipo', tipoFilter);
+    if (estadoFilter) params.append('estado', estadoFilter);
+    if (statusFilter) params.append('status', statusFilter);
+    
+    const currentSearch = document.querySelector('input[name="search"]').value;
+    if (currentSearch) params.append('search', currentSearch);
+    
+    window.location.href = `${window.location.pathname}?${params.toString()}`;
+}
+
+function exportVehicles() {
+    FeedbackManager.showSuccess('Funcionalidade de exportação será implementada em breve!');
+}
+
+function importVehicles() {
+    FeedbackManager.showSuccess('Funcionalidade de importação será implementada em breve!');
+}
+
+function refreshTable() {
+    location.reload();
+}
+
+function viewVehicle(veiculoId) {
+    FeedbackManager.showSuccess(`Visualizando veículo ID: ${veiculoId}`);
+    // Implementar modal de visualização
+}
+
+function duplicateVehicle(veiculoId) {
+    if (confirm('Deseja duplicar este veículo?')) {
+        FeedbackManager.showSuccess(`Duplicando veículo ID: ${veiculoId}`);
+        // Implementar lógica de duplicação
+    }
+}
+
+// Ordenação da tabela
+document.addEventListener('click', (e) => {
+    if (e.target.closest('.sortable')) {
+        const th = e.target.closest('.sortable');
+        const sortField = th.dataset.sort;
+        const currentSort = new URLSearchParams(window.location.search).get('sort');
+        const currentOrder = new URLSearchParams(window.location.search).get('order');
+        
+        let newOrder = 'asc';
+        if (currentSort === sortField && currentOrder === 'asc') {
+            newOrder = 'desc';
+        }
+        
+        const params = new URLSearchParams(window.location.search);
+        params.set('sort', sortField);
+        params.set('order', newOrder);
+        
+        window.location.href = `${window.location.pathname}?${params.toString()}`;
+    }
+});
+
+// Botão de adicionar veículo vazio
+document.addEventListener('click', (e) => {
+    if (e.target.id === 'add-veiculo-btn-empty') {
+        document.getElementById('add-veiculo-btn').click();
+    }
+});
+
+// Ajustar posicionamento do dropdown automaticamente
+document.addEventListener('click', (e) => {
+    if (e.target.closest('.dropdown-toggle')) {
+        const dropdown = e.target.closest('.dropdown');
+        const menu = dropdown.querySelector('.dropdown-menu');
+        const rect = dropdown.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+        
+        // Verificar se há espaço suficiente abaixo
+        const spaceBelow = viewportHeight - rect.bottom;
+        const menuHeight = 200; // Altura estimada do menu
+        
+        if (spaceBelow < menuHeight && rect.top > menuHeight) {
+            // Mostrar menu para cima
+            menu.style.top = 'auto';
+            menu.style.bottom = '100%';
+            menu.style.marginTop = '0';
+            menu.style.marginBottom = '4px';
+        } else {
+            // Mostrar menu para baixo (padrão)
+            menu.style.top = '100%';
+            menu.style.bottom = 'auto';
+            menu.style.marginTop = '4px';
+            menu.style.marginBottom = '0';
+        }
+    }
+});
+</script>
+{% endblock %}
+{% endblock %}

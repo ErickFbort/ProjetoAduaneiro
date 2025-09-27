@@ -1,0 +1,17 @@
+<!-- Formulário de Busca Parcial -->
+<div class="actions-container">
+    <form method="GET" class="search-group">
+        <input type="text" name="search" value="{{ search }}" class="form-control" placeholder="{{ placeholder }}">
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-search"></i> Pesquisar
+        </button>
+        {% if search %}
+        <a href="{{ clear_url }}" class="btn btn-secondary">
+            <i class="fas fa-times"></i> Limpar
+        </a>
+        {% endif %}
+    </form>
+    <button id="{{ add_button_id }}" class="btn btn-success">
+        <i class="fas fa-plus"></i> {{ add_button_text }}
+    </button>
+</div>
