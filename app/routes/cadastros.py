@@ -156,22 +156,50 @@ def cadastros_veiculos():
 def cadastros_entidades():
     """Página de cadastros de entidades"""
     try:
-        entidades = Entidade.query.all()
+        # Obter parâmetros de filtro
         search = request.args.get('search', '', type=str)
+        tipo_cliente_filter = request.args.get('tipo_cliente_filter', '', type=str)
+        pagamento_filter = request.args.get('pagamento_filter', '', type=str)
+        status_filter = request.args.get('status_filter', '', type=str)
         
-        # Filtrar entidades se houver busca
+        # Construir query base
+        query = Entidade.query
+        
+        # Aplicar filtro de busca
         if search:
-            filtered_entidades = []
-            for entidade in entidades:
-                if (search.lower() in entidade.razao_social.lower() or 
-                    search.lower() in entidade.nome_fantasia.lower() or 
-                    search.lower() in entidade.cpf_cnpj.lower() or 
-                    search.lower() in entidade.email_faturamento.lower()):
-                    filtered_entidades.append(entidade)
-            entidades = filtered_entidades
+            from sqlalchemy import or_
+            query = query.filter(or_(
+                Entidade.razao_social.ilike(f'%{search}%'),
+                Entidade.nome_fantasia.ilike(f'%{search}%'),
+                Entidade.cpf_cnpj.ilike(f'%{search}%'),
+                Entidade.email_faturamento.ilike(f'%{search}%')
+            ))
+        
+        # Aplicar filtros específicos
+        if tipo_cliente_filter:
+            query = query.filter(Entidade.tipo_cliente == tipo_cliente_filter)
+        
+        if pagamento_filter:
+            query = query.filter(Entidade.pagamento == pagamento_filter)
+        
+        if status_filter:
+            query = query.filter(Entidade.status == status_filter)
+        
+        # Executar query
+        entidades = query.all()
         
         paginated_entidades = create_mock_paginate(entidades)
-        return render_template('cadastros_entidades.html', entidades=paginated_entidades, search=search)
+        return render_template('cadastros_entidades.html', 
+                             entidades=paginated_entidades, 
+                             search=search,
+                             tipo_cliente_filter=tipo_cliente_filter,
+                             pagamento_filter=pagamento_filter,
+                             status_filter=status_filter)
     except Exception as e:
         print(f"Erro na rota cadastros entidades: {e}")
-        return render_template('cadastros_entidades.html', entidades=[], search='')
+        return render_template('cadastros_entidades.html', 
+                             entidades=create_mock_paginate([]), 
+                             search='',
+                             tipo_cliente_filter='',
+                             pagamento_filter='',
+                             status_filter='')

@@ -17,11 +17,6 @@
                         <h2><i class="fas fa-users"></i> Cadastro de Usuários</h2>
                         <p class="header-subtitle">Gerencie os usuários do sistema</p>
                     </div>
-                    <div class="header-actions">
-                        <button class="btn btn-success" onclick="openAddUserModal()">
-                            <i class="fas fa-plus"></i> Adicionar Usuário
-                        </button>
-                    </div>
                 </div>
             </div>
 
@@ -42,6 +37,9 @@
                     </form>
                     <button class="btn btn-outline-info filter-toggle" onclick="toggleAdvancedFilters()">
                         <i class="fas fa-filter"></i> Filtros Avançados
+                    </button>
+                    <button class="btn btn-success" onclick="openAddUserModal()">
+                        <i class="fas fa-plus"></i> Adicionar Usuário
                     </button>
                 </div>
 
@@ -67,15 +65,13 @@
                                     <option value="blocked" {% if status_filter == 'blocked' %}selected{% endif %}>Bloqueado</option>
                                 </select>
                             </div>
-                            <div class="col-md-4 d-flex align-items-end">
-                                <div class="btn-group w-100">
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="fas fa-check"></i> Aplicar Filtros
-                                    </button>
-                                    <button type="button" class="btn btn-outline-secondary" onclick="clearFilters()">
-                                        <i class="fas fa-times"></i> Limpar Filtros
-                                    </button>
-                                </div>
+                            <div class="col-md-4 d-flex align-items-end gap-2">
+                                <button type="submit" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-check"></i> Aplicar
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary btn-sm" onclick="clearFilters()">
+                                    <i class="fas fa-times"></i> Limpar
+                                </button>
                             </div>
                         </div>
                     </form>
@@ -92,12 +88,8 @@
                         <button class="btn btn-outline-primary" onclick="importUsers()" title="Importar do CSV">
                             <i class="fas fa-file-import"></i> Importar
                         </button>
-                    </div>
-                </div>
-                <div class="actions-right">
-                    <div class="btn-group">
                         <button type="button" class="btn btn-outline-secondary" onclick="refreshTable()" title="Atualizar">
-                            <i class="fas fa-sync-alt"></i>
+                            <i class="fas fa-sync-alt"></i> Atualizar
                         </button>
                     </div>
                 </div>
@@ -109,30 +101,11 @@
                     <table class="table table-hover users-table">
                         <thead class="table-header">
                             <tr>
-                                <th class="sortable" data-sort="name">
-                                    <span>Nome</span>
-                                    <i class="fas fa-sort sort-icon"></i>
-                                </th>
-                                <th class="sortable" data-sort="lastname">
-                                    <span>Sobrenome</span>
-                                    <i class="fas fa-sort sort-icon"></i>
-                                </th>
-                                <th class="sortable" data-sort="cpf">
-                                    <span>CPF</span>
-                                    <i class="fas fa-sort sort-icon"></i>
-                                </th>
-                                <th class="sortable" data-sort="email">
-                                    <span>E-mail</span>
-                                    <i class="fas fa-sort sort-icon"></i>
-                                </th>
-                                <th class="sortable" data-sort="group">
-                                    <span>Grupo</span>
-                                    <i class="fas fa-sort sort-icon"></i>
-                                </th>
-                                <th class="sortable" data-sort="status">
-                                    <span>Status</span>
-                                    <i class="fas fa-sort sort-icon"></i>
-                                </th>
+                                <th>Nome Completo</th>
+                                <th>CPF</th>
+                                <th>E-mail</th>
+                                <th>Grupo</th>
+                                <th>Status</th>
                                 <th class="text-center">Ações</th>
                             </tr>
                         </thead>
@@ -142,11 +115,8 @@
                             <tr class="user-row" data-user-id="{{ user.id }}">
                                 <td class="name-cell">
                                     <div class="user-info">
-                                        <div class="user-name">{{ user.name }}</div>
+                                        <div class="user-name">{{ user.name }} {{ user.lastname }}</div>
                                     </div>
-                                </td>
-                                <td class="lastname-cell">
-                                    <div class="user-lastname">{{ user.lastname }}</div>
                                 </td>
                                 <td class="cpf-cell">
                                     <div class="cpf-value">{{ user.cpf }}</div>
@@ -188,7 +158,7 @@
                             <!-- Mensagem quando não há registros -->
                             {% if not users or not users.items %}
                             <tr>
-                                <td colspan="7" class="text-center py-5">
+                                <td colspan="6" class="text-center py-5">
                                     <div class="empty-state">
                                         <i class="fas fa-users fa-3x text-muted mb-3"></i>
                                         <h5 class="text-muted">Nenhum usuário encontrado</h5>

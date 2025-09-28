@@ -14,6 +14,7 @@
                 <!-- Header com título e estatísticas -->
                 <div class="page-header">
                     <div class="header-content">
+                        <i class="fas fa-car"></i>
                         <div class="title-section">
                             <h2 class="page-title">Cadastro de Veículos</h2>
                             <p class="page-subtitle">Gerencie a frota de veículos do sistema</p>
@@ -52,6 +53,9 @@
                                 <!-- Filtros Avançados -->
                                 <button class="btn btn-outline-info filter-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#filterCollapse" aria-expanded="false">
                                     <i class="fas fa-filter"></i> Filtros Avançados
+                                </button>
+                                <button id="add-veiculo-btn" class="btn btn-success">
+                                    <i class="fas fa-plus"></i> Adicionar Veículo
                                 </button>
                             </div>
                         </form>
@@ -92,12 +96,12 @@
                                         </div>
                                         <div class="col-md-3">
                                             <label class="form-label">&nbsp;</label>
-                                            <div class="d-grid gap-2">
-                                                <button type="button" class="btn btn-primary" onclick="applyFilters()">
-                                                    <i class="fas fa-search"></i> Aplicar Filtros
+                                            <div class="d-flex gap-2">
+                                                <button type="button" class="btn btn-primary btn-sm" onclick="applyFilters()">
+                                                    <i class="fas fa-search"></i> Aplicar
                                                 </button>
-                                                <button type="button" class="btn btn-outline-secondary" onclick="clearFilters()">
-                                                    <i class="fas fa-times"></i> Limpar Filtros
+                                                <button type="button" class="btn btn-outline-secondary btn-sm" onclick="clearFilters()">
+                                                    <i class="fas fa-times"></i> Limpar
                                                 </button>
                                             </div>
                                         </div>
@@ -106,20 +110,20 @@
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="action-buttons">
-                        <button id="add-veiculo-btn" class="btn btn-success btn-lg">
-                            <i class="fas fa-plus"></i> Adicionar Veículo
-                        </button>
-                        <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-outline-secondary" onclick="exportVehicles()" title="Exportar dados">
-                                <i class="fas fa-download"></i>
+                </div>
+
+                <!-- Ações da Tabela -->
+                <div class="table-actions">
+                    <div class="actions-left">
+                        <div class="btn-group">
+                            <button class="btn btn-outline-success" onclick="exportVehicles()" title="Exportar para Excel">
+                                <i class="fas fa-file-excel"></i> Exportar
                             </button>
-                            <button type="button" class="btn btn-outline-secondary" onclick="importVehicles()" title="Importar dados">
-                                <i class="fas fa-upload"></i>
+                            <button class="btn btn-outline-primary" onclick="importVehicles()" title="Importar do CSV">
+                                <i class="fas fa-file-import"></i> Importar
                             </button>
                             <button type="button" class="btn btn-outline-secondary" onclick="refreshTable()" title="Atualizar">
-                                <i class="fas fa-sync-alt"></i>
+                                <i class="fas fa-sync-alt"></i> Atualizar
                             </button>
                         </div>
                     </div>
@@ -757,6 +761,40 @@ document.addEventListener('click', (e) => {
     }
 });
 
+// Funções de filtros avançados
+function applyFilters() {
+    const search = document.querySelector('input[name="search"]').value;
+    const tipo = document.getElementById('tipoFilter').value;
+    const estado = document.getElementById('estadoFilter').value;
+    const status = document.getElementById('statusFilter').value;
+    
+    const params = new URLSearchParams();
+    if (search) params.append('search', search);
+    if (tipo) params.append('tipo', tipo);
+    if (estado) params.append('estado', estado);
+    if (status) params.append('status', status);
+    
+    window.location.href = `{{ url_for('cadastros.cadastros_veiculos') }}?${params.toString()}`;
+}
+
+function clearFilters() {
+    window.location.href = '{{ url_for("cadastros.cadastros_veiculos") }}';
+}
+
+// Funções de exportação/importação
+function exportVehicles() {
+    window.location.href = '/api/veiculos/export';
+}
+
+function importVehicles() {
+    document.getElementById('importFile').click();
+}
+
+// Função para atualizar tabela
+function refreshTable() {
+    location.reload();
+}
+
 // Ajustar posicionamento do dropdown automaticamente
 document.addEventListener('click', (e) => {
     if (e.target.closest('.dropdown-toggle')) {
@@ -783,6 +821,45 @@ document.addEventListener('click', (e) => {
             menu.style.marginBottom = '0';
         }
     }
+});
+
+// Input oculto para importação
+const importFileInput = document.createElement('input');
+importFileInput.type = 'file';
+importFileInput.accept = '.csv';
+importFileInput.style.display = 'none';
+document.body.appendChild(importFileInput);
+
+importFileInput.addEventListener('change', async function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    try {
+        const response = await fetch('/api/veiculos/import', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok) {
+            alert(result.message);
+            if (result.errors && result.errors.length > 0) {
+                console.warn('Erros durante importação:', result.errors);
+            }
+            setTimeout(() => location.reload(), 1000);
+        } else {
+            alert(result.error);
+        }
+    } catch (error) {
+        alert('Erro ao importar veículos');
+    }
+    
+    // Limpar input
+    e.target.value = '';
 });
 </script>
 {% endblock %}

@@ -10,26 +10,110 @@
 <main class="content main-content--shifted">
     <div class="content-section active">
         <div class="container-fluid">
-            <h2>Cadastro de Entidades</h2>
+            <!-- Cabeçalho da Página -->
+            <div class="page-header">
+                <div class="header-content">
+                    <i class="fas fa-building"></i>
+                    <div class="header-text">
+                        <h2>Cadastro de Entidades</h2>
+                        <p class="page-subtitle">Gerencie as entidades do sistema</p>
+                    </div>
+                </div>
+            </div>
 
             <div id="entidade-list-view">
-                <div class="actions-container">
+                <!-- Barra de Pesquisa e Filtros -->
+                <div class="search-input-group">
                     <form method="GET" class="search-form">
                         <div class="input-group">
-                            <input type="text" class="form-control" name="search" placeholder="Buscar por razão social, nome fantasia, CPF/CNPJ ou email..." value="{{ search }}">
-                            <button class="btn btn-outline-secondary" type="submit">
+                            <input type="text" class="form-control search-input" name="search" placeholder="Buscar por razão social, nome fantasia, CPF/CNPJ ou email..." value="{{ search }}">
+                            <button class="btn btn-primary search-btn" type="submit">
                                 <i class="fas fa-search"></i>
                             </button>
+                            {% if search %}
+                            <a href="{{ url_for('cadastros.cadastros_entidades') }}" class="btn btn-outline-secondary clear-btn">
+                                <i class="fas fa-times"></i>
+                            </a>
+                            {% endif %}
                         </div>
                     </form>
-                    <button id="add-entidade-btn" class="btn btn-primary">
+                    <button class="btn btn-outline-info filter-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#advancedFilters" aria-expanded="false">
+                        <i class="fas fa-filter"></i> Filtros Avançados
+                    </button>
+                    <button id="add-entidade-btn" class="btn btn-success">
                         <i class="fas fa-plus"></i> Adicionar Entidade
                     </button>
                 </div>
 
+                <!-- Filtros Avançados -->
+                <div class="collapse" id="advancedFilters">
+                    <div class="card mt-3">
+                        <div class="card-body">
+                            <form method="GET" class="advanced-filters-form">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label class="form-label">Tipo de Cliente</label>
+                                        <select class="form-select" name="tipo_cliente_filter" id="tipoClienteFilter">
+                                            <option value="">Todos os tipos</option>
+                                            <option value="Pessoa Fisica" {% if tipo_cliente_filter == 'Pessoa Fisica' %}selected{% endif %}>Pessoa Física</option>
+                                            <option value="Juridica" {% if tipo_cliente_filter == 'Juridica' %}selected{% endif %}>Jurídica</option>
+                                            <option value="Estrangeira" {% if tipo_cliente_filter == 'Estrangeira' %}selected{% endif %}>Estrangeira</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">Pagamento</label>
+                                        <select class="form-select" name="pagamento_filter" id="pagamentoFilter">
+                                            <option value="">Todos os pagamentos</option>
+                                            <option value="001" {% if pagamento_filter == '001' %}selected{% endif %}>Vista</option>
+                                            <option value="002" {% if pagamento_filter == '002' %}selected{% endif %}>Correntista</option>
+                                            <option value="003" {% if pagamento_filter == '003' %}selected{% endif %}>Express</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">Status</label>
+                                        <select class="form-select" name="status_filter" id="statusFilter">
+                                            <option value="">Todos os status</option>
+                                            <option value="active" {% if status_filter == 'active' %}selected{% endif %}>Ativo</option>
+                                            <option value="blocked" {% if status_filter == 'blocked' %}selected{% endif %}>Bloqueado</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">&nbsp;</label>
+                                        <div class="d-flex gap-2">
+                                            <button type="button" class="btn btn-primary btn-sm" onclick="applyFilters()">
+                                                <i class="fas fa-search"></i> Aplicar
+                                            </button>
+                                            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="clearFilters()">
+                                                <i class="fas fa-times"></i> Limpar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ações da Tabela -->
+                <div class="table-actions">
+                    <div class="actions-left">
+                        <div class="btn-group">
+                            <button class="btn btn-outline-success" onclick="exportEntidades()" title="Exportar para Excel">
+                                <i class="fas fa-file-excel"></i> Exportar
+                            </button>
+                            <button class="btn btn-outline-info" onclick="importEntidades()" title="Importar do CSV">
+                                <i class="fas fa-file-import"></i> Importar
+                            </button>
+                            <button class="btn btn-outline-warning" onclick="refreshTable()" title="Atualizar tabela">
+                                <i class="fas fa-sync-alt"></i> Atualizar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead>
+                    <table class="table table-striped entidades-table">
+                        <thead class="table-header">
                             <tr>
                                 <th>Razão Social</th>
                                 <th>Nome Fantasia</th>
@@ -41,54 +125,70 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for entidade in entidades.items %}
-                            <tr>
-                                <td>{{ entidade.razao_social }}</td>
-                                <td>{{ entidade.nome_fantasia }}</td>
-                                <td>{{ entidade.cpf_cnpj }}</td>
-                                <td>{{ entidade.tipo_cliente }}</td>
-                                <td>
-                                    {% if entidade.pagamento == '001' %}Vista
-                                    {% elif entidade.pagamento == '002' %}Correntista
-                                    {% elif entidade.pagamento == '003' %}Express
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    <span class="badge {% if entidade.status == 'active' %}bg-success{% else %}bg-danger{% endif %}">
-                                        {% if entidade.status == 'active' %}Ativo{% else %}Bloqueado{% endif %}
-                                    </span>
-                                </td>
-                                <td>
-                                    <div class="dropdown">
-                                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                            <i class="fas fa-ellipsis-v"></i>
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item edit-entidade" href="#" data-entidade-id="{{ entidade.id }}">
-                                                <i class="fas fa-edit"></i> Editar
-                                            </a></li>
-                                            <li><a class="dropdown-item toggle-status" href="#" data-entidade-id="{{ entidade.id }}">
+                            {% if entidades and entidades.items %}
+                                {% for entidade in entidades.items %}
+                                <tr class="entidade-row">
+                                    <td class="entidade-info">
+                                        <div class="entidade-name">{{ entidade.razao_social }}</div>
+                                    </td>
+                                    <td class="entidade-info">
+                                        <div class="entidade-name">{{ entidade.nome_fantasia }}</div>
+                                    </td>
+                                    <td class="cpf-cnpj-cell">
+                                        {{ entidade.cpf_cnpj }}
+                                    </td>
+                                    <td class="tipo-cell">
+                                        {{ entidade.tipo_cliente }}
+                                    </td>
+                                    <td class="pagamento-cell">
+                                        {% if entidade.pagamento == '001' %}Vista
+                                        {% elif entidade.pagamento == '002' %}Correntista
+                                        {% elif entidade.pagamento == '003' %}Express
+                                        {% endif %}
+                                    </td>
+                                    <td class="status-cell">
+                                        <span class="status-badge status-{{ entidade.status }}">
+                                            {% if entidade.status == 'active' %}Ativo{% else %}Bloqueado{% endif %}
+                                        </span>
+                                    </td>
+                                    <td class="actions-cell">
+                                        <div class="btn-group" role="group">
+                                            <button class="btn btn-sm btn-outline-primary edit-entidade" data-entidade-id="{{ entidade.id }}" title="Editar">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-{% if entidade.status == 'active' %}warning{% else %}success{% endif %} toggle-status" data-entidade-id="{{ entidade.id }}" title="{% if entidade.status == 'active' %}Bloquear{% else %}Desbloquear{% endif %}">
                                                 <i class="fas fa-{% if entidade.status == 'active' %}ban{% else %}check{% endif %}"></i>
-                                                {% if entidade.status == 'active' %}Bloquear{% else %}Desbloquear{% endif %}
-                                            </a></li>
-                                            <li><a class="dropdown-item delete-entidade" href="#" data-entidade-id="{{ entidade.id }}">
-                                                <i class="fas fa-trash"></i> Excluir
-                                            </a></li>
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger delete-entidade" data-entidade-id="{{ entidade.id }}" title="Excluir">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
                             {% else %}
-                            <tr>
-                                <td colspan="7" class="text-center">Nenhuma entidade encontrada</td>
-                            </tr>
-                            {% endfor %}
+                                <tr>
+                                    <td colspan="7" class="text-center">
+                                        <div class="empty-state">
+                                            <i class="fas fa-building fa-3x text-muted mb-3"></i>
+                                            <h5>Nenhuma entidade encontrada</h5>
+                                            <p class="text-muted">
+                                                {% if search %}
+                                                    Não foram encontradas entidades com os critérios de busca.
+                                                {% else %}
+                                                    Comece adicionando uma nova entidade ao sistema.
+                                                {% endif %}
+                                            </p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endif %}
                         </tbody>
                     </table>
                 </div>
 
                 <!-- Paginação -->
-                {% if entidades.pages > 1 %}
+                {% if entidades and entidades.pages and entidades.pages > 1 %}
                 <nav aria-label="Paginação">
                     <ul class="pagination justify-content-center">
                         {% if entidades.has_prev %}
@@ -391,6 +491,80 @@
 {% block extra_js %}
 <script>
 let currentEntidadeId = null;
+
+// Funções de filtros avançados
+function applyFilters() {
+    const search = document.querySelector('input[name="search"]').value;
+    const tipoCliente = document.getElementById('tipoClienteFilter').value;
+    const pagamento = document.getElementById('pagamentoFilter').value;
+    const status = document.getElementById('statusFilter').value;
+    
+    const params = new URLSearchParams();
+    if (search) params.append('search', search);
+    if (tipoCliente) params.append('tipo_cliente_filter', tipoCliente);
+    if (pagamento) params.append('pagamento_filter', pagamento);
+    if (status) params.append('status_filter', status);
+    
+    window.location.href = `{{ url_for('cadastros.cadastros_entidades') }}?${params.toString()}`;
+}
+
+function clearFilters() {
+    window.location.href = '{{ url_for("cadastros.cadastros_entidades") }}';
+}
+
+// Funções de exportação/importação
+function exportEntidades() {
+    window.location.href = '/api/entidades/export';
+}
+
+function importEntidades() {
+    document.getElementById('importFile').click();
+}
+
+// Função para atualizar tabela
+function refreshTable() {
+    location.reload();
+}
+
+// Input oculto para importação
+const importFileInput = document.createElement('input');
+importFileInput.type = 'file';
+importFileInput.accept = '.csv';
+importFileInput.style.display = 'none';
+importFileInput.id = 'importFile';
+document.body.appendChild(importFileInput);
+
+importFileInput.addEventListener('change', async function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    try {
+        const response = await fetch('/api/entidades/import', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok) {
+            alert(result.message);
+            if (result.errors && result.errors.length > 0) {
+                console.warn('Erros durante importação:', result.errors);
+            }
+            setTimeout(() => location.reload(), 1000);
+        } else {
+            alert(result.error);
+        }
+    } catch (error) {
+        alert('Erro ao importar entidades');
+    }
+    
+    // Limpar input
+    e.target.value = '';
+});
 
 // Validação de CPF/CNPJ
 function validarCPFCNPJ(input) {
