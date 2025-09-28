@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Cadastros - Sistema Aduaneiro{% endblock %}
+{% block title %}Cadastros - Usuários{% endblock %}
 
 {% block body_class %}main-body{% endblock %}
 
@@ -10,243 +10,353 @@
 <main class="content main-content--shifted">
     <div class="content-section active">
         <div class="container-fluid">
-            <h2>Cadastro de Usuário</h2>
+            <!-- Cabeçalho da Página -->
+            <div class="page-header">
+                <div class="header-content">
+                    <div class="header-title">
+                        <h2><i class="fas fa-users"></i> Cadastro de Usuários</h2>
+                        <p class="header-subtitle">Gerencie os usuários do sistema</p>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn btn-success" onclick="openAddUserModal()">
+                            <i class="fas fa-plus"></i> Adicionar Usuário
+                        </button>
+                    </div>
+                </div>
+            </div>
 
-            <div id="user-list-view">
-                <div class="actions-container">
-                    <form method="GET" class="search-group">
-                        <input type="text" name="search" value="{{ search }}" class="form-control" placeholder="Pesquisar por nome, sobrenome, email ou CPF...">
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Pesquisar</button>
-                        {% if search %}
-                        <a href="{{ url_for('cadastros.cadastros') }}" class="btn btn-secondary"><i class="fas fa-times"></i> Limpar</a>
-                        {% endif %}
+            <!-- Barra de Pesquisa e Filtros -->
+            <div class="search-section">
+                <div class="search-input-group">
+                    <form method="GET" class="search-form">
+                        <div class="input-group">
+                            <input type="text" 
+                                   name="search" 
+                                   value="{{ search }}" 
+                                   class="form-control search-input" 
+                                   placeholder="Pesquisar por nome, sobrenome, email ou CPF...">
+                            <button type="submit" class="btn btn-primary search-btn">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
                     </form>
-                    <button id="add-user-btn" class="btn btn-success"><i class="fas fa-plus"></i> Adicionar Usuário</button>
+                    <button class="btn btn-outline-info filter-toggle" onclick="toggleAdvancedFilters()">
+                        <i class="fas fa-filter"></i> Filtros Avançados
+                    </button>
                 </div>
 
-                <div class="user-table-container">
-                    <h3>Usuários Cadastrados</h3>
-                    <div class="table-responsive">
-                        <table class="table table-striped table-hover">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th>Nome</th>
-                                    <th>Sobrenome</th>
-                                    <th>CPF</th>
-                                    <th>E-mail</th>
-                                    <th>Grupo</th>
-                                    <th>Status</th>
-                                    <th>Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody id="users-table-body">
-                                {% for user in users.items %}
-                                <tr>
-                                    <td>{{ user.name }}</td>
-                                    <td>{{ user.lastname }}</td>
-                                    <td>{{ user.cpf }}</td>
-                                    <td>{{ user.email }}</td>
-                                    <td>
-                                        <span class="badge bg-info">{{ user.group }}</span>
-                                    </td>
-                                    <td>
-                                        <span class="badge bg-{{ 'success' if user.status == 'active' else 'danger' }}">
-                                            {{ 'Ativo' if user.status == 'active' else 'Bloqueado' }}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <div class="dropdown">
-                                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <i class="fas fa-bars"></i>
-                                            </button>
-                                            <ul class="dropdown-menu">
-                                                <li>
-                                                    <button class="dropdown-item edit-user" data-user-id="{{ user.id }}">
-                                                        <i class="fas fa-edit me-2"></i>Editar
-                                                    </button>
-                                                </li>
-                                                <li>
-                                                    <button class="dropdown-item toggle-status" data-user-id="{{ user.id }}">
-                                                        <i class="fas fa-{{ 'lock' if user.status == 'active' else 'unlock' }} me-2"></i>
-                                                        {{ 'Bloquear' if user.status == 'active' else 'Desbloquear' }}
-                                                    </button>
-                                                </li>
-                                                <li><hr class="dropdown-divider"></li>
-                                                <li>
-                                                    <button class="dropdown-item text-danger delete-user" data-user-id="{{ user.id }}">
-                                                        <i class="fas fa-trash me-2"></i>Excluir
-                                                    </button>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                <!-- Filtros Avançados -->
+                <div class="advanced-filters" id="advancedFilters" style="display: none;">
+                    <form method="GET" class="filters-form">
+                        <input type="hidden" name="search" value="{{ search }}">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="form-label">Grupo</label>
+                                <select name="grupo" class="form-select">
+                                    <option value="">Todos os grupos</option>
+                                    <option value="Paclog Faturamento" {% if grupo_filter == 'Paclog Faturamento' %}selected{% endif %}>Paclog Faturamento</option>
+                                    <option value="Paclog ADM" {% if grupo_filter == 'Paclog ADM' %}selected{% endif %}>Paclog ADM</option>
+                                    <option value="Paclog Operacional" {% if grupo_filter == 'Paclog Operacional' %}selected{% endif %}>Paclog Operacional</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Status</label>
+                                <select name="status" class="form-select">
+                                    <option value="">Todos os status</option>
+                                    <option value="active" {% if status_filter == 'active' %}selected{% endif %}>Ativo</option>
+                                    <option value="blocked" {% if status_filter == 'blocked' %}selected{% endif %}>Bloqueado</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 d-flex align-items-end">
+                                <div class="btn-group w-100">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-check"></i> Aplicar Filtros
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary" onclick="clearFilters()">
+                                        <i class="fas fa-times"></i> Limpar Filtros
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Ações da Tabela -->
+            <div class="table-actions">
+                <div class="actions-left">
+                    <div class="btn-group">
+                        <button class="btn btn-outline-success" onclick="exportUsers()" title="Exportar para Excel">
+                            <i class="fas fa-file-excel"></i> Exportar
+                        </button>
+                        <button class="btn btn-outline-primary" onclick="importUsers()" title="Importar do CSV">
+                            <i class="fas fa-file-import"></i> Importar
+                        </button>
                     </div>
-                    
-                    <!-- Paginação -->
-                    {% if users.pages > 1 %}
-                    <nav aria-label="Paginação de usuários">
-                        <ul class="pagination justify-content-center">
-                            {% if users.has_prev %}
-                            <li class="page-item">
-                                <a class="page-link" href="{{ url_for('cadastros.cadastros_usuarios', page=users.prev_num, search=search) }}">Anterior</a>
-                            </li>
-                            {% endif %}
-                            
-                            {% for page_num in users.iter_pages() %}
-                                {% if page_num %}
-                                    {% if page_num != users.page %}
-                                    <li class="page-item">
-                                        <a class="page-link" href="{{ url_for('cadastros.cadastros_usuarios', page=page_num, search=search) }}">{{ page_num }}</a>
-                                    </li>
-                                    {% else %}
-                                    <li class="page-item active">
-                                        <span class="page-link">{{ page_num }}</span>
-                                    </li>
-                                    {% endif %}
-                                {% else %}
-                                <li class="page-item disabled">
-                                    <span class="page-link">...</span>
-                                </li>
-                                {% endif %}
+                </div>
+                <div class="actions-right">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-outline-secondary" onclick="refreshTable()" title="Atualizar">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabela de Usuários -->
+            <div class="table-container">
+                <div class="table-responsive">
+                    <table class="table table-hover users-table">
+                        <thead class="table-header">
+                            <tr>
+                                <th class="sortable" data-sort="name">
+                                    <span>Nome</span>
+                                    <i class="fas fa-sort sort-icon"></i>
+                                </th>
+                                <th class="sortable" data-sort="lastname">
+                                    <span>Sobrenome</span>
+                                    <i class="fas fa-sort sort-icon"></i>
+                                </th>
+                                <th class="sortable" data-sort="cpf">
+                                    <span>CPF</span>
+                                    <i class="fas fa-sort sort-icon"></i>
+                                </th>
+                                <th class="sortable" data-sort="email">
+                                    <span>E-mail</span>
+                                    <i class="fas fa-sort sort-icon"></i>
+                                </th>
+                                <th class="sortable" data-sort="group">
+                                    <span>Grupo</span>
+                                    <i class="fas fa-sort sort-icon"></i>
+                                </th>
+                                <th class="sortable" data-sort="status">
+                                    <span>Status</span>
+                                    <i class="fas fa-sort sort-icon"></i>
+                                </th>
+                                <th class="text-center">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if users and users.items %}
+                            {% for user in users.items %}
+                            <tr class="user-row" data-user-id="{{ user.id }}">
+                                <td class="name-cell">
+                                    <div class="user-info">
+                                        <div class="user-name">{{ user.name }}</div>
+                                    </div>
+                                </td>
+                                <td class="lastname-cell">
+                                    <div class="user-lastname">{{ user.lastname }}</div>
+                                </td>
+                                <td class="cpf-cell">
+                                    <div class="cpf-value">{{ user.cpf }}</div>
+                                </td>
+                                <td class="email-cell">
+                                    <div class="email-value">{{ user.email }}</div>
+                                </td>
+                                <td class="group-cell">
+                                    <div class="group-value">{{ user.group }}</div>
+                                </td>
+                                <td class="status-cell">
+                                    <span class="status-badge status-{{ user.status }}">
+                                        {{ 'Ativo' if user.status == 'active' else 'Bloqueado' }}
+                                    </span>
+                                </td>
+                                <td class="actions-cell">
+                                    <div class="btn-group">
+                                        <button class="btn btn-sm btn-outline-primary edit-user" 
+                                                data-user-id="{{ user.id }}" 
+                                                title="Editar usuário">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-warning toggle-status" 
+                                                data-user-id="{{ user.id }}" 
+                                                title="{{ 'Bloquear' if user.status == 'active' else 'Desbloquear' }} usuário">
+                                            <i class="fas fa-{{ 'lock' if user.status == 'active' else 'unlock' }}"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger delete-user" 
+                                                data-user-id="{{ user.id }}" 
+                                                title="Excluir usuário">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
                             {% endfor %}
-                            
-                            {% if users.has_next %}
-                            <li class="page-item">
-                                <a class="page-link" href="{{ url_for('cadastros.cadastros_usuarios', page=users.next_num, search=search) }}">Próximo</a>
-                            </li>
                             {% endif %}
-                        </ul>
-                    </nav>
+                            
+                            <!-- Mensagem quando não há registros -->
+                            {% if not users or not users.items %}
+                            <tr>
+                                <td colspan="7" class="text-center py-5">
+                                    <div class="empty-state">
+                                        <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                                        <h5 class="text-muted">Nenhum usuário encontrado</h5>
+                                        <p class="text-muted">
+                                            {% if search %}
+                                                Não foram encontrados usuários para a busca "{{ search }}".
+                                            {% elif grupo_filter or status_filter %}
+                                                Não foram encontrados usuários com os filtros aplicados.
+                                            {% else %}
+                                                Nenhum usuário cadastrado no sistema.
+                                            {% endif %}
+                                        </p>
+                                        <button class="btn btn-primary" onclick="clearFilters()">
+                                            <i class="fas fa-refresh"></i> Limpar Filtros
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Paginação -->
+            {% if users and users.pages and users.pages > 1 %}
+            <nav aria-label="Paginação">
+                <ul class="pagination justify-content-center">
+                    {% if users.has_prev %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ users.prev_num }}">Anterior</a>
+                    </li>
                     {% endif %}
                     
-                    <div class="text-center">
-                        <small class="text-muted">
-                            Mostrando {{ users.items|length }} de {{ users.total }} usuários
-                        </small>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Modal para Adicionar/Editar Usuário -->
-            <div class="modal fade" id="userModal" tabindex="-1">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="modalTitle">Adicionar Novo Usuário</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                        </div>
-                        <form id="user-form">
-                            <div class="modal-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="name" class="form-label">Nome *</label>
-                                            <input type="text" class="form-control" id="name" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="lastname" class="form-label">Sobrenome *</label>
-                                            <input type="text" class="form-control" id="lastname" required>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="cpf" class="form-label">CPF *</label>
-                                            <input type="text" class="form-control" id="cpf" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="email" class="form-label">E-mail *</label>
-                                            <input type="email" class="form-control" id="email" required>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="password" class="form-label">Senha *</label>
-                                            <input type="password" class="form-control" id="password">
-                                            <div class="form-text">Deixe em branco para manter a senha atual (apenas para edição)</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="group" class="form-label">Grupo *</label>
-                                            <select class="form-select" id="group" required>
-                                                <option value="">Selecione um grupo</option>
-                                                <option value="Paclog Faturamento">Paclog Faturamento</option>
-                                                <option value="Paclog ADM">Paclog ADM</option>
-                                                <option value="Paclog Operacional">Paclog Operacional</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label class="form-label">Status do Usuário</label>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="status" id="status-active" value="active" checked>
-                                        <label class="form-check-label" for="status-active">Ativado</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="status" id="status-blocked" value="blocked">
-                                        <label class="form-check-label" for="status-blocked">Bloqueado</label>
-                                    </div>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label class="form-label">Permissões</label>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="permission" value="cadastrar-processo" id="perm-cadastrar">
-                                                <label class="form-check-label" for="perm-cadastrar">Cadastrar Processo</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="permission" value="editar-processo" id="perm-editar">
-                                                <label class="form-check-label" for="perm-editar">Editar Processos</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="permission" value="visualizar-processo" id="perm-visualizar">
-                                                <label class="form-check-label" for="perm-visualizar">Visualizar Processos</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="permission" value="cancelar-processo" id="perm-cancelar">
-                                                <label class="form-check-label" for="perm-cancelar">Cancelar Processo</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="permission" value="alterar-senha" id="perm-alterar-senha">
-                                                <label class="form-check-label" for="perm-alterar-senha">Alterar Senha</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                <button type="submit" class="btn btn-success">
-                                    <i class="fas fa-save"></i> Salvar Usuário
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+                    {% for page_num in users.iter_pages() %}
+                    <li class="page-item {% if page_num == users.page %}active{% endif %}">
+                        <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+                    </li>
+                    {% endfor %}
+                    
+                    {% if users.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ users.next_num }}">Próximo</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
         </div>
     </div>
 </main>
+
+<!-- Modal para Adicionar/Editar Usuário -->
+<div class="modal fade" id="userModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Adicionar Novo Usuário</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="user-form">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Nome *</label>
+                                <input type="text" class="form-control" id="name" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="lastname" class="form-label">Sobrenome *</label>
+                                <input type="text" class="form-control" id="lastname" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="cpf" class="form-label">CPF *</label>
+                                <input type="text" class="form-control" id="cpf" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="email" class="form-label">E-mail *</label>
+                                <input type="email" class="form-control" id="email" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Senha *</label>
+                                <input type="password" class="form-control" id="password">
+                                <div class="form-text">Deixe em branco para manter a senha atual (apenas para edição)</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="group" class="form-label">Grupo *</label>
+                                <select class="form-select" id="group" required>
+                                    <option value="">Selecione um grupo</option>
+                                    <option value="Paclog Faturamento">Paclog Faturamento</option>
+                                    <option value="Paclog ADM">Paclog ADM</option>
+                                    <option value="Paclog Operacional">Paclog Operacional</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Status do Usuário</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="status" id="status-active" value="active" checked>
+                            <label class="form-check-label" for="status-active">Ativado</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="status" id="status-blocked" value="blocked">
+                            <label class="form-check-label" for="status-blocked">Bloqueado</label>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Permissões</label>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="permission" value="cadastrar-processo" id="perm-cadastrar">
+                                    <label class="form-check-label" for="perm-cadastrar">Cadastrar Processo</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="permission" value="editar-processo" id="perm-editar">
+                                    <label class="form-check-label" for="perm-editar">Editar Processos</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="permission" value="visualizar-processo" id="perm-visualizar">
+                                    <label class="form-check-label" for="perm-visualizar">Visualizar Processos</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="permission" value="cancelar-processo" id="perm-cancelar">
+                                    <label class="form-check-label" for="perm-cancelar">Cancelar Processo</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="permission" value="alterar-senha" id="perm-alterar-senha">
+                                    <label class="form-check-label" for="perm-alterar-senha">Alterar Senha</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save"></i> Salvar Usuário
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Input oculto para importação -->
+<input type="file" id="importFile" accept=".csv" style="display: none;">
 {% endblock %}
 
 {% block extra_js %}
@@ -270,15 +380,82 @@ function validarCPFInput(input) {
     }
 }
 
-// Event listeners
-document.getElementById('add-user-btn').addEventListener('click', () => {
+// Funções de filtros
+function toggleAdvancedFilters() {
+    const filters = document.getElementById('advancedFilters');
+    const button = document.querySelector('.filter-toggle');
+    
+    if (filters.style.display === 'none') {
+        filters.style.display = 'block';
+        button.innerHTML = '<i class="fas fa-filter"></i> Ocultar Filtros';
+    } else {
+        filters.style.display = 'none';
+        button.innerHTML = '<i class="fas fa-filter"></i> Filtros Avançados';
+    }
+}
+
+function clearFilters() {
+    window.location.href = '{{ url_for("cadastros.cadastros_usuarios") }}';
+}
+
+// Funções de exportação/importação
+function exportUsers() {
+    window.location.href = '/api/users/export';
+}
+
+function importUsers() {
+    document.getElementById('importFile').click();
+}
+
+document.getElementById('importFile').addEventListener('change', async function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    try {
+        const response = await fetch('/api/users/import', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok) {
+            FeedbackManager.showSuccess(result.message);
+            if (result.errors && result.errors.length > 0) {
+                console.warn('Erros durante importação:', result.errors);
+            }
+            setTimeout(() => location.reload(), 1000);
+        } else {
+            FeedbackManager.showError(result.error);
+        }
+    } catch (error) {
+        FeedbackManager.showError('Erro ao importar usuários');
+    }
+    
+    // Limpar input
+    e.target.value = '';
+});
+
+// Função para atualizar tabela
+function refreshTable() {
+    location.reload();
+}
+
+// Função para abrir modal de adicionar usuário
+function openAddUserModal() {
     currentUserId = null;
     document.getElementById('modalTitle').textContent = 'Adicionar Novo Usuário';
     document.getElementById('user-form').reset();
     document.getElementById('password').required = true;
     document.getElementById('password').placeholder = 'Digite a senha';
     new bootstrap.Modal(document.getElementById('userModal')).show();
-});
+}
+
+// Event listeners
+document.getElementById('add-user-btn')?.addEventListener('click', openAddUserModal);
 
 // Validação de CPF em tempo real
 document.getElementById('cpf').addEventListener('input', function() {
@@ -410,4 +587,3 @@ document.addEventListener('click', async (e) => {
 });
 </script>
 {% endblock %}
-

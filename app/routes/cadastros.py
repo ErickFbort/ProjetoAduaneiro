@@ -38,25 +38,54 @@ def cadastros():
 def cadastros_usuarios():
     """Página de cadastros de usuários"""
     try:
-        users = User.query.all()
+        # Obter parâmetros de filtro
         search = request.args.get('search', '', type=str)
+        grupo_filter = request.args.get('grupo', '', type=str)
+        status_filter = request.args.get('status', '', type=str)
         
-        # Filtrar usuários se houver busca
+        # Construir query base
+        query = User.query
+        
+        # Aplicar filtro de busca
         if search:
-            filtered_users = []
-            for user in users:
-                if (search.lower() in user.name.lower() or 
-                    search.lower() in user.lastname.lower() or 
-                    search.lower() in user.email.lower() or 
-                    search.lower() in user.cpf.lower()):
-                    filtered_users.append(user)
-            users = filtered_users
+            search_term = f"%{search.lower()}%"
+            query = query.filter(
+                db.or_(
+                    User.name.ilike(search_term),
+                    User.lastname.ilike(search_term),
+                    User.email.ilike(search_term),
+                    User.cpf.ilike(search_term)
+                )
+            )
         
+        # Aplicar filtro de grupo
+        if grupo_filter:
+            query = query.filter(User.group == grupo_filter)
+        
+        # Aplicar filtro de status
+        if status_filter:
+            query = query.filter(User.status == status_filter)
+        
+        # Executar query
+        users = query.all()
+        
+        # Criar paginação
         paginated_users = create_mock_paginate(users)
-        return render_template('cadastros_usuarios.html', users=paginated_users, search=search)
+        
+        return render_template('cadastros_usuarios.html', 
+                             users=paginated_users, 
+                             search=search,
+                             grupo_filter=grupo_filter,
+                             status_filter=status_filter)
     except Exception as e:
         print(f"Erro na rota cadastros usuarios: {e}")
-        return render_template('cadastros_usuarios.html', users=[], search='')
+        # Criar objeto de paginação vazio em caso de erro
+        empty_pagination = create_mock_paginate([])
+        return render_template('cadastros_usuarios.html', 
+                             users=empty_pagination, 
+                             search='',
+                             grupo_filter='',
+                             status_filter='')
 
 @cadastros_bp.route('/cadastros/veiculos')
 @login_required
