@@ -276,6 +276,18 @@
                             </div>
                         </div>
                     </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="job_title" class="form-label">Cargo/Função</label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="job_title" 
+                                       placeholder="Ex: Analista de Sistemas, Gerente, Coordenador, etc.">
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="mb-3">
                         <label class="form-label">Status do Usuário</label>
@@ -484,6 +496,7 @@ document.addEventListener('click', async (e) => {
             document.getElementById('cpf').value = user.cpf;
             document.getElementById('email').value = user.email;
             document.getElementById('group').value = user.group;
+            document.getElementById('job_title').value = user.job_title || '';
             document.getElementById('password').required = false;
             document.getElementById('password').placeholder = 'Deixe em branco para manter a senha atual';
             

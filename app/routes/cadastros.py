@@ -3,7 +3,7 @@ Rotas de cadastros
 """
 
 from flask import Blueprint, render_template, request
-from flask_login import login_required
+from flask_login import login_required, current_user
 from app import db
 from app.models.user import User
 from app.models.veiculo import Veiculo
@@ -77,7 +77,8 @@ def cadastros_usuarios():
                              users=paginated_users, 
                              search=search,
                              grupo_filter=grupo_filter,
-                             status_filter=status_filter)
+                             status_filter=status_filter,
+                             user=current_user)
     except Exception as e:
         print(f"Erro na rota cadastros usuarios: {e}")
         # Criar objeto de paginação vazio em caso de erro
@@ -86,7 +87,8 @@ def cadastros_usuarios():
                              users=empty_pagination, 
                              search='',
                              grupo_filter='',
-                             status_filter='')
+                             status_filter='',
+                             user=current_user)
 
 @cadastros_bp.route('/cadastros/veiculos')
 @login_required
@@ -140,7 +142,8 @@ def cadastros_veiculos():
                              search=search,
                              tipo_filter=tipo_filter,
                              estado_filter=estado_filter,
-                             status_filter=status_filter)
+                             status_filter=status_filter,
+                             user=current_user)
     except Exception as e:
         print(f"Erro na rota cadastros veiculos: {e}")
         # Criar objeto de paginação vazio em caso de erro
@@ -150,7 +153,8 @@ def cadastros_veiculos():
                              search='',
                              tipo_filter='',
                              estado_filter='',
-                             status_filter='')
+                             status_filter='',
+                             user=current_user)
 
 @cadastros_bp.route('/cadastros/entidades')
 @login_required
@@ -197,7 +201,8 @@ def cadastros_entidades():
                              search=search,
                              tipo_cliente_filter=tipo_cliente_filter,
                              pagamento_filter=pagamento_filter,
-                             status_filter=status_filter)
+                             status_filter=status_filter,
+                             user=current_user)
     except Exception as e:
         print(f"Erro na rota cadastros entidades: {e}")
         return render_template('cadastros/cadastros_entidades.html', 
@@ -205,4 +210,5 @@ def cadastros_entidades():
                              search='',
                              tipo_cliente_filter='',
                              pagamento_filter='',
-                             status_filter='')
+                             status_filter='',
+                             user=current_user)

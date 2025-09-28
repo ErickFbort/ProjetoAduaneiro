@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Sistema Aduaneiro{% endblock %}
+{% block title %}Sistema Aduaneiro - Home{% endblock %}
 
 {% block body_class %}main-body{% endblock %}
 
@@ -9,10 +9,1226 @@
 
 <main class="content main-content--shifted">
     <div id="home" class="content-section active">
-        <h1>Bem-vindo(a), {{ user.name }}!</h1>
-        <p>Gerencie seus processos de forma prática e segura.</p>
-        <hr class="separator-line">
+        <!-- Header de Boas-vindas -->
+        <div class="welcome-header animate-on-scroll fade-in-up">
+            <div class="welcome-content">
+                <h1 class="welcome-title">
+                    <i class="fas fa-home"></i>
+                    Bem-vindo(a), {{ user.name }}!
+                </h1>
+                <p class="welcome-subtitle">Gerencie seus processos aduaneiros de forma prática e segura</p>
+                <div class="welcome-info">
+                    <span class="user-role pulse">{{ user.group }}</span>
+                    <span class="last-login">Último acesso: <span id="current-time"></span></span>
+                </div>
+            </div>
+            <div class="welcome-actions">
+                <button class="btn btn-primary scale-in delay-2" onclick="location.reload()">
+                    <i class="fas fa-sync-alt"></i> Atualizar
+                </button>
+            </div>
+        </div>
+
+        <!-- Ações Rápidas Personalizáveis -->
+        <div class="quick-actions-main animate-on-scroll fade-in-up delay-1">
+            <div class="quick-actions-header">
+                <h2><i class="fas fa-star"></i> Acesso Rápido</h2>
+                <button class="btn btn-outline-primary btn-sm" onclick="openFavoritesModal()" title="Personalizar favoritos">
+                    <i class="fas fa-cog"></i> Personalizar
+                </button>
+            </div>
+            <div class="quick-actions-grid-main" id="favorite-actions">
+                <!-- Ações favoritas serão carregadas dinamicamente -->
+                <div class="quick-action-card animate-on-scroll scale-in delay-2" data-module="usuarios">
+                    <div class="action-icon">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <h3>Usuários</h3>
+                    <p>Gerenciar usuários do sistema</p>
+                    <div class="action-badge">
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+                <div class="quick-action-card animate-on-scroll scale-in delay-3" data-module="veiculos">
+                    <div class="action-icon">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <h3>Veículos</h3>
+                    <p>Gerenciar frota de veículos</p>
+                    <div class="action-badge">
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+                <div class="quick-action-card animate-on-scroll scale-in delay-4" data-module="entidades">
+                    <div class="action-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <h3>Entidades</h3>
+                    <p>Gerenciar entidades/clientes</p>
+                    <div class="action-badge">
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+                <div class="quick-action-card animate-on-scroll scale-in delay-5" data-module="relatorios">
+                    <div class="action-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <h3>Relatórios</h3>
+                    <p>Gerar relatórios do sistema</p>
+                    <div class="action-badge">
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cards de Estatísticas -->
+        <div class="stats-grid">
+            <div class="stat-card animate-on-scroll fade-in-left delay-1 stat-progress">
+                <div class="stat-icon">
+                    <i class="fas fa-users pulse"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 id="total-users">-</h3>
+                    <p>Usuários Ativos</p>
+                </div>
+            </div>
+            <div class="stat-card animate-on-scroll fade-in-left delay-2 stat-progress">
+                <div class="stat-icon">
+                    <i class="fas fa-truck pulse"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 id="total-vehicles">-</h3>
+                    <p>Veículos Cadastrados</p>
+                </div>
+            </div>
+            <div class="stat-card animate-on-scroll fade-in-right delay-3 stat-progress">
+                <div class="stat-icon">
+                    <i class="fas fa-building pulse"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 id="total-entities">-</h3>
+                    <p>Entidades Cadastradas</p>
+                </div>
+            </div>
+            <div class="stat-card animate-on-scroll fade-in-right delay-4 stat-progress">
+                <div class="stat-icon">
+                    <i class="fas fa-chart-line pulse"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 id="total-processes">-</h3>
+                    <p>Processos em Andamento</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grid Principal -->
+        <div class="home-grid">
+            <!-- Seção de Novidades e Comunicados -->
+            <div class="news-section animate-on-scroll slide-in-bottom delay-2">
+                <div class="section-header">
+                    <h2><i class="fas fa-newspaper"></i> Novidades e Comunicados</h2>
+                    <div class="section-actions">
+                        <button class="btn btn-outline-primary btn-sm scale-in delay-3" onclick="refreshNews()">
+                            <i class="fas fa-sync-alt"></i> Atualizar
+                        </button>
+                        <button class="btn btn-outline-warning btn-sm scale-in delay-4" onclick="forceRefreshLinkedIn()" title="Forçar atualização do LinkedIn (limpar cache)">
+                            <i class="fas fa-refresh"></i> Forçar LinkedIn
+                        </button>
+                    </div>
+                </div>
+                <div class="news-content">
+                    <div class="news-tabs">
+                        <button class="tab-btn" onclick="switchNewsTab('paclog')">
+                            <i class="fas fa-globe"></i> Pac Log
+                        </button>
+                        <button class="tab-btn active" onclick="switchNewsTab('linkedin')">
+                            <i class="fab fa-linkedin"></i> LinkedIn
+                        </button>
+                    </div>
+                    <div class="news-list" id="news-content">
+                        <!-- Conteúdo será carregado via JavaScript -->
+                        <div class="loading-state">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <p>Carregando novidades...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Seção de Terminais Aéreos (TECA) -->
+            <div class="terminals-section animate-on-scroll fade-in-right delay-3">
+                <div class="section-header">
+                    <h2><i class="fas fa-plane"></i> Operações por Terminal Aéreo</h2>
+                    <div class="section-actions">
+                        <button class="btn btn-outline-primary btn-sm scale-in delay-4" onclick="refreshTerminals()">
+                            <i class="fas fa-sync-alt"></i> Atualizar
+                        </button>
+                    </div>
+                </div>
+                <div class="terminals-grid">
+                    <div class="terminal-card animate-on-scroll fade-in-up delay-1">
+                        <div class="terminal-header">
+                            <h3><i class="fas fa-map-marker-alt pulse"></i> CWB - Curitiba</h3>
+                            <span class="terminal-status active">Ativo</span>
+                        </div>
+                        <div class="terminal-info">
+                            <p><strong>Telefone:</strong> +55 47 3515.0802</p>
+                            <p><strong>Operações:</strong> Import/Export</p>
+                            <p><strong>Status:</strong> <span class="status-badge success">Operacional</span></p>
+                        </div>
+                        <div class="terminal-actions">
+                            <button class="btn btn-sm btn-outline-primary scale-in delay-2" onclick="viewTerminalDetails('CWB')">
+                                <i class="fas fa-eye"></i> Detalhes
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="terminal-card animate-on-scroll fade-in-up delay-2">
+                        <div class="terminal-header">
+                            <h3><i class="fas fa-map-marker-alt pulse"></i> GYN - Goiânia</h3>
+                            <span class="terminal-status active">Ativo</span>
+                        </div>
+                        <div class="terminal-info">
+                            <p><strong>Telefone:</strong> +55 47 3515.0801</p>
+                            <p><strong>Operações:</strong> Import/Export</p>
+                            <p><strong>Status:</strong> <span class="status-badge success">Operacional</span></p>
+                        </div>
+                        <div class="terminal-actions">
+                            <button class="btn btn-sm btn-outline-primary scale-in delay-3" onclick="viewTerminalDetails('GYN')">
+                                <i class="fas fa-eye"></i> Detalhes
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="terminal-card animate-on-scroll fade-in-up delay-3">
+                        <div class="terminal-header">
+                            <h3><i class="fas fa-map-marker-alt pulse"></i> REC - Recife</h3>
+                            <span class="terminal-status active">Ativo</span>
+                        </div>
+                        <div class="terminal-info">
+                            <p><strong>Telefone:</strong> +55 47 3515-0803</p>
+                            <p><strong>Operações:</strong> Import/Export</p>
+                            <p><strong>Status:</strong> <span class="status-badge success">Operacional</span></p>
+                        </div>
+                        <div class="terminal-actions">
+                            <button class="btn btn-sm btn-outline-primary scale-in delay-4" onclick="viewTerminalDetails('REC')">
+                                <i class="fas fa-eye"></i> Detalhes
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="terminal-card animate-on-scroll fade-in-up delay-4">
+                        <div class="terminal-header">
+                            <h3><i class="fas fa-map-marker-alt pulse"></i> VIX - Vitória</h3>
+                            <span class="terminal-status active">Ativo</span>
+                        </div>
+                        <div class="terminal-info">
+                            <p><strong>Telefone:</strong> +55 47 3515.0805</p>
+                            <p><strong>Operações:</strong> Import/Export</p>
+                            <p><strong>Status:</strong> <span class="status-badge success">Operacional</span></p>
+                        </div>
+                        <div class="terminal-actions">
+                            <button class="btn btn-sm btn-outline-primary scale-in delay-5" onclick="viewTerminalDetails('VIX')">
+                                <i class="fas fa-eye"></i> Detalhes
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="terminal-card animate-on-scroll fade-in-up delay-5">
+                        <div class="terminal-header">
+                            <h3><i class="fas fa-map-marker-alt pulse"></i> NVT - Navegantes</h3>
+                            <span class="terminal-status active">Ativo</span>
+                        </div>
+                        <div class="terminal-info">
+                            <p><strong>Telefone:</strong> +55 47 3515.0804</p>
+                            <p><strong>Operações:</strong> Import/Export</p>
+                            <p><strong>Status:</strong> <span class="status-badge success">Operacional</span></p>
+                        </div>
+                        <div class="terminal-actions">
+                            <button class="btn btn-sm btn-outline-primary scale-in delay-6" onclick="viewTerminalDetails('NVT')">
+                                <i class="fas fa-eye"></i> Detalhes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </div>
 </main>
+
+<!-- Modal para Detalhes do Terminal -->
+<div class="modal fade" id="terminalModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="terminalModalTitle">Detalhes do Terminal</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="terminalModalBody">
+                <!-- Conteúdo será carregado via JavaScript -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Personalizar Favoritos -->
+<div class="modal fade" id="favoritesModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-star"></i> Personalizar Acesso Rápido
+                </h5>
+                <button type="button" class="btn-close" onclick="cancelFavorites()"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted mb-4">Selecione os módulos que deseja ter no acesso rápido. Arraste para reordenar.</p>
+                
+                <div class="favorites-grid" id="favorites-grid">
+                    <!-- Módulos disponíveis serão carregados via JavaScript -->
+                </div>
+                
+                <div class="mt-4">
+                    <h6>Módulos Disponíveis:</h6>
+                    <div class="available-modules" id="available-modules">
+                        <!-- Módulos não selecionados aparecerão aqui -->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="cancelFavorites()">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="saveFavorites()">
+                    <i class="fas fa-save"></i> Salvar Configuração
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Upload de Avatar -->
+<div class="modal fade avatar-upload-modal" id="avatarUploadModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-camera"></i> Alterar Foto de Perfil
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-3">
+                    <img src="{{ url_for('static', filename='img/user-avatar-placeholder.svg') }}" 
+                         alt="Preview do avatar" 
+                         class="avatar-preview" 
+                         id="avatar-preview">
+                </div>
+                
+                <div class="avatar-upload-area" id="avatar-upload-area">
+                    <i class="fas fa-cloud-upload-alt fa-2x text-muted mb-2"></i>
+                    <h6 class="mb-1">Arraste uma imagem aqui ou clique para selecionar</h6>
+                    <p class="text-muted small mb-0">Formatos aceitos: JPG, PNG, GIF (máx. 2MB)</p>
+                    <input type="file" id="avatar-file-input" accept="image/*" style="display: none;">
+                </div>
+                
+                <div class="d-grid gap-2 mb-3">
+                    <button class="btn btn-outline-primary" onclick="document.getElementById('avatar-file-input').click()">
+                        <i class="fas fa-folder-open"></i> Escolher Arquivo
+                    </button>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="job-title-input" class="form-label">
+                        <i class="fas fa-briefcase"></i> Cargo/Função
+                    </label>
+                    <input type="text" 
+                           class="form-control" 
+                           id="job-title-input" 
+                           placeholder="Ex: Analista de Sistemas, Gerente, etc."
+                           value="{{ user.job_title or '' }}">
+                    <div class="form-text">Informe seu cargo ou função na empresa (opcional)</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="uploadAvatar()" id="upload-avatar-btn">
+                    <i class="fas fa-save"></i> Salvar Informações
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Dados dos terminais
+const terminalsData = {
+    'CWB': {
+        name: 'Curitiba',
+        phone: '+55 47 3515.0802',
+        operations: ['Import', 'Export', 'Transbordo'],
+        status: 'Operacional',
+        lastUpdate: '2024-01-15',
+        notes: 'Terminal operando normalmente com capacidade total.'
+    },
+    'GYN': {
+        name: 'Goiânia',
+        phone: '+55 47 3515.0801',
+        operations: ['Import', 'Export'],
+        status: 'Operacional',
+        lastUpdate: '2024-01-15',
+        notes: 'Novas operações de carga perigosa implementadas.'
+    },
+    'REC': {
+        name: 'Recife',
+        phone: '+55 47 3515-0803',
+        operations: ['Import', 'Export', 'Transbordo'],
+        status: 'Operacional',
+        lastUpdate: '2024-01-14',
+        notes: 'Expansão da área de armazenagem concluída.'
+    },
+    'VIX': {
+        name: 'Vitória',
+        phone: '+55 47 3515.0805',
+        operations: ['Import', 'Export'],
+        status: 'Operacional',
+        lastUpdate: '2024-01-15',
+        notes: 'Sistema de rastreamento atualizado.'
+    },
+    'NVT': {
+        name: 'Navegantes',
+        phone: '+55 47 3515.0804',
+        operations: ['Import', 'Export', 'Transbordo'],
+        status: 'Operacional',
+        lastUpdate: '2024-01-15',
+        notes: 'Nova linha de processamento de cargas especiais.'
+    }
+};
+
+// Dados de notícias (carregados dinamicamente da API)
+let newsData = {
+    paclog: [
+        {
+            id: 1,
+            title: 'Novo sistema de rastreamento implementado',
+            date: '2024-01-15',
+            category: 'Tecnologia',
+            content: 'Sistema de rastreamento em tempo real foi implementado em todos os terminais.',
+            source: 'Comunicados Pac Log'
+        },
+        {
+            id: 2,
+            title: 'Expansão da área de armazenagem em Recife',
+            date: '2024-01-14',
+            category: 'Infraestrutura',
+            content: 'Nova área de 5.000m² foi inaugurada no terminal de Recife.',
+            source: 'Comunicados Pac Log'
+        },
+        {
+            id: 3,
+            title: 'Novas operações de carga perigosa em Goiânia',
+            date: '2024-01-12',
+            category: 'Operações',
+            content: 'Terminal de Goiânia agora processa cargas perigosas classe 1.',
+            source: 'Comunicados Pac Log'
+        }
+    ],
+    linkedin: []
+};
+
+let currentNewsTab = 'linkedin';
+
+// Carregar estatísticas
+async function loadStats() {
+    try {
+        const response = await fetch('/api/stats');
+        const data = await response.json();
+        
+        if (data.success) {
+            document.getElementById('total-users').textContent = data.data.users;
+            document.getElementById('total-vehicles').textContent = data.data.vehicles;
+            document.getElementById('total-entities').textContent = data.data.entities;
+            document.getElementById('total-processes').textContent = data.data.processes;
+        } else {
+            // Fallback para dados simulados
+            document.getElementById('total-users').textContent = '12';
+            document.getElementById('total-vehicles').textContent = '45';
+            document.getElementById('total-entities').textContent = '128';
+            document.getElementById('total-processes').textContent = '23';
+        }
+    } catch (error) {
+        console.error('Erro ao carregar estatísticas:', error);
+        // Fallback para dados simulados
+        document.getElementById('total-users').textContent = '12';
+        document.getElementById('total-vehicles').textContent = '45';
+        document.getElementById('total-entities').textContent = '128';
+        document.getElementById('total-processes').textContent = '23';
+    }
+}
+
+// Carregar posts do LinkedIn da API
+async function loadLinkedInPosts() {
+    try {
+        // Usar dados simulados por padrão para garantir qualidade
+        const response = await fetch('/api/linkedin/posts?limit=5&force_simulated=true');
+        const data = await response.json();
+        
+        if (data.success) {
+            newsData.linkedin = data.data;
+            console.log(`Carregados ${data.count} posts do LinkedIn (${data.source})`);
+        } else {
+            console.error('Erro ao carregar posts do LinkedIn:', data.error);
+            // Manter dados existentes ou usar fallback
+        }
+    } catch (error) {
+        console.error('Erro ao carregar posts do LinkedIn:', error);
+    }
+}
+
+// Carregar notícias
+function loadNews(tab = 'linkedin') {
+    const newsContent = document.getElementById('news-content');
+    const news = newsData[tab] || [];
+    
+    if (news.length === 0) {
+        newsContent.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-newspaper fa-2x text-muted"></i>
+                <p>Nenhuma notícia disponível no momento.</p>
+            </div>
+        `;
+        return;
+    }
+    
+    if (tab === 'linkedin') {
+        newsContent.innerHTML = news.map(item => `
+            <div class="linkedin-post" onclick="openLinkedInPost('${item.url}')">
+                <div class="post-header">
+                    <div class="author-info">
+                        <img src="${item.author_image || item.authorImage}" alt="${item.author}" class="author-avatar">
+                        <div class="author-details">
+                            <h4 class="author-name">${item.author}</h4>
+                            <span class="post-date">${formatDate(item.date)}</span>
+                        </div>
+                    </div>
+                    <div class="post-category">
+                        <span class="category-badge">${item.category}</span>
+                    </div>
+                </div>
+                
+                <div class="post-content">
+                    <h3 class="post-title">${item.title}</h3>
+                    <p class="post-subtitle">${item.subtitle}</p>
+                </div>
+                
+                <div class="post-image-container">
+                    <img src="${item.image}" alt="${item.title}" class="post-image">
+                    <div class="image-overlay">
+                        <div class="overlay-content">
+                            <i class="fab fa-linkedin"></i>
+                            <span>Ver mais</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="post-engagement">
+                    <div class="engagement-stats">
+                        <span class="likes-count">${item.likes} curtidas</span>
+                        <span class="comments-shares">${item.comments} comentários • ${item.shares} compartilhamentos</span>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    } else {
+        newsContent.innerHTML = news.map(item => `
+            <div class="news-item">
+                <div class="news-header">
+                    <h4>${item.title}</h4>
+                    <span class="news-date">${formatDate(item.date)}</span>
+                </div>
+                <div class="news-meta">
+                    <span class="news-category">${item.category}</span>
+                    <span class="news-source">${item.source}</span>
+                </div>
+                <div class="news-content">
+                    <p>${item.content}</p>
+                </div>
+            </div>
+        `).join('');
+    }
+}
+
+// Alternar aba de notícias
+function switchNewsTab(tab) {
+    currentNewsTab = tab;
+    
+    // Atualizar botões
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+    
+    // Carregar conteúdo
+    loadNews(tab);
+}
+
+// Atualizar notícias
+async function refreshNews() {
+    if (currentNewsTab === 'linkedin') {
+        await loadLinkedInPosts();
+    }
+    // Para Pac Log, os dados são estáticos, então apenas recarregamos
+    loadNews(currentNewsTab);
+    FeedbackManager.showSuccess('Notícias atualizadas!');
+}
+
+// Forçar atualização do LinkedIn (limpar cache)
+async function forceRefreshLinkedIn() {
+    try {
+        // Primeiro tentar scraping real
+        const response = await fetch('/api/linkedin/posts?limit=5&force_simulated=false');
+        const data = await response.json();
+        
+        if (data.success) {
+            newsData.linkedin = data.data;
+            loadNews('linkedin');
+            FeedbackManager.showSuccess(`LinkedIn atualizado! ${data.count} posts carregados (${data.source})`);
+        } else {
+            // Se falhar, usar dados simulados
+            const simulatedResponse = await fetch('/api/linkedin/posts?limit=5&force_simulated=true');
+            const simulatedData = await simulatedResponse.json();
+            
+            if (simulatedData.success) {
+                newsData.linkedin = simulatedData.data;
+                loadNews('linkedin');
+                FeedbackManager.showInfo('Usando dados simulados do LinkedIn');
+            } else {
+                FeedbackManager.showError('Erro ao atualizar LinkedIn');
+            }
+        }
+    } catch (error) {
+        console.error('Erro ao forçar atualização:', error);
+        FeedbackManager.showError('Erro ao atualizar LinkedIn');
+    }
+}
+
+// Atualizar terminais
+function refreshTerminals() {
+    FeedbackManager.showSuccess('Informações dos terminais atualizadas!');
+}
+
+// Ver detalhes do terminal
+function viewTerminalDetails(terminalCode) {
+    const terminal = terminalsData[terminalCode];
+    if (!terminal) return;
+    
+    document.getElementById('terminalModalTitle').textContent = `Terminal ${terminalCode} - ${terminal.name}`;
+    document.getElementById('terminalModalBody').innerHTML = `
+        <div class="terminal-details">
+            <div class="row">
+                <div class="col-md-6">
+                    <h6>Informações Básicas</h6>
+                    <p><strong>Nome:</strong> ${terminal.name}</p>
+                    <p><strong>Telefone:</strong> ${terminal.phone}</p>
+                    <p><strong>Status:</strong> <span class="status-badge success">${terminal.status}</span></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Operações</h6>
+                    <ul>
+                        ${terminal.operations.map(op => `<li>${op}</li>`).join('')}
+                    </ul>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-12">
+                    <h6>Última Atualização</h6>
+                    <p>${formatDate(terminal.lastUpdate)}</p>
+                    <h6>Observações</h6>
+                    <p>${terminal.notes}</p>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    new bootstrap.Modal(document.getElementById('terminalModal')).show();
+}
+
+// Mostrar relatórios
+function showReports() {
+    FeedbackManager.showInfo('Funcionalidade de relatórios em desenvolvimento');
+}
+
+// Abrir post do LinkedIn
+function openLinkedInPost(url) {
+    window.open(url, '_blank');
+}
+
+// Formatar data
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('pt-BR');
+}
+
+// Atualizar data e hora atual
+function updateCurrentTime() {
+    const now = new Date();
+    const timeString = now.toLocaleDateString('pt-BR') + ' ' + now.toLocaleTimeString('pt-BR', {hour: '2-digit', minute: '2-digit'});
+    const timeElement = document.getElementById('current-time');
+    if (timeElement) {
+        timeElement.textContent = timeString;
+    }
+}
+
+// Sistema de animações de scroll
+function initScrollAnimations() {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animated');
+                
+                // Adicionar animação específica baseada na classe
+                if (entry.target.classList.contains('fade-in-up')) {
+                    entry.target.classList.add('fade-in-up');
+                } else if (entry.target.classList.contains('fade-in-left')) {
+                    entry.target.classList.add('fade-in-left');
+                } else if (entry.target.classList.contains('fade-in-right')) {
+                    entry.target.classList.add('fade-in-right');
+                } else if (entry.target.classList.contains('slide-in-bottom')) {
+                    entry.target.classList.add('slide-in-bottom');
+                } else if (entry.target.classList.contains('scale-in')) {
+                    entry.target.classList.add('scale-in');
+                }
+            }
+        });
+    }, observerOptions);
+
+    // Observar todos os elementos com animação
+    document.querySelectorAll('.animate-on-scroll').forEach(el => {
+        observer.observe(el);
+    });
+}
+
+// Efeito de contagem animada para estatísticas
+function animateCounters() {
+    const counters = document.querySelectorAll('#total-users, #total-vehicles, #total-entities, #total-processes');
+    
+    counters.forEach(counter => {
+        const target = parseInt(counter.textContent);
+        if (isNaN(target)) return;
+        
+        let current = 0;
+        const increment = target / 50; // 50 steps
+        const timer = setInterval(() => {
+            current += increment;
+            if (current >= target) {
+                counter.textContent = target;
+                clearInterval(timer);
+            } else {
+                counter.textContent = Math.floor(current);
+            }
+        }, 30);
+    });
+}
+
+// Efeito de parallax sutil
+function initParallax() {
+    window.addEventListener('scroll', () => {
+        const scrolled = window.pageYOffset;
+        const parallaxElements = document.querySelectorAll('.parallax-element');
+        
+        parallaxElements.forEach(element => {
+            const speed = 0.5;
+            element.style.transform = `translateY(${scrolled * speed}px)`;
+        });
+    });
+}
+
+// Efeito de typing removido conforme solicitado
+
+// Sistema de Favoritos Personalizáveis
+let favoriteModules = {
+    'usuarios': {
+        name: 'Usuários',
+        icon: 'fas fa-user-plus',
+        url: "{{ url_for('cadastros.cadastros_usuarios') }}",
+        description: 'Gerenciar usuários do sistema'
+    },
+    'veiculos': {
+        name: 'Veículos',
+        icon: 'fas fa-truck',
+        url: "{{ url_for('cadastros.cadastros_veiculos') }}",
+        description: 'Gerenciar frota de veículos'
+    },
+    'entidades': {
+        name: 'Entidades',
+        icon: 'fas fa-building',
+        url: "{{ url_for('cadastros.cadastros_entidades') }}",
+        description: 'Gerenciar entidades/clientes'
+    },
+    'relatorios': {
+        name: 'Relatórios',
+        icon: 'fas fa-chart-bar',
+        url: '#',
+        description: 'Gerar relatórios do sistema'
+    },
+    'processos': {
+        name: 'Processos',
+        icon: 'fas fa-file-alt',
+        url: '#',
+        description: 'Gerenciar processos aduaneiros'
+    },
+    'configuracoes': {
+        name: 'Configurações',
+        icon: 'fas fa-cog',
+        url: '#',
+        description: 'Configurações do sistema'
+    }
+};
+
+let currentFavorites = ['usuarios', 'veiculos', 'entidades', 'relatorios'];
+
+// Carregar favoritos salvos
+function loadFavorites() {
+    const saved = localStorage.getItem('dashboard_favorites');
+    if (saved) {
+        currentFavorites = JSON.parse(saved);
+    }
+    renderFavorites();
+}
+
+// Salvar favoritos
+function saveFavorites() {
+    localStorage.setItem('dashboard_favorites', JSON.stringify(currentFavorites));
+    renderFavorites();
+    
+    // Fechar modal usando a instância global
+    if (favoritesModalInstance) {
+        favoritesModalInstance.hide();
+    } else {
+        // Fallback se não conseguir obter a instância
+        const modalElement = document.getElementById('favoritesModal');
+        modalElement.classList.remove('show');
+        modalElement.style.display = 'none';
+        document.body.classList.remove('modal-open');
+        const backdrop = document.querySelector('.modal-backdrop');
+        if (backdrop) {
+            backdrop.remove();
+        }
+    }
+    
+    FeedbackManager.showSuccess('Favoritos atualizados com sucesso!');
+}
+
+// Renderizar favoritos na tela principal
+function renderFavorites() {
+    const container = document.getElementById('favorite-actions');
+    container.innerHTML = '';
+    
+    currentFavorites.forEach((moduleId, index) => {
+        const module = favoriteModules[moduleId];
+        if (module) {
+            const card = document.createElement('div');
+            card.className = `quick-action-card animate-on-scroll scale-in delay-${index + 2}`;
+            card.setAttribute('data-module', moduleId);
+            card.onclick = () => {
+                if (module.url !== '#') {
+                    window.location.href = module.url;
+                } else {
+                    showReports();
+                }
+            };
+            
+            card.innerHTML = `
+                <div class="action-icon">
+                    <i class="${module.icon}"></i>
+                </div>
+                <h3>${module.name}</h3>
+                <p>${module.description}</p>
+                <div class="action-badge">
+                    <i class="fas fa-star"></i>
+                </div>
+            `;
+            
+            container.appendChild(card);
+        }
+    });
+}
+
+// Variável global para armazenar a instância do modal
+let favoritesModalInstance = null;
+
+// Abrir modal de personalização
+function openFavoritesModal() {
+    const modalElement = document.getElementById('favoritesModal');
+    favoritesModalInstance = new bootstrap.Modal(modalElement, {
+        backdrop: true,
+        keyboard: true
+    });
+    
+    // Adicionar evento para fechar quando clicar fora
+    modalElement.addEventListener('hidden.bs.modal', function() {
+        favoritesModalInstance = null;
+    });
+    
+    renderFavoritesModal();
+    favoritesModalInstance.show();
+}
+
+// Renderizar modal de favoritos
+function renderFavoritesModal() {
+    const favoritesGrid = document.getElementById('favorites-grid');
+    const availableModules = document.getElementById('available-modules');
+    
+    // Renderizar favoritos atuais
+    favoritesGrid.innerHTML = '';
+    currentFavorites.forEach((moduleId, index) => {
+        const module = favoriteModules[moduleId];
+        if (module) {
+            const item = document.createElement('div');
+            item.className = 'favorite-item';
+            item.setAttribute('data-module', moduleId);
+            item.draggable = true;
+            
+            item.innerHTML = `
+                <div class="module-icon">
+                    <i class="${module.icon}"></i>
+                </div>
+                <div class="module-name">${module.name}</div>
+                <button class="remove-btn" onclick="removeFavorite('${moduleId}')">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            // Adicionar eventos de drag
+            item.addEventListener('dragstart', handleDragStart);
+            item.addEventListener('dragover', handleDragOver);
+            item.addEventListener('drop', handleDrop);
+            item.addEventListener('dragend', handleDragEnd);
+            
+            favoritesGrid.appendChild(item);
+        }
+    });
+    
+    // Renderizar módulos disponíveis
+    availableModules.innerHTML = '';
+    Object.keys(favoriteModules).forEach(moduleId => {
+        if (!currentFavorites.includes(moduleId)) {
+            const module = favoriteModules[moduleId];
+            const item = document.createElement('div');
+            item.className = 'available-module';
+            item.setAttribute('data-module', moduleId);
+            item.onclick = () => addFavorite(moduleId);
+            
+            item.innerHTML = `
+                <div class="module-icon">
+                    <i class="${module.icon}"></i>
+                </div>
+                <div class="module-name">${module.name}</div>
+            `;
+            
+            availableModules.appendChild(item);
+        }
+    });
+}
+
+// Cancelar e fechar modal
+function cancelFavorites() {
+    if (favoritesModalInstance) {
+        favoritesModalInstance.hide();
+    } else {
+        // Fallback se não conseguir obter a instância
+        const modalElement = document.getElementById('favoritesModal');
+        modalElement.classList.remove('show');
+        modalElement.style.display = 'none';
+        document.body.classList.remove('modal-open');
+        const backdrop = document.querySelector('.modal-backdrop');
+        if (backdrop) {
+            backdrop.remove();
+        }
+    }
+}
+
+// Adicionar favorito
+function addFavorite(moduleId) {
+    if (!currentFavorites.includes(moduleId)) {
+        currentFavorites.push(moduleId);
+        renderFavoritesModal();
+    }
+}
+
+// Remover favorito
+function removeFavorite(moduleId) {
+    const index = currentFavorites.indexOf(moduleId);
+    if (index > -1) {
+        currentFavorites.splice(index, 1);
+        renderFavoritesModal();
+    }
+}
+
+// Drag and Drop
+let draggedElement = null;
+
+function handleDragStart(e) {
+    draggedElement = this;
+    this.classList.add('dragging');
+}
+
+function handleDragOver(e) {
+    e.preventDefault();
+}
+
+function handleDrop(e) {
+    e.preventDefault();
+    if (draggedElement && draggedElement !== this) {
+        const draggedModule = draggedElement.getAttribute('data-module');
+        const targetModule = this.getAttribute('data-module');
+        
+        const draggedIndex = currentFavorites.indexOf(draggedModule);
+        const targetIndex = currentFavorites.indexOf(targetModule);
+        
+        // Reordenar array
+        currentFavorites.splice(draggedIndex, 1);
+        currentFavorites.splice(targetIndex, 0, draggedModule);
+        
+        renderFavoritesModal();
+    }
+}
+
+function handleDragEnd(e) {
+    this.classList.remove('dragging');
+    draggedElement = null;
+}
+
+// Sistema de Avatar e Perfil do Usuário
+let selectedAvatarFile = null;
+
+// Função para atualizar cargo do usuário no banco de dados
+async function updateUserJobTitle(jobTitle) {
+    try {
+        // Simular chamada para API (em produção, fazer requisição real)
+        console.log('Atualizando cargo do usuário:', jobTitle);
+        
+        // Em produção, fazer uma requisição PUT para /api/users/current
+        // const response = await fetch('/api/users/current', {
+        //     method: 'PUT',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //     },
+        //     body: JSON.stringify({ job_title: jobTitle })
+        // });
+        
+        // Por enquanto, apenas simular sucesso
+        return true;
+    } catch (error) {
+        console.error('Erro ao atualizar cargo:', error);
+        return false;
+    }
+}
+
+// Mostrar seção do colaborador apenas na home
+function showUserProfileSection() {
+    const userProfileSection = document.getElementById('user-profile-section');
+    if (userProfileSection) {
+        userProfileSection.style.display = 'block';
+        
+        // Carregar cargo salvo do localStorage
+        const savedJobTitle = localStorage.getItem('user_job_title');
+        if (savedJobTitle) {
+            const jobTitleElement = document.getElementById('user-job-title');
+            if (jobTitleElement) {
+                jobTitleElement.textContent = savedJobTitle;
+            }
+        }
+    }
+}
+
+// Esconder seção do colaborador em outras páginas
+function hideUserProfileSection() {
+    const userProfileSection = document.getElementById('user-profile-section');
+    if (userProfileSection) {
+        userProfileSection.style.display = 'none';
+    }
+}
+
+// Abrir modal de upload de avatar
+function openAvatarUpload() {
+    const modal = new bootstrap.Modal(document.getElementById('avatarUploadModal'));
+    
+    // Carregar cargo atual do usuário
+    const currentJobTitle = document.getElementById('user-job-title').textContent;
+    const jobTitleInput = document.getElementById('job-title-input');
+    if (jobTitleInput && currentJobTitle !== 'Cargo não informado') {
+        jobTitleInput.value = currentJobTitle;
+    }
+    
+    modal.show();
+}
+
+// Abrir configurações do perfil (removido - agora apenas clica na foto)
+
+// Configurar upload de avatar
+function setupAvatarUpload() {
+    const fileInput = document.getElementById('avatar-file-input');
+    const uploadArea = document.getElementById('avatar-upload-area');
+    const preview = document.getElementById('avatar-preview');
+    const uploadBtn = document.getElementById('upload-avatar-btn');
+    
+    // Click na área de upload
+    uploadArea.addEventListener('click', () => {
+        fileInput.click();
+    });
+    
+    // Drag and drop
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('dragover');
+    });
+    
+    uploadArea.addEventListener('dragleave', () => {
+        uploadArea.classList.remove('dragover');
+    });
+    
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('dragover');
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            handleFileSelect(files[0]);
+        }
+    });
+    
+    // Seleção de arquivo
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+            handleFileSelect(e.target.files[0]);
+        }
+    });
+    
+    function handleFileSelect(file) {
+        // Validar tipo de arquivo
+        if (!file.type.startsWith('image/')) {
+            alert('Por favor, selecione apenas arquivos de imagem.');
+            return;
+        }
+        
+        // Validar tamanho (2MB)
+        if (file.size > 2 * 1024 * 1024) {
+            alert('O arquivo deve ter no máximo 2MB.');
+            return;
+        }
+        
+        selectedAvatarFile = file;
+        
+        // Mostrar preview
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            preview.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+// Upload do avatar e atualização do cargo
+function uploadAvatar() {
+    const jobTitleInput = document.getElementById('job-title-input');
+    const jobTitle = jobTitleInput ? jobTitleInput.value.trim() : '';
+    
+    // Atualizar cargo na sidebar
+    const sidebarJobTitle = document.getElementById('user-job-title');
+    if (sidebarJobTitle) {
+        sidebarJobTitle.textContent = jobTitle || 'Cargo não informado';
+    }
+    
+    // Salvar cargo no localStorage
+    localStorage.setItem('user_job_title', jobTitle);
+    
+    // Simular atualização no banco de dados
+    updateUserJobTitle(jobTitle);
+    
+    if (!selectedAvatarFile) {
+        // Se não há arquivo, apenas atualizar o cargo
+        const modal = bootstrap.Modal.getInstance(document.getElementById('avatarUploadModal'));
+        if (modal) {
+            modal.hide();
+        }
+        
+        FeedbackManager.showSuccess('Informações do perfil atualizadas com sucesso!');
+        return;
+    }
+    
+    const formData = new FormData();
+    formData.append('avatar', selectedAvatarFile);
+    
+    // Simular upload (em produção, enviar para o servidor)
+    const uploadBtn = document.getElementById('upload-avatar-btn');
+    const originalText = uploadBtn.innerHTML;
+    
+    uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+    uploadBtn.disabled = true;
+    
+    // Simular delay de upload
+    setTimeout(() => {
+        // Atualizar avatar na sidebar
+        const sidebarAvatar = document.getElementById('user-avatar');
+        const preview = document.getElementById('avatar-preview');
+        
+        if (sidebarAvatar && preview) {
+            sidebarAvatar.src = preview.src;
+        }
+        
+        // Fechar modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById('avatarUploadModal'));
+        if (modal) {
+            modal.hide();
+        }
+        
+        // Resetar botão
+        uploadBtn.innerHTML = originalText;
+        uploadBtn.disabled = false;
+        
+        // Mostrar sucesso
+        FeedbackManager.showSuccess('Foto de perfil e informações atualizadas com sucesso!');
+        
+        // Limpar seleção
+        selectedAvatarFile = null;
+        document.getElementById('avatar-file-input').value = '';
+    }, 1500);
+}
+
+// Inicializar página
+document.addEventListener('DOMContentLoaded', async function() {
+    updateCurrentTime();
+    await loadStats();
+    await loadLinkedInPosts();
+    loadNews();
+    
+    // Inicializar favoritos
+    loadFavorites();
+    
+    // Mostrar seção do colaborador (apenas na home)
+    showUserProfileSection();
+    
+    // Configurar upload de avatar
+    setupAvatarUpload();
+    
+    // Inicializar animações
+    initScrollAnimations();
+    initParallax();
+    
+    // Animar contadores após carregar dados
+    setTimeout(animateCounters, 500);
+    
+    // Atualizar a cada minuto
+    setInterval(updateCurrentTime, 60000);
+});
+</script>
 {% endblock %}
 

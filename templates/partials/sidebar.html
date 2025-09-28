@@ -5,5 +5,24 @@
         <ul class="sidebar-links">
             <!-- A barra lateral será preenchida dinamicamente pelo JavaScript -->
         </ul>
+        
+        <!-- Seção do Colaborador - Apenas na Home -->
+        <div class="user-profile-section" id="user-profile-section" style="display: none;">
+            <div class="user-profile-card">
+                <div class="user-profile-avatar">
+                    <img src="{{ url_for('static', filename='img/user-avatar-placeholder.svg') }}" 
+                         alt="Foto do usuário" 
+                         class="profile-avatar"
+                         id="user-avatar">
+                    <div class="avatar-upload-overlay" onclick="openAvatarUpload()">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                </div>
+                <div class="user-profile-info">
+                    <h4 class="user-name">{{ user.name }}</h4>
+                    <p class="user-role" id="user-job-title">{{ user.job_title or 'Cargo não informado' }}</p>
+                </div>
+            </div>
+        </div>
     </nav>
 </aside>

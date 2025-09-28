@@ -246,8 +246,8 @@ const FeedbackManager = {
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         `;
         
-        const targetContainer = container || document.querySelector('.container-fluid') || document.body;
-        targetContainer.insertBefore(alertDiv, targetContainer.firstChild);
+        // Sempre adicionar ao body para posicionamento fixo
+        document.body.appendChild(alertDiv);
         
         // Auto-dismiss após 5 segundos
         setTimeout(() => {

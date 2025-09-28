@@ -32,6 +32,7 @@ def create_app(config_name=None):
     from app.routes.auth import auth_bp
     from app.routes.main import main_bp
     from app.routes.cadastros import cadastros_bp
+    from app.routes.api import api_bp
     from app.api.users import users_bp
     from app.api.veiculos import veiculos_bp
     from app.api.entidades import entidades_bp
@@ -39,6 +40,7 @@ def create_app(config_name=None):
     app.register_blueprint(auth_bp)
     app.register_blueprint(main_bp)
     app.register_blueprint(cadastros_bp)
+    app.register_blueprint(api_bp)
     app.register_blueprint(users_bp, url_prefix='/api')
     app.register_blueprint(veiculos_bp, url_prefix='/api')
     app.register_blueprint(entidades_bp, url_prefix='/api')

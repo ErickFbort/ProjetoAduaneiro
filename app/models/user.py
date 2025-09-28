@@ -20,6 +20,7 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     status = db.Column(db.String(20), default='active')
     group = db.Column(db.String(50), nullable=False)  # Paclog Faturamento, Paclog ADM, Paclog Operacional
+    job_title = db.Column(db.String(100), nullable=True)  # Cargo/função do usuário
     permissions = db.Column(db.Text)  # JSON string das permissões
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
@@ -41,6 +42,7 @@ class User(UserMixin, db.Model):
             'email': self.email,
             'status': self.status,
             'group': self.group,
+            'job_title': self.job_title,
             'permissions': self.permissions,
             'created_at': self.created_at.isoformat() if self.created_at else None
         }
