@@ -761,25 +761,7 @@ document.addEventListener('click', (e) => {
     }
 });
 
-// Funções de filtros avançados
-function applyFilters() {
-    const search = document.querySelector('input[name="search"]').value;
-    const tipo = document.getElementById('tipoFilter').value;
-    const estado = document.getElementById('estadoFilter').value;
-    const status = document.getElementById('statusFilter').value;
-    
-    const params = new URLSearchParams();
-    if (search) params.append('search', search);
-    if (tipo) params.append('tipo', tipo);
-    if (estado) params.append('estado', estado);
-    if (status) params.append('status', status);
-    
-    window.location.href = `{{ url_for('cadastros.cadastros_veiculos') }}?${params.toString()}`;
-}
-
-function clearFilters() {
-    window.location.href = '{{ url_for("cadastros.cadastros_veiculos") }}';
-}
+// Funções de filtros avançados (removidas - já definidas acima)
 
 // Funções de exportação/importação
 function exportVehicles() {

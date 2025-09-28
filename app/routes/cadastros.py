@@ -4,6 +4,7 @@ Rotas de cadastros
 
 from flask import Blueprint, render_template, request
 from flask_login import login_required
+from app import db
 from app.models.user import User
 from app.models.veiculo import Veiculo
 from app.models.entidade import Entidade
@@ -31,7 +32,7 @@ def create_mock_paginate(items):
 @login_required
 def cadastros():
     """Página principal de cadastros com sub-menus"""
-    return render_template('cadastros_main.html')
+    return render_template('cadastros/cadastros_main.html')
 
 @cadastros_bp.route('/cadastros/usuarios')
 @login_required
@@ -72,7 +73,7 @@ def cadastros_usuarios():
         # Criar paginação
         paginated_users = create_mock_paginate(users)
         
-        return render_template('cadastros_usuarios.html', 
+        return render_template('cadastros/cadastros_usuarios.html', 
                              users=paginated_users, 
                              search=search,
                              grupo_filter=grupo_filter,
@@ -81,7 +82,7 @@ def cadastros_usuarios():
         print(f"Erro na rota cadastros usuarios: {e}")
         # Criar objeto de paginação vazio em caso de erro
         empty_pagination = create_mock_paginate([])
-        return render_template('cadastros_usuarios.html', 
+        return render_template('cadastros/cadastros_usuarios.html', 
                              users=empty_pagination, 
                              search='',
                              grupo_filter='',
@@ -134,7 +135,7 @@ def cadastros_veiculos():
         # Criar paginação
         paginated_veiculos = create_mock_paginate(veiculos)
         
-        return render_template('cadastros_veiculos.html', 
+        return render_template('cadastros/cadastros_veiculos.html', 
                              veiculos=paginated_veiculos, 
                              search=search,
                              tipo_filter=tipo_filter,
@@ -144,7 +145,7 @@ def cadastros_veiculos():
         print(f"Erro na rota cadastros veiculos: {e}")
         # Criar objeto de paginação vazio em caso de erro
         empty_pagination = create_mock_paginate([])
-        return render_template('cadastros_veiculos.html', 
+        return render_template('cadastros/cadastros_veiculos.html', 
                              veiculos=empty_pagination, 
                              search='',
                              tipo_filter='',
@@ -167,13 +168,15 @@ def cadastros_entidades():
         
         # Aplicar filtro de busca
         if search:
-            from sqlalchemy import or_
-            query = query.filter(or_(
-                Entidade.razao_social.ilike(f'%{search}%'),
-                Entidade.nome_fantasia.ilike(f'%{search}%'),
-                Entidade.cpf_cnpj.ilike(f'%{search}%'),
-                Entidade.email_faturamento.ilike(f'%{search}%')
-            ))
+            search_term = f"%{search.lower()}%"
+            query = query.filter(
+                db.or_(
+                    Entidade.razao_social.ilike(search_term),
+                    Entidade.nome_fantasia.ilike(search_term),
+                    Entidade.cpf_cnpj.ilike(search_term),
+                    Entidade.email_faturamento.ilike(search_term)
+                )
+            )
         
         # Aplicar filtros específicos
         if tipo_cliente_filter:
@@ -189,7 +192,7 @@ def cadastros_entidades():
         entidades = query.all()
         
         paginated_entidades = create_mock_paginate(entidades)
-        return render_template('cadastros_entidades.html', 
+        return render_template('cadastros/cadastros_entidades.html', 
                              entidades=paginated_entidades, 
                              search=search,
                              tipo_cliente_filter=tipo_cliente_filter,
@@ -197,7 +200,7 @@ def cadastros_entidades():
                              status_filter=status_filter)
     except Exception as e:
         print(f"Erro na rota cadastros entidades: {e}")
-        return render_template('cadastros_entidades.html', 
+        return render_template('cadastros/cadastros_entidades.html', 
                              entidades=create_mock_paginate([]), 
                              search='',
                              tipo_cliente_filter='',

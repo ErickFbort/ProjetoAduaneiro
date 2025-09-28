@@ -33,6 +33,11 @@
                             <button type="submit" class="btn btn-primary search-btn">
                                 <i class="fas fa-search"></i>
                             </button>
+                            {% if search %}
+                            <a href="{{ url_for('cadastros.cadastros_usuarios') }}" class="btn btn-outline-secondary clear-btn">
+                                <i class="fas fa-times"></i>
+                            </a>
+                            {% endif %}
                         </div>
                     </form>
                     <button class="btn btn-outline-info filter-toggle" onclick="toggleAdvancedFilters()">

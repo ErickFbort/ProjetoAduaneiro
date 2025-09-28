@@ -128,19 +128,35 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Database
-*.db
-*.sqlite
-*.sqlite3
-
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
+*~
 
 # OS
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
 
+# Project specific
+*.db
+*.sqlite
+*.sqlite3
+uploads/
+logs/
+temp/
+tmp/
 
+# Test files
+test_*.py
+*_test.py
+tests/
+
+# Documentation build
+docs/build/

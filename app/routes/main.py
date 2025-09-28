@@ -18,4 +18,4 @@ def index():
 @login_required
 def dashboard():
     """Dashboard principal"""
-    return render_template('dashboard.html', user=current_user)
+    return render_template('dashboard/dashboard.html', user=current_user)

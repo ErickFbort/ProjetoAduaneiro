@@ -27,7 +27,7 @@ def login():
         else:
             flash('Usuário ou senha inválidos!', 'error')
     
-    return render_template('login.html')
+    return render_template('auth/login.html')
 
 @auth_bp.route('/logout')
 @login_required

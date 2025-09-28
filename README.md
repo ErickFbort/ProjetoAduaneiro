@@ -132,6 +132,75 @@ O projeto foi organizado seguindo o padrão de **Blueprints** do Flask, separand
 - Variáveis de ambiente suportadas
 - Configuração centralizada em `config.py`
 
+## 📚 Histórico de Desenvolvimento
+
+### Conversão para Flask + Bootstrap
+O projeto foi completamente convertido de HTML/CSS/JavaScript estático para uma aplicação web moderna usando Python Flask e Bootstrap.
+
+#### Melhorias Implementadas
+
+**🔧 Backend**
+- **Flask**: Framework web moderno e flexível
+- **SQLAlchemy**: ORM para banco de dados
+- **Flask-Login**: Autenticação e sessões
+- **Werkzeug**: Hash seguro de senhas
+- **Configuração por ambiente**: Dev/Prod/Test
+
+**🎨 Frontend**
+- **Bootstrap 5**: Framework CSS moderno
+- **Font Awesome**: Ícones profissionais
+- **Responsividade**: Mobile-first design
+- **Componentes**: Modais, tabelas, formulários
+- **UX/UI**: Interface intuitiva e moderna
+
+**🛡️ Segurança**
+- **Hash de senhas**: Senhas nunca em texto plano
+- **Sessões seguras**: Flask-Login
+- **Validação**: Dados validados no backend
+- **CSRF Protection**: Proteção contra ataques
+
+**📊 Funcionalidades**
+- **CRUD Completo**: Criar, ler, atualizar, deletar para todos os módulos
+- **Sistema de Permissões**: Controle granular de usuários
+- **Status de Registros**: Ativo/Bloqueado para todos os cadastros
+- **Busca Avançada**: Pesquisa com filtros em todos os módulos
+- **API REST**: Endpoints para integração
+- **Validações Frontend**: CPF, CNPJ, Placa, Email em tempo real
+- **Feedback Visual**: Loading states, alertas contextuais, validação visual
+
+### Estrutura de Arquivos Otimizada
+
+```
+ProjetoAduaneiro/
+├── app/                    # Aplicação principal modularizada
+│   ├── models/            # Modelos do banco de dados
+│   ├── routes/            # Rotas da aplicação web
+│   ├── api/               # APIs REST
+│   └── utils/             # Utilitários centralizados
+├── templates/             # Templates HTML organizados
+│   ├── partials/          # Componentes reutilizáveis
+│   └── [módulos].html     # Templates específicos
+├── static/                # Arquivos estáticos únicos
+│   ├── css/               # Estilos centralizados
+│   ├── js/                # JavaScript modularizado
+│   └── img/               # Imagens do projeto
+├── instance/              # Banco de dados SQLite
+├── main.py               # Arquivo principal
+├── config.py             # Configurações centralizadas
+├── requirements.txt      # Dependências Python
+├── .gitignore           # Controle de versão
+└── README.md            # Documentação consolidada
+```
+
+### Benefícios da Reorganização
+
+1. **Manutenibilidade**: Código centralizado e reutilizável
+2. **Consistência**: Comportamento uniforme em toda a aplicação
+3. **UX Melhorada**: Validações em tempo real e feedback visual
+4. **Performance**: Eliminação de código duplicado
+5. **Escalabilidade**: Estrutura preparada para futuras funcionalidades
+6. **Debugging**: Código mais organizado e fácil de debugar
+
 ## 📄 Licença
 
 Este projeto é de uso interno da empresa.
