@@ -14,15 +14,16 @@ def create_mock_paginate(items):
     """Cria objeto mock para paginação"""
     class MockPaginate:
         def __init__(self, items):
-            self.items = items
-            self.total = len(items)
-            self.pages = 1
+            # Garantir que items seja sempre uma lista
+            self.items = items if isinstance(items, list) else []
+            self.total = len(self.items)
+            self.pages = 1 if self.items else 0
             self.page = 1
             self.has_prev = False
             self.has_next = False
             self.prev_num = None
             self.next_num = None
-            self.iter_pages = lambda: [1]
+            self.iter_pages = lambda: [1] if self.items else []
     
     return MockPaginate(items)
 
@@ -62,25 +63,64 @@ def cadastros_usuarios():
 def cadastros_veiculos():
     """Página de cadastros de veículos"""
     try:
-        veiculos = Veiculo.query.all()
+        # Obter parâmetros de filtro
         search = request.args.get('search', '', type=str)
+        tipo_filter = request.args.get('tipo', '', type=str)
+        estado_filter = request.args.get('estado', '', type=str)
+        status_filter = request.args.get('status', '', type=str)
         
-        # Filtrar veículos se houver busca
+        # Construir query base
+        query = Veiculo.query
+        
+        # Aplicar filtro de busca
         if search:
-            filtered_veiculos = []
-            for veiculo in veiculos:
-                if (search.lower() in veiculo.motorista_responsavel.lower() or 
-                    search.lower() in veiculo.cpf_motorista.lower() or 
-                    search.lower() in veiculo.placa.lower() or 
-                    search.lower() in veiculo.renavam.lower() if veiculo.renavam else False):
-                    filtered_veiculos.append(veiculo)
-            veiculos = filtered_veiculos
+            search_term = f"%{search.lower()}%"
+            query = query.filter(
+                db.or_(
+                    Veiculo.motorista_responsavel.ilike(search_term),
+                    Veiculo.cpf_motorista.ilike(search_term),
+                    Veiculo.placa.ilike(search_term),
+                    Veiculo.renavam.ilike(search_term)
+                )
+            )
         
+        # Aplicar filtro de tipo
+        if tipo_filter:
+            if tipo_filter == 'Outros':
+                query = query.filter(Veiculo.tipo == 'Outros')
+            else:
+                query = query.filter(Veiculo.tipo == tipo_filter)
+        
+        # Aplicar filtro de estado
+        if estado_filter:
+            query = query.filter(Veiculo.estado == estado_filter)
+        
+        # Aplicar filtro de status
+        if status_filter:
+            query = query.filter(Veiculo.status == status_filter)
+        
+        # Executar query
+        veiculos = query.all()
+        
+        # Criar paginação
         paginated_veiculos = create_mock_paginate(veiculos)
-        return render_template('cadastros_veiculos.html', veiculos=paginated_veiculos, search=search)
+        
+        return render_template('cadastros_veiculos.html', 
+                             veiculos=paginated_veiculos, 
+                             search=search,
+                             tipo_filter=tipo_filter,
+                             estado_filter=estado_filter,
+                             status_filter=status_filter)
     except Exception as e:
         print(f"Erro na rota cadastros veiculos: {e}")
-        return render_template('cadastros_veiculos.html', veiculos=[], search='')
+        # Criar objeto de paginação vazio em caso de erro
+        empty_pagination = create_mock_paginate([])
+        return render_template('cadastros_veiculos.html', 
+                             veiculos=empty_pagination, 
+                             search='',
+                             tipo_filter='',
+                             estado_filter='',
+                             status_filter='')
 
 @cadastros_bp.route('/cadastros/entidades')
 @login_required

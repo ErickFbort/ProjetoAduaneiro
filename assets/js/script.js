@@ -4,13 +4,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const loginForm = document.querySelector(".login-form");
   const errorMessageEl = document.querySelector("#error-message");
   
-  // Função para exibir mensagens de erro
   const showErrorMessage = (message) => {
     errorMessageEl.textContent = message;
     errorMessageEl.style.display = 'block';
   };
 
-  // Se estiver na tela de login
   if (loginForm) {
     loginForm.addEventListener("submit", async (e) => {
       e.preventDefault();

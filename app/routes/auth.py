@@ -2,7 +2,7 @@
 Rotas de autenticação
 """
 
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from flask_login import login_user, logout_user, login_required, current_user
 from app.models.user import User
 from app import db
@@ -34,5 +34,10 @@ def login():
 def logout():
     """Logout do usuário"""
     logout_user()
+    
+    # Limpar todas as mensagens flash existentes
+    session.pop('_flashes', None)
+    
+    # Adicionar apenas a mensagem de logout
     flash('Você foi desconectado com sucesso!', 'info')
     return redirect(url_for('auth.login'))

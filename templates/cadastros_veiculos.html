@@ -49,14 +49,15 @@
                                     <i class="fas fa-times"></i>
                                 </a>
                                 {% endif %}
+                                <!-- Filtros Avançados -->
+                                <button class="btn btn-outline-info filter-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#filterCollapse" aria-expanded="false">
+                                    <i class="fas fa-filter"></i> Filtros Avançados
+                                </button>
                             </div>
                         </form>
                         
                         <!-- Filtros Avançados -->
                         <div class="advanced-filters">
-                            <button class="btn btn-outline-info filter-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#filterCollapse" aria-expanded="false">
-                                <i class="fas fa-filter"></i> Filtros Avançados
-                            </button>
                             <div class="collapse" id="filterCollapse">
                                 <div class="filter-content">
                                     <div class="row g-3">
@@ -64,36 +65,41 @@
                                             <label class="form-label">Tipo de Veículo</label>
                                             <select class="form-select" name="tipo_filter" id="tipoFilter">
                                                 <option value="">Todos os tipos</option>
-                                                <option value="Cavalo">Cavalo</option>
-                                                <option value="Carreta">Carreta</option>
-                                                <option value="Truck">Truck</option>
-                                                <option value="Outros">Outros</option>
+                                                <option value="Cavalo" {% if tipo_filter == 'Cavalo' %}selected{% endif %}>Cavalo</option>
+                                                <option value="Carreta" {% if tipo_filter == 'Carreta' %}selected{% endif %}>Carreta</option>
+                                                <option value="Truck" {% if tipo_filter == 'Truck' %}selected{% endif %}>Truck</option>
+                                                <option value="Outros" {% if tipo_filter == 'Outros' %}selected{% endif %}>Outros</option>
                                             </select>
                                         </div>
                                         <div class="col-md-3">
                                             <label class="form-label">Estado</label>
                                             <select class="form-select" name="estado_filter" id="estadoFilter">
                                                 <option value="">Todos os estados</option>
-                                                <option value="SP">São Paulo</option>
-                                                <option value="RJ">Rio de Janeiro</option>
-                                                <option value="MG">Minas Gerais</option>
-                                                <option value="PR">Paraná</option>
-                                                <option value="RS">Rio Grande do Sul</option>
+                                                <option value="SP" {% if estado_filter == 'SP' %}selected{% endif %}>São Paulo</option>
+                                                <option value="RJ" {% if estado_filter == 'RJ' %}selected{% endif %}>Rio de Janeiro</option>
+                                                <option value="MG" {% if estado_filter == 'MG' %}selected{% endif %}>Minas Gerais</option>
+                                                <option value="PR" {% if estado_filter == 'PR' %}selected{% endif %}>Paraná</option>
+                                                <option value="RS" {% if estado_filter == 'RS' %}selected{% endif %}>Rio Grande do Sul</option>
                                             </select>
                                         </div>
                                         <div class="col-md-3">
                                             <label class="form-label">Status</label>
                                             <select class="form-select" name="status_filter" id="statusFilter">
                                                 <option value="">Todos os status</option>
-                                                <option value="active">Ativo</option>
-                                                <option value="blocked">Bloqueado</option>
+                                                <option value="active" {% if status_filter == 'active' %}selected{% endif %}>Ativo</option>
+                                                <option value="blocked" {% if status_filter == 'blocked' %}selected{% endif %}>Bloqueado</option>
                                             </select>
                                         </div>
                                         <div class="col-md-3">
                                             <label class="form-label">&nbsp;</label>
-                                            <button type="button" class="btn btn-primary w-100" onclick="applyFilters()">
-                                                <i class="fas fa-search"></i> Aplicar Filtros
-                                            </button>
+                                            <div class="d-grid gap-2">
+                                                <button type="button" class="btn btn-primary" onclick="applyFilters()">
+                                                    <i class="fas fa-search"></i> Aplicar Filtros
+                                                </button>
+                                                <button type="button" class="btn btn-outline-secondary" onclick="clearFilters()">
+                                                    <i class="fas fa-times"></i> Limpar Filtros
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -157,6 +163,7 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                {% if veiculos and veiculos.items %}
                                 {% for veiculo in veiculos.items %}
                                 <tr class="vehicle-row" data-veiculo-id="{{ veiculo.id }}">
                                     <td class="driver-cell">
@@ -171,19 +178,17 @@
                                         <span class="cpf-formatted">{{ veiculo.cpf_motorista }}</span>
                                     </td>
                                     <td class="placa-cell">
-                                        <span class="placa-badge">{{ veiculo.placa }}</span>
+                                        {{ veiculo.placa }}
                                     </td>
                                     <td class="renavam-cell">
                                         <span class="renavam-text">{{ veiculo.renavam or '-' }}</span>
                                     </td>
                                     <td class="tipo-cell">
-                                        <span class="tipo-badge tipo-{{ veiculo.tipo.lower() }}">
-                                            {% if veiculo.tipo == 'Outros' and veiculo.tipo_outros %}
-                                                {{ veiculo.tipo_outros }}
-                                            {% else %}
-                                                {{ veiculo.tipo }}
-                                            {% endif %}
-                                        </span>
+                                        {% if veiculo.tipo == 'Outros' and veiculo.tipo_outros %}
+                                            {{ veiculo.tipo_outros }}
+                                        {% else %}
+                                            {{ veiculo.tipo }}
+                                        {% endif %}
                                     </td>
                                     <td class="estado-cell">
                                         <span class="estado-badge">{{ veiculo.estado or '-' }}</span>
@@ -245,13 +250,38 @@
                                     </td>
                                 </tr>
                                 {% endfor %}
+                                {% endif %}
+                                
+                                <!-- Mensagem quando não há registros -->
+                                {% if not veiculos or not veiculos.items %}
+                                <tr>
+                                    <td colspan="8" class="text-center py-5">
+                                        <div class="empty-state">
+                                            <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                                            <h5 class="text-muted">Nenhum veículo encontrado</h5>
+                                            <p class="text-muted">
+                                                {% if search %}
+                                                    Não foram encontrados veículos para a busca "{{ search }}".
+                                                {% elif tipo_filter or estado_filter or status_filter %}
+                                                    Não foram encontrados veículos com os filtros aplicados.
+                                                {% else %}
+                                                    Nenhum veículo cadastrado no sistema.
+                                                {% endif %}
+                                            </p>
+                                            <button class="btn btn-primary" onclick="clearFilters()">
+                                                <i class="fas fa-refresh"></i> Limpar Filtros
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endif %}
                             </tbody>
                         </table>
                     </div>
                 </div>
 
                 <!-- Paginação -->
-                {% if veiculos.pages > 1 %}
+                {% if veiculos and veiculos.pages and veiculos.pages > 1 %}
                 <nav aria-label="Paginação">
                     <ul class="pagination justify-content-center">
                         {% if veiculos.has_prev %}
@@ -602,12 +632,85 @@ function applyFilters() {
     window.location.href = `${window.location.pathname}?${params.toString()}`;
 }
 
+function clearFilters() {
+    // Limpar todos os filtros
+    document.getElementById('tipoFilter').value = '';
+    document.getElementById('estadoFilter').value = '';
+    document.getElementById('statusFilter').value = '';
+    document.querySelector('input[name="search"]').value = '';
+    
+    // Redirecionar para a página sem filtros
+    window.location.href = window.location.pathname;
+}
+
 function exportVehicles() {
-    FeedbackManager.showSuccess('Funcionalidade de exportação será implementada em breve!');
+    try {
+        // Fazer requisição para exportar
+        window.location.href = '/api/veiculos/export';
+        FeedbackManager.showSuccess('Exportação iniciada! O arquivo Excel será baixado automaticamente.');
+    } catch (error) {
+        FeedbackManager.showError('Erro ao exportar veículos: ' + error.message);
+    }
 }
 
 function importVehicles() {
-    FeedbackManager.showSuccess('Funcionalidade de importação será implementada em breve!');
+    // Criar input de arquivo
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.csv';
+    input.style.display = 'none';
+    
+    input.onchange = function(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        
+        // Validar tipo de arquivo
+        if (!file.name.toLowerCase().endsWith('.csv')) {
+            FeedbackManager.showError('Por favor, selecione um arquivo CSV válido.');
+            return;
+        }
+        
+        // Mostrar loading
+        FeedbackManager.showInfo('Importando veículos...');
+        
+        // Preparar FormData
+        const formData = new FormData();
+        formData.append('file', file);
+        
+        // Fazer requisição
+        fetch('/api/veiculos/import', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                FeedbackManager.showError(data.error);
+            } else {
+                let message = data.message;
+                if (data.errors && data.errors.length > 0) {
+                    message += `\n\nErros encontrados:\n${data.errors.slice(0, 5).join('\n')}`;
+                    if (data.errors.length > 5) {
+                        message += `\n... e mais ${data.errors.length - 5} erros.`;
+                    }
+                }
+                FeedbackManager.showSuccess(message);
+                
+                // Recarregar a página para mostrar os novos dados
+                setTimeout(() => {
+                    location.reload();
+                }, 2000);
+            }
+        })
+        .catch(error => {
+            FeedbackManager.showError('Erro ao importar veículos: ' + error.message);
+        });
+    };
+    
+    // Adicionar ao DOM e clicar
+    document.body.appendChild(input);
+    input.click();
+    document.body.removeChild(input);
 }
 
 function refreshTable() {
