@@ -12,7 +12,6 @@ const SidebarManager = {
         const mainContent = document.querySelector('.main-content--shifted');
         
         if (sidebar && mainContent) {
-            // Verificar se deve recolher a barra lateral
             const currentPath = window.location.pathname;
             const shouldCollapse = currentPath !== '/' && currentPath !== '/dashboard';
             
@@ -24,7 +23,6 @@ const SidebarManager = {
     },
     
     setupNavigation() {
-        // Aplicar modo da barra lateral baseado na página atual
         this.toggleSidebarMode();
     },
     
@@ -34,36 +32,50 @@ const SidebarManager = {
         
         if (!sidebar || !sidebarLinks) return;
         
-        const isCadastrosModule = () => {
-            const currentPath = window.location.pathname;
-            return currentPath.startsWith('/cadastros');
-        };
+        const currentPath = window.location.pathname;
+        const module = this.getCurrentModule(currentPath);
         
-        if (isCadastrosModule()) {
-            // Modo cadastros - mostrar opções específicas
-            sidebarLinks.innerHTML = `
-                <li><a href="/dashboard" class="nav-link"><i class="fas fa-home"></i> <span>Home</span></a></li>
-                <li><a href="/cadastros/usuarios" class="nav-link ${window.location.pathname === '/cadastros/usuarios' ? 'active' : ''}"><i class="fas fa-users"></i> <span>Usuários</span></a></li>
-                <li><a href="/cadastros/veiculos" class="nav-link ${window.location.pathname === '/cadastros/veiculos' ? 'active' : ''}"><i class="fas fa-truck"></i> <span>Veículos</span></a></li>
-                <li><a href="/cadastros/entidades" class="nav-link ${window.location.pathname === '/cadastros/entidades' ? 'active' : ''}"><i class="fas fa-building"></i> <span>Entidades</span></a></li>
-                <li><a href="#" class="nav-link" onclick="logoutUser()"><i class="fas fa-sign-out-alt"></i> <span>Sair</span></a></li>
-            `;
+        if (module) {
+            this.renderModuleMenu(sidebarLinks, module, currentPath);
         } else {
-            // Modo normal - mostrar menu completo
-            sidebarLinks.innerHTML = `
-                <li><a href="/dashboard" class="nav-link ${window.location.pathname === '/dashboard' ? 'active' : ''}"><i class="fas fa-home"></i> <span>Home</span></a></li>
-                <li><a href="#operacional" class="nav-link"><i class="fas fa-tasks"></i> <span>Operacional</span></a></li>
-                <li><a href="#faturamento" class="nav-link"><i class="fas fa-file-invoice-dollar"></i> <span>Faturamento</span></a></li>
-                <li><a href="#web-cliente" class="nav-link"><i class="fas fa-user-tie"></i> <span>Web Cliente</span></a></li>
-                <li><a href="#portal-adm" class="nav-link"><i class="fas fa-user-shield"></i> <span>Portal ADM</span></a></li>
-                <li><a href="/cadastros" class="nav-link"><i class="fas fa-edit"></i> <span>Cadastros</span></a></li>
-                <li><a href="#relatorios" class="nav-link"><i class="fas fa-chart-line"></i> <span>Relatórios</span></a></li>
-                <li><a href="#" class="nav-link" onclick="logoutUser()"><i class="fas fa-sign-out-alt"></i> <span>Sair</span></a></li>
-            `;
+            this.renderDefaultMenu(sidebarLinks, currentPath);
         }
         
-        // Reaplicar event listeners após mudança do HTML
         this.attachNavListeners();
+    },
+
+    getCurrentModule(path) {
+        if (path.startsWith('/cadastros')) return 'cadastros';
+        if (path.startsWith('/relatorios')) return 'relatorios';
+        return null;
+    },
+
+    renderModuleMenu(container, moduleName, currentPath) {
+        const module = AppConfig.modules[moduleName];
+        if (!module) return;
+
+        const homeLink = `<li><a href="/dashboard" class="nav-link"><i class="fas fa-home"></i> <span>Home</span></a></li>`;
+        const moduleLinks = module.routes.map(route => 
+            `<li><a href="${route.path}" class="nav-link ${currentPath === route.path ? 'active' : ''}">
+                <i class="${route.icon}"></i> <span>${route.name}</span>
+            </a></li>`
+        ).join('');
+        const logoutLink = `<li><a href="#" class="nav-link" onclick="logoutUser()"><i class="fas fa-sign-out-alt"></i> <span>Sair</span></a></li>`;
+        
+        container.innerHTML = homeLink + moduleLinks + logoutLink;
+    },
+
+    renderDefaultMenu(container, currentPath) {
+        container.innerHTML = `
+            <li><a href="/dashboard" class="nav-link ${currentPath === '/dashboard' ? 'active' : ''}"><i class="fas fa-home"></i> <span>Home</span></a></li>
+            <li><a href="#operacional" class="nav-link"><i class="fas fa-tasks"></i> <span>Operacional</span></a></li>
+            <li><a href="#faturamento" class="nav-link"><i class="fas fa-file-invoice-dollar"></i> <span>Faturamento</span></a></li>
+            <li><a href="#web-cliente" class="nav-link"><i class="fas fa-user-tie"></i> <span>Web Cliente</span></a></li>
+            <li><a href="#portal-adm" class="nav-link"><i class="fas fa-user-shield"></i> <span>Portal ADM</span></a></li>
+            <li><a href="/cadastros" class="nav-link"><i class="fas fa-edit"></i> <span>Cadastros</span></a></li>
+            <li><a href="/relatorios" class="nav-link ${currentPath === '/relatorios' ? 'active' : ''}"><i class="fas fa-chart-bar"></i> <span>Relatórios</span></a></li>
+            <li><a href="#" class="nav-link" onclick="logoutUser()"><i class="fas fa-sign-out-alt"></i> <span>Sair</span></a></li>
+        `;
     },
     
     attachNavListeners() {
@@ -125,44 +137,52 @@ const SidebarManager = {
 
 // Validações
 const Validators = {
-    // Validação de CPF
     validarCPF(cpf) {
         cpf = cpf.replace(/[^\d]/g, '');
         if (cpf.length !== 11) return false;
-        
-        // Verificar se todos os dígitos são iguais
         if (/^(\d)\1{10}$/.test(cpf)) return false;
         
-        // Algoritmo de validação do CPF
-        let soma = 0;
-        for (let i = 0; i < 9; i++) {
-            soma += parseInt(cpf.charAt(i)) * (10 - i);
-        }
-        let resto = 11 - (soma % 11);
-        if (resto === 10 || resto === 11) resto = 0;
-        if (resto !== parseInt(cpf.charAt(9))) return false;
-        
-        soma = 0;
-        for (let i = 0; i < 10; i++) {
-            soma += parseInt(cpf.charAt(i)) * (11 - i);
-        }
-        resto = 11 - (soma % 11);
-        if (resto === 10 || resto === 11) resto = 0;
-        return resto === parseInt(cpf.charAt(10));
+        return this._validarDigitosCPF(cpf, 9) && this._validarDigitosCPF(cpf, 10);
     },
     
-    // Validação de CNPJ
     validarCNPJ(cnpj) {
         cnpj = cnpj.replace(/[^\d]/g, '');
         if (cnpj.length !== 14) return false;
-        
-        // Verificar se todos os dígitos são iguais
         if (/^(\d)\1{13}$/.test(cnpj)) return false;
         
-        // Algoritmo de validação do CNPJ
-        let tamanho = cnpj.length - 2;
+        return this._validarDigitosCNPJ(cnpj, 12) && this._validarDigitosCNPJ(cnpj, 13);
+    },
+    
+    validarPlaca(placa) {
+        placa = placa.toUpperCase().replace(/[^A-Z0-9]/g, '');
+        if (placa.length === 7) {
+            const comHifen = placa.substring(0, 3) + '-' + placa.substring(3);
+            return AppConfig.validations.placa.pattern.test(comHifen) || AppConfig.validations.placa.pattern.test(placa);
+        }
+        return AppConfig.validations.placa.pattern.test(placa);
+    },
+    
+    validarEmail(email) {
+        return AppConfig.validations.email.pattern.test(email);
+    },
+
+    // Métodos auxiliares
+    _validarDigitosCPF(cpf, posicao) {
+        let soma = 0;
+        const multiplicador = posicao === 9 ? 10 : 11;
+        
+        for (let i = 0; i < posicao; i++) {
+            soma += parseInt(cpf.charAt(i)) * (multiplicador - i);
+        }
+        
+        let resto = 11 - (soma % 11);
+        if (resto === 10 || resto === 11) resto = 0;
+        return resto === parseInt(cpf.charAt(posicao));
+    },
+
+    _validarDigitosCNPJ(cnpj, posicao) {
+        let tamanho = posicao - 1;
         let numeros = cnpj.substring(0, tamanho);
-        let digitos = cnpj.substring(tamanho);
         let soma = 0;
         let pos = tamanho - 7;
         
@@ -172,44 +192,7 @@ const Validators = {
         }
         
         let resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
-        if (resultado != digitos.charAt(0)) return false;
-        
-        tamanho = tamanho + 1;
-        numeros = cnpj.substring(0, tamanho);
-        soma = 0;
-        pos = tamanho - 7;
-        
-        for (let i = tamanho; i >= 1; i--) {
-            soma += numeros.charAt(tamanho - i) * pos--;
-            if (pos < 2) pos = 9;
-        }
-        
-        resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
-        return resultado == digitos.charAt(1);
-    },
-    
-    // Validação de placa (formato brasileiro)
-    validarPlaca(placa) {
-        // Formato antigo: ABC-1234
-        const formatoAntigo = /^[A-Z]{3}-[0-9]{4}$/;
-        // Formato Mercosul: ABC-1A23
-        const formatoMercosul = /^[A-Z]{3}[0-9][A-Z][0-9]{2}$/;
-        
-        placa = placa.toUpperCase().replace(/[^A-Z0-9]/g, '');
-        
-        if (placa.length === 7) {
-            // Formato sem hífen
-            const comHifen = placa.substring(0, 3) + '-' + placa.substring(3);
-            return formatoAntigo.test(comHifen) || formatoMercosul.test(placa);
-        }
-        
-        return formatoAntigo.test(placa) || formatoMercosul.test(placa);
-    },
-    
-    // Validação de email
-    validarEmail(email) {
-        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return regex.test(email);
+        return resultado == cnpj.charAt(posicao);
     }
 };
 
@@ -246,15 +229,17 @@ const FeedbackManager = {
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         `;
         
-        // Sempre adicionar ao body para posicionamento fixo
+        // Aplicar posicionamento da configuração
+        Object.assign(alertDiv.style, AppConfig.notifications.position);
+        
         document.body.appendChild(alertDiv);
         
-        // Auto-dismiss após 5 segundos
+        // Auto-dismiss usando configuração
         setTimeout(() => {
             if (alertDiv.parentNode) {
                 alertDiv.remove();
             }
-        }, 5000);
+        }, AppConfig.notifications.duration);
     }
 };
 

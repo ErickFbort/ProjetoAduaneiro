@@ -1,0 +1,683 @@
+{% extends "base.html" %}
+
+{% block title %}Relatórios - Sistema Aduaneiro{% endblock %}
+
+{% block body_class %}main-body{% endblock %}
+
+{% block content %}
+{% include 'partials/sidebar.html' %}
+
+<main class="content main-content--shifted">
+    <div class="content-section active">
+        <div class="container-fluid">
+            <!-- Header -->
+            <div class="page-header">
+                <div class="header-content">
+                    <i class="fas fa-chart-bar"></i>
+                    <div class="title-section">
+                        <h2 class="page-title">Relatórios e Análises</h2>
+                        <p class="page-subtitle">Visualize dados e gere relatórios detalhados do sistema</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cards de Estatísticas Gerais -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number" id="total-users">0</div>
+                        <p>Total de Usuários</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number" id="total-vehicles">0</div>
+                        <p>Total de Veículos</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number" id="total-entities">0</div>
+                        <p>Total de Entidades</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number" id="total-records">0</div>
+                        <p>Total de Registros</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Seção de Relatórios -->
+            <div class="reports-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-file-alt"></i> Relatórios Disponíveis</h3>
+                </div>
+                
+                <div class="reports-grid">
+                    <!-- Relatório de Usuários -->
+                    <div class="report-card" data-report="users">
+                        <div class="report-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="report-content">
+                            <h4>Relatório de Usuários</h4>
+                            <p>Análise detalhada de usuários cadastrados</p>
+                            <div class="report-stats">
+                                <span class="stat-item">
+                                    <i class="fas fa-check-circle text-success"></i>
+                                    <span id="active-users">0</span> Ativos
+                                </span>
+                                <span class="stat-item">
+                                    <i class="fas fa-times-circle text-danger"></i>
+                                    <span id="blocked-users">0</span> Bloqueados
+                                </span>
+                            </div>
+                        </div>
+                        <div class="report-actions">
+                            <button class="btn btn-primary btn-sm" onclick="openReport('users')">
+                                <i class="fas fa-eye"></i> Visualizar
+                            </button>
+                            <button class="btn btn-outline-primary btn-sm" onclick="exportReport('users')">
+                                <i class="fas fa-download"></i> Exportar
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Relatório de Veículos -->
+                    <div class="report-card" data-report="vehicles">
+                        <div class="report-icon">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <div class="report-content">
+                            <h4>Relatório de Veículos</h4>
+                            <p>Análise da frota de veículos cadastrados</p>
+                            <div class="report-stats">
+                                <span class="stat-item">
+                                    <i class="fas fa-check-circle text-success"></i>
+                                    <span id="active-vehicles">0</span> Ativos
+                                </span>
+                                <span class="stat-item">
+                                    <i class="fas fa-times-circle text-danger"></i>
+                                    <span id="blocked-vehicles">0</span> Bloqueados
+                                </span>
+                            </div>
+                        </div>
+                        <div class="report-actions">
+                            <button class="btn btn-primary btn-sm" onclick="openReport('vehicles')">
+                                <i class="fas fa-eye"></i> Visualizar
+                            </button>
+                            <button class="btn btn-outline-primary btn-sm" onclick="exportReport('vehicles')">
+                                <i class="fas fa-download"></i> Exportar
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Relatório de Entidades -->
+                    <div class="report-card" data-report="entities">
+                        <div class="report-icon">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <div class="report-content">
+                            <h4>Relatório de Entidades</h4>
+                            <p>Análise de entidades cadastradas</p>
+                            <div class="report-stats">
+                                <span class="stat-item">
+                                    <i class="fas fa-check-circle text-success"></i>
+                                    <span id="active-entities">0</span> Ativas
+                                </span>
+                                <span class="stat-item">
+                                    <i class="fas fa-times-circle text-danger"></i>
+                                    <span id="blocked-entities">0</span> Bloqueadas
+                                </span>
+                            </div>
+                        </div>
+                        <div class="report-actions">
+                            <button class="btn btn-primary btn-sm" onclick="openReport('entities')">
+                                <i class="fas fa-eye"></i> Visualizar
+                            </button>
+                            <button class="btn btn-outline-primary btn-sm" onclick="exportReport('entities')">
+                                <i class="fas fa-download"></i> Exportar
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Relatório de Crescimento -->
+                    <div class="report-card" data-report="growth">
+                        <div class="report-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="report-content">
+                            <h4>Relatório de Crescimento</h4>
+                            <p>Análise de crescimento mensal</p>
+                            <div class="report-stats">
+                                <span class="stat-item">
+                                    <i class="fas fa-calendar"></i>
+                                    Últimos 12 meses
+                                </span>
+                                <span class="stat-item">
+                                    <i class="fas fa-trending-up"></i>
+                                    Tendência de crescimento
+                                </span>
+                            </div>
+                        </div>
+                        <div class="report-actions">
+                            <button class="btn btn-primary btn-sm" onclick="openReport('growth')">
+                                <i class="fas fa-eye"></i> Visualizar
+                            </button>
+                            <button class="btn btn-outline-primary btn-sm" onclick="exportReport('growth')">
+                                <i class="fas fa-download"></i> Exportar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gráficos e Análises -->
+            <div class="charts-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-chart-pie"></i> Análises Visuais</h3>
+                </div>
+                
+                <div class="charts-grid">
+                    <!-- Gráfico de Usuários por Grupo -->
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h4>Usuários por Grupo</h4>
+                            <div class="chart-actions">
+                                <button class="btn btn-sm btn-outline-secondary" onclick="refreshChart('users-by-group')">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="chart-content">
+                            <canvas id="users-by-group-chart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Gráfico de Veículos por Tipo -->
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h4>Veículos por Tipo</h4>
+                            <div class="chart-actions">
+                                <button class="btn btn-sm btn-outline-secondary" onclick="refreshChart('vehicles-by-type')">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="chart-content">
+                            <canvas id="vehicles-by-type-chart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Gráfico de Crescimento Mensal -->
+                    <div class="chart-card chart-wide">
+                        <div class="chart-header">
+                            <h4>Crescimento Mensal</h4>
+                            <div class="chart-actions">
+                                <button class="btn btn-sm btn-outline-secondary" onclick="refreshChart('monthly-growth')">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="chart-content">
+                            <canvas id="monthly-growth-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Modal para Visualizar Relatórios -->
+<div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reportModalLabel">Relatório</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Filtros -->
+                <div class="report-filters mb-4">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="start-date" class="form-label">Data Inicial</label>
+                            <input type="date" class="form-control" id="start-date">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="end-date" class="form-label">Data Final</label>
+                            <input type="date" class="form-control" id="end-date">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="filter-type" class="form-label">Tipo/Grupo</label>
+                            <select class="form-select" id="filter-type">
+                                <option value="">Todos</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="filter-status" class="form-label">Status</label>
+                            <select class="form-select" id="filter-status">
+                                <option value="">Todos</option>
+                                <option value="active">Ativo</option>
+                                <option value="blocked">Bloqueado</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <button class="btn btn-primary" onclick="applyFilters()">
+                                <i class="fas fa-filter"></i> Aplicar Filtros
+                            </button>
+                            <button class="btn btn-outline-secondary" onclick="clearFilters()">
+                                <i class="fas fa-times"></i> Limpar Filtros
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabela de Dados -->
+                <div class="table-responsive">
+                    <table class="table table-striped" id="report-table">
+                        <thead>
+                            <tr id="report-table-header">
+                                <!-- Cabeçalho será preenchido dinamicamente -->
+                            </tr>
+                        </thead>
+                        <tbody id="report-table-body">
+                            <!-- Dados serão preenchidos dinamicamente -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Paginação -->
+                <nav aria-label="Navegação do relatório">
+                    <ul class="pagination justify-content-center" id="report-pagination">
+                        <!-- Paginação será preenchida dinamicamente -->
+                    </ul>
+                </nav>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-primary" onclick="exportCurrentReport()">
+                    <i class="fas fa-download"></i> Exportar Relatório
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Incluir Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+// Variáveis globais
+let currentReportType = null;
+let currentReportData = [];
+let currentPage = 1;
+let itemsPerPage = 10;
+let charts = {};
+
+// Carregar dados iniciais
+document.addEventListener('DOMContentLoaded', function() {
+    loadReportsStats();
+    initializeCharts();
+});
+
+// Carregar estatísticas dos relatórios
+async function loadReportsStats() {
+    try {
+        const response = await fetch('/api/reports/stats');
+        const data = await response.json();
+        
+        if (data.success) {
+            updateStatsCards(data.data);
+            updateReportCards(data.data);
+        }
+    } catch (error) {
+        console.error('Erro ao carregar estatísticas:', error);
+    }
+}
+
+// Atualizar cards de estatísticas
+function updateStatsCards(data) {
+    document.getElementById('total-users').textContent = data.users.total;
+    document.getElementById('total-vehicles').textContent = data.vehicles.total;
+    document.getElementById('total-entities').textContent = data.entities.total;
+    document.getElementById('total-records').textContent = data.users.total + data.vehicles.total + data.entities.total;
+}
+
+// Atualizar cards de relatórios
+function updateReportCards(data) {
+    document.getElementById('active-users').textContent = data.users.active;
+    document.getElementById('blocked-users').textContent = data.users.blocked;
+    document.getElementById('active-vehicles').textContent = data.vehicles.active;
+    document.getElementById('blocked-vehicles').textContent = data.vehicles.blocked;
+    document.getElementById('active-entities').textContent = data.entities.active;
+    document.getElementById('blocked-entities').textContent = data.entities.blocked;
+}
+
+// Abrir relatório
+async function openReport(reportType) {
+    currentReportType = reportType;
+    
+    // Configurar filtros baseado no tipo de relatório
+    setupFilters(reportType);
+    
+    // Carregar dados
+    await loadReportData();
+    
+    // Mostrar modal
+    const modal = new bootstrap.Modal(document.getElementById('reportModal'));
+    modal.show();
+}
+
+// Configurar filtros
+function setupFilters(reportType) {
+    const filterType = document.getElementById('filter-type');
+    filterType.innerHTML = '<option value="">Todos</option>';
+    
+    if (reportType === 'users') {
+        filterType.innerHTML += '<option value="admin">Admin</option><option value="operador">Operador</option><option value="visualizador">Visualizador</option>';
+    } else if (reportType === 'vehicles') {
+        filterType.innerHTML += '<option value="caminhao">Caminhão</option><option value="van">Van</option><option value="carro">Carro</option>';
+    } else if (reportType === 'entities') {
+        filterType.innerHTML += '<option value="importadora">Importadora</option><option value="exportadora">Exportadora</option><option value="despachante">Despachante</option>';
+    }
+}
+
+// Carregar dados do relatório
+async function loadReportData() {
+    try {
+        const params = new URLSearchParams();
+        const startDate = document.getElementById('start-date').value;
+        const endDate = document.getElementById('end-date').value;
+        const filterType = document.getElementById('filter-type').value;
+        const filterStatus = document.getElementById('filter-status').value;
+        
+        if (startDate) params.append('start_date', startDate);
+        if (endDate) params.append('end_date', endDate);
+        if (filterType) params.append('group' if currentReportType === 'users' else 'tipo', filterType);
+        if (filterStatus) params.append('status', filterStatus);
+        
+        const response = await fetch(`/api/reports/${currentReportType}?${params}`);
+        const data = await response.json();
+        
+        if (data.success) {
+            currentReportData = data.data;
+            renderReportTable();
+        }
+    } catch (error) {
+        console.error('Erro ao carregar dados do relatório:', error);
+    }
+}
+
+// Renderizar tabela do relatório
+function renderReportTable() {
+    const tableHeader = document.getElementById('report-table-header');
+    const tableBody = document.getElementById('report-table-body');
+    
+    // Limpar tabela
+    tableHeader.innerHTML = '';
+    tableBody.innerHTML = '';
+    
+    if (currentReportData.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="100%" class="text-center">Nenhum dado encontrado</td></tr>';
+        return;
+    }
+    
+    // Configurar cabeçalho baseado no tipo de relatório
+    let headers = [];
+    if (currentReportType === 'users') {
+        headers = ['ID', 'Nome', 'Email', 'Grupo', 'Cargo', 'Status', 'Criado em', 'Último Login'];
+    } else if (currentReportType === 'vehicles') {
+        headers = ['ID', 'Motorista', 'CPF', 'Placa', 'RENAVAM', 'Tipo', 'Status', 'Criado em'];
+    } else if (currentReportType === 'entities') {
+        headers = ['ID', 'Nome', 'CNPJ', 'Tipo', 'Status', 'Criado em'];
+    }
+    
+    // Criar cabeçalho
+    headers.forEach(header => {
+        const th = document.createElement('th');
+        th.textContent = header;
+        tableHeader.appendChild(th);
+    });
+    
+    // Calcular paginação
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const pageData = currentReportData.slice(startIndex, endIndex);
+    
+    // Criar linhas
+    pageData.forEach(item => {
+        const row = document.createElement('tr');
+        
+        if (currentReportType === 'users') {
+            row.innerHTML = `
+                <td>${item.id}</td>
+                <td>${item.name}</td>
+                <td>${item.email}</td>
+                <td>${item.group}</td>
+                <td>${item.job_title || '-'}</td>
+                <td><span class="badge ${item.status === 'active' ? 'bg-success' : 'bg-danger'}">${item.status}</span></td>
+                <td>${item.created_at}</td>
+                <td>${item.last_login}</td>
+            `;
+        } else if (currentReportType === 'vehicles') {
+            row.innerHTML = `
+                <td>${item.id}</td>
+                <td>${item.motorista}</td>
+                <td>${item.cpf}</td>
+                <td>${item.placa}</td>
+                <td>${item.renavam}</td>
+                <td>${item.tipo}</td>
+                <td><span class="badge ${item.status === 'active' ? 'bg-success' : 'bg-danger'}">${item.status}</span></td>
+                <td>${item.created_at}</td>
+            `;
+        } else if (currentReportType === 'entities') {
+            row.innerHTML = `
+                <td>${item.id}</td>
+                <td>${item.nome}</td>
+                <td>${item.cnpj}</td>
+                <td>${item.tipo}</td>
+                <td><span class="badge ${item.status === 'active' ? 'bg-success' : 'bg-danger'}">${item.status}</span></td>
+                <td>${item.created_at}</td>
+            `;
+        }
+        
+        tableBody.appendChild(row);
+    });
+    
+    // Atualizar paginação
+    updatePagination();
+}
+
+// Atualizar paginação
+function updatePagination() {
+    const pagination = document.getElementById('report-pagination');
+    const totalPages = Math.ceil(currentReportData.length / itemsPerPage);
+    
+    pagination.innerHTML = '';
+    
+    // Botão anterior
+    const prevLi = document.createElement('li');
+    prevLi.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
+    prevLi.innerHTML = `<a class="page-link" href="#" onclick="changePage(${currentPage - 1})">Anterior</a>`;
+    pagination.appendChild(prevLi);
+    
+    // Páginas
+    for (let i = 1; i <= totalPages; i++) {
+        const li = document.createElement('li');
+        li.className = `page-item ${i === currentPage ? 'active' : ''}`;
+        li.innerHTML = `<a class="page-link" href="#" onclick="changePage(${i})">${i}</a>`;
+        pagination.appendChild(li);
+    }
+    
+    // Botão próximo
+    const nextLi = document.createElement('li');
+    nextLi.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
+    nextLi.innerHTML = `<a class="page-link" href="#" onclick="changePage(${currentPage + 1})">Próximo</a>`;
+    pagination.appendChild(nextLi);
+}
+
+// Mudar página
+function changePage(page) {
+    currentPage = page;
+    renderReportTable();
+}
+
+// Aplicar filtros
+function applyFilters() {
+    currentPage = 1;
+    loadReportData();
+}
+
+// Limpar filtros
+function clearFilters() {
+    document.getElementById('start-date').value = '';
+    document.getElementById('end-date').value = '';
+    document.getElementById('filter-type').value = '';
+    document.getElementById('filter-status').value = '';
+    applyFilters();
+}
+
+// Exportar relatório
+async function exportReport(reportType) {
+    try {
+        const response = await fetch(`/api/reports/export/${reportType}?format=pdf`);
+        const data = await response.json();
+        
+        if (data.success) {
+            // TODO: Implementar download real
+            alert('Funcionalidade de exportação será implementada em breve!');
+        }
+    } catch (error) {
+        console.error('Erro ao exportar relatório:', error);
+    }
+}
+
+// Exportar relatório atual
+function exportCurrentReport() {
+    if (currentReportType) {
+        exportReport(currentReportType);
+    }
+}
+
+// Inicializar gráficos
+function initializeCharts() {
+    // Gráfico de usuários por grupo
+    const usersByGroupCtx = document.getElementById('users-by-group-chart').getContext('2d');
+    charts['users-by-group'] = new Chart(usersByGroupCtx, {
+        type: 'doughnut',
+        data: {
+            labels: [],
+            datasets: [{
+                data: [],
+                backgroundColor: ['#007bff', '#28a745', '#ffc107', '#dc3545']
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+    
+    // Gráfico de veículos por tipo
+    const vehiclesByTypeCtx = document.getElementById('vehicles-by-type-chart').getContext('2d');
+    charts['vehicles-by-type'] = new Chart(vehiclesByTypeCtx, {
+        type: 'pie',
+        data: {
+            labels: [],
+            datasets: [{
+                data: [],
+                backgroundColor: ['#007bff', '#28a745', '#ffc107', '#dc3545']
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+    
+    // Gráfico de crescimento mensal
+    const monthlyGrowthCtx = document.getElementById('monthly-growth-chart').getContext('2d');
+    charts['monthly-growth'] = new Chart(monthlyGrowthCtx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: []
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    
+    // Carregar dados dos gráficos
+    loadChartsData();
+}
+
+// Carregar dados dos gráficos
+async function loadChartsData() {
+    try {
+        const response = await fetch('/api/reports/stats');
+        const data = await response.json();
+        
+        if (data.success) {
+            // Atualizar gráfico de usuários por grupo
+            const usersByGroup = data.data.users.by_group;
+            charts['users-by-group'].data.labels = usersByGroup.map(item => item.group);
+            charts['users-by-group'].data.datasets[0].data = usersByGroup.map(item => item.count);
+            charts['users-by-group'].update();
+            
+            // Atualizar gráfico de veículos por tipo
+            const vehiclesByType = data.data.vehicles.by_type;
+            charts['vehicles-by-type'].data.labels = vehiclesByType.map(item => item.type);
+            charts['vehicles-by-type'].data.datasets[0].data = vehiclesByType.map(item => item.count);
+            charts['vehicles-by-type'].update();
+            
+            // Atualizar gráfico de crescimento mensal
+            const monthlyData = data.data.users.by_month;
+            charts['monthly-growth'].data.labels = monthlyData.map(item => item.month);
+            charts['monthly-growth'].data.datasets = [{
+                label: 'Usuários',
+                data: monthlyData.map(item => item.count),
+                borderColor: '#007bff',
+                backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                tension: 0.4
+            }];
+            charts['monthly-growth'].update();
+        }
+    } catch (error) {
+        console.error('Erro ao carregar dados dos gráficos:', error);
+    }
+}
+
+// Atualizar gráfico
+function refreshChart(chartName) {
+    if (charts[chartName]) {
+        loadChartsData();
+    }
+}
+</script>
+
+{% endblock %}

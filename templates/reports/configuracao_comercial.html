@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block title %}Configuração de Relatórios - {{ submenu_title }}{% endblock %}
+
+{% block body_class %}main-body{% endblock %}
+
+{% block content %}
+{% include 'partials/sidebar.html' %}
+
+<main class="content main-content--shifted">
+    <div class="content-section active">
+        <div class="container-fluid">
+            <!-- Header -->
+            <div class="page-header">
+                <div class="header-content">
+                    <a href="/relatorios/configuracao" class="back-button">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                    <div class="title-section">
+                        <h2 class="page-title">Configuração de Relatórios - {{ submenu_title }}</h2>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Seção de Relatórios -->
+            <div class="reports-config-section">
+                <h3>Relatórios</h3>
+                
+                <div class="table-responsive">
+                    <table class="table table-striped" id="reports-config-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Relatório</th>
+                                <th>Campos</th>
+                                <th>Opções</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reports-tbody">
+                            <!-- Dados serão carregados dinamicamente -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Botão para adicionar novo relatório -->
+                <div class="add-report-section mt-3">
+                    <button class="btn btn-primary" onclick="addNewReport()">
+                        <i class="fas fa-plus"></i> Adicionar Relatório
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+// Dados dos relatórios comerciais (baseado na imagem)
+const reportsData = [
+    { id: 1, name: 'Cargas Armazenadas +60 Dias', fields: '003*,006,008,018' },
+    { id: 2, name: 'Cargas Armazenadas por Consignatário', fields: '003*,006,008,009' },
+    { id: 3, name: 'Cargas com Isenção', fields: '001*,002,003*,018,006,008' },
+    { id: 4, name: 'Cargas Entregues', fields: '001*,002*,003*,004,006,008,009,014,018' },
+    { id: 5, name: 'Cargas Entregues (Processo)', fields: '001*,002*,003*,004,006,008,009,014,018' },
+    { id: 6, name: 'Cargas Entregues DTA', fields: '001*,002*,003,004,006,008,018' },
+    { id: 7, name: 'Clientes Correntistas', fields: '001*,002*,003,006,008,018' },
+    { id: 8, name: 'Custódia', fields: '001*,002,003*,018,006,008,009' },
+    { id: 9, name: 'DAPES Sem Carga em Aberto', fields: '001*,002*,003,006,008,007,018' },
+    { id: 10, name: 'Demonstrativo Cargas Analítico', fields: '001*,002,003*,018' },
+    { id: 11, name: 'Descontos', fields: '001*,002,003,018,006,008' },
+    { id: 12, name: 'Exportações', fields: '001*,002*,003,006,008,018,027' },
+    { id: 13, name: 'Perfil de Cliente', fields: '001*,002,003,006,008,018,024,025' },
+    { id: 14, name: 'Serviços x Faturamento', fields: '001*,002*,003,006,007,008,009,018' },
+    { id: 15, name: 'Vistorias', fields: '001*,002,003,018,006,008,021' }
+];
+
+// Carregar dados ao inicializar
+document.addEventListener('DOMContentLoaded', function() {
+    loadReports();
+});
+
+// Carregar relatórios
+function loadReports() {
+    const tbody = document.getElementById('reports-tbody');
+    tbody.innerHTML = '';
+    
+    reportsData.forEach((report, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>
+                <select class="form-select" onchange="updateReportName(${report.id}, this.value)">
+                    <option value="${report.name}" selected>${report.name}</option>
+                    <option value="Novo Relatório">Novo Relatório</option>
+                </select>
+            </td>
+            <td>
+                <input type="text" class="form-control" value="${report.fields}" 
+                       onchange="updateReportFields(${report.id}, this.value)">
+            </td>
+            <td>
+                <button class="btn btn-sm btn-outline-danger" onclick="deleteReport(${report.id})" title="Excluir">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+// Atualizar nome do relatório
+function updateReportName(id, newName) {
+    const report = reportsData.find(r => r.id === id);
+    if (report) {
+        report.name = newName;
+        console.log('Relatório atualizado:', report);
+    }
+}
+
+// Atualizar campos do relatório
+function updateReportFields(id, newFields) {
+    const report = reportsData.find(r => r.id === id);
+    if (report) {
+        report.fields = newFields;
+        console.log('Campos atualizados:', report);
+    }
+}
+
+// Excluir relatório
+function deleteReport(id) {
+    if (confirm('Tem certeza que deseja excluir este relatório?')) {
+        const index = reportsData.findIndex(r => r.id === id);
+        if (index > -1) {
+            reportsData.splice(index, 1);
+            loadReports();
+        }
+    }
+}
+
+// Adicionar novo relatório
+function addNewReport() {
+    const newId = Math.max(...reportsData.map(r => r.id)) + 1;
+    reportsData.push({
+        id: newId,
+        name: 'Novo Relatório',
+        fields: ''
+    });
+    loadReports();
+}
+</script>
+
+{% endblock %}

@@ -23,6 +23,14 @@
                 </div>
             </div>
             <div class="welcome-actions">
+                <!-- Notificações -->
+                <div class="notification-bell-container">
+                    <button class="notification-bell" id="notificationBell" onclick="toggleNotifications()">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge" id="notificationBadge">2</span>
+                    </button>
+                </div>
+                
                 <button class="btn btn-primary scale-in delay-2" onclick="location.reload()">
                     <i class="fas fa-sync-alt"></i> Atualizar
                 </button>
@@ -1221,14 +1229,215 @@ document.addEventListener('DOMContentLoaded', async function() {
     
     // Inicializar animações
     initScrollAnimations();
-    initParallax();
+    // initParallax(); // Removido - causava problema de scroll
     
     // Animar contadores após carregar dados
     setTimeout(animateCounters, 500);
     
     // Atualizar a cada minuto
     setInterval(updateCurrentTime, 60000);
+    
+    // Inicializar notificações
+    initNotifications();
+});
+
+// ========================================
+// SISTEMA DE NOTIFICAÇÕES
+// ========================================
+
+// Dados de notificações
+let notificationsData = [
+    {
+        id: 1,
+        type: 'document',
+        title: 'Documentos',
+        message: 'Por favor inserir CE MERCANTE - P2025.16.430',
+        time: '2 min atrás',
+        read: false,
+        priority: 'high'
+    },
+    {
+        id: 2,
+        type: 'update',
+        title: 'Atualização',
+        message: 'Amanhã teremos atualização no sistema, confira as novidades.',
+        time: '1 hora atrás',
+        read: false,
+        priority: 'medium'
+    },
+    {
+        id: 3,
+        type: 'process',
+        title: 'Processo',
+        message: 'O Processo P2025.43.392 foi aprovado.',
+        time: '3 horas atrás',
+        read: true,
+        priority: 'low'
+    },
+    {
+        id: 4,
+        type: 'billing',
+        title: 'Faturamento',
+        message: 'A nota fiscal 7320 está pendente.',
+        time: '5 horas atrás',
+        read: true,
+        priority: 'high'
+    }
+];
+
+function initNotifications() {
+    loadNotifications();
+    updateBadge();
+}
+
+function loadNotifications() {
+    const list = document.getElementById('notificationList');
+    if (!list) return;
+    
+    list.innerHTML = '';
+    
+    if (notificationsData.length === 0) {
+        list.innerHTML = `
+            <div class="notification-empty">
+                <i class="fas fa-bell-slash"></i>
+                <p>Nenhuma notificação</p>
+            </div>
+        `;
+        return;
+    }
+    
+    notificationsData.forEach(notification => {
+        const notificationElement = createNotificationElement(notification);
+        list.appendChild(notificationElement);
+    });
+}
+
+function createNotificationElement(notification) {
+    const div = document.createElement('div');
+    div.className = `notification-item ${notification.read ? 'read' : 'unread'} priority-${notification.priority}`;
+    div.innerHTML = `
+        <div class="notification-icon">
+            <i class="fas fa-${getNotificationIcon(notification.type)}"></i>
+        </div>
+        <div class="notification-content">
+            <div class="notification-title">${notification.title}</div>
+            <div class="notification-message">${notification.message}</div>
+            <div class="notification-time">${notification.time}</div>
+        </div>
+        <div class="notification-actions">
+            <button class="btn-remove" onclick="removeNotification(${notification.id})" title="Remover">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    `;
+    
+    // Adicionar evento de clique para marcar como lida
+    div.addEventListener('click', (e) => {
+        if (!e.target.closest('.btn-remove')) {
+            markAsRead(notification.id);
+        }
+    });
+    
+    return div;
+}
+
+function getNotificationIcon(type) {
+    const icons = {
+        'document': 'file-alt',
+        'update': 'sync-alt',
+        'process': 'check-circle',
+        'billing': 'receipt',
+        'warning': 'exclamation-triangle',
+        'info': 'info-circle'
+    };
+    return icons[type] || 'bell';
+}
+
+function markAsRead(id) {
+    const notification = notificationsData.find(n => n.id === id);
+    if (notification && !notification.read) {
+        notification.read = true;
+        loadNotifications();
+        updateBadge();
+    }
+}
+
+function removeNotification(id) {
+    notificationsData = notificationsData.filter(n => n.id !== id);
+    loadNotifications();
+    updateBadge();
+}
+
+function markAllAsRead() {
+    notificationsData.forEach(n => n.read = true);
+    loadNotifications();
+    updateBadge();
+}
+
+function clearAllNotifications() {
+    if (confirm('Tem certeza que deseja remover todas as notificações?')) {
+        notificationsData = [];
+        loadNotifications();
+        updateBadge();
+    }
+}
+
+function updateBadge() {
+    const badge = document.getElementById('notificationBadge');
+    const unreadCount = notificationsData.filter(n => !n.read).length;
+    
+    if (badge) {
+        badge.textContent = unreadCount;
+        badge.style.display = unreadCount > 0 ? 'block' : 'none';
+    }
+}
+
+function toggleNotifications() {
+    const dropdown = document.getElementById('notificationDropdown');
+    const bell = document.getElementById('notificationBell');
+    
+    if (dropdown && bell) {
+        if (dropdown.classList.contains('show')) {
+            dropdown.classList.remove('show');
+        } else {
+            // Calcular posição baseada na posição do sininho
+            const bellRect = bell.getBoundingClientRect();
+            dropdown.style.top = (bellRect.bottom + 10) + 'px';
+            dropdown.style.right = (window.innerWidth - bellRect.right) + 'px';
+            dropdown.style.left = 'auto';
+            dropdown.classList.add('show');
+        }
+    }
+}
+
+// Fechar dropdown ao clicar fora
+document.addEventListener('click', (e) => {
+    const container = document.querySelector('.notification-bell-container');
+    const dropdown = document.getElementById('notificationDropdown');
+    
+    if (container && dropdown && !container.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.classList.remove('show');
+    }
 });
 </script>
+
+<!-- Dropdown de Notificações -->
+<div class="notification-dropdown" id="notificationDropdown">
+    <div class="notification-header">
+        <h4>Notificações</h4>
+        <button class="btn-clear-all" onclick="clearAllNotifications()">
+            <i class="fas fa-trash"></i>
+        </button>
+    </div>
+    <div class="notification-list" id="notificationList">
+        <!-- Notificações serão carregadas dinamicamente -->
+    </div>
+    <div class="notification-footer">
+        <button class="btn btn-sm btn-outline-primary" onclick="markAllAsRead()">
+            Marcar todas como lidas
+        </button>
+    </div>
+</div>
+
 {% endblock %}
 

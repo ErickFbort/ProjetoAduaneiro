@@ -11,27 +11,13 @@
     <div class="content-section active">
         <div class="container-fluid">
             <div id="veiculo-list-view">
-                <!-- Header com título e estatísticas -->
+                <!-- Header com título -->
                 <div class="page-header">
                     <div class="header-content">
                         <i class="fas fa-car"></i>
                         <div class="title-section">
                             <h2 class="page-title">Cadastro de Veículos</h2>
                             <p class="page-subtitle">Gerencie a frota de veículos do sistema</p>
-                        </div>
-                        <div class="stats-section">
-                            <div class="stat-card">
-                                <div class="stat-number">{{ veiculos.total }}</div>
-                                <div class="stat-label">Total</div>
-                            </div>
-                            <div class="stat-card active">
-                                <div class="stat-number">{{ veiculos.items | selectattr('status', 'equalto', 'active') | list | length }}</div>
-                                <div class="stat-label">Ativos</div>
-                            </div>
-                            <div class="stat-card blocked">
-                                <div class="stat-number">{{ veiculos.items | selectattr('status', 'equalto', 'blocked') | list | length }}</div>
-                                <div class="stat-label">Bloqueados</div>
-                            </div>
                         </div>
                     </div>
                 </div>

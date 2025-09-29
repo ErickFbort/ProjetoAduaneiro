@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block title %}Relatórios - Configuração{% endblock %}
+
+{% block body_class %}main-body{% endblock %}
+
+{% block content %}
+{% include 'partials/sidebar.html' %}
+
+<main class="content main-content--shifted">
+    <div class="content-section active">
+        <div class="container-fluid">
+            <!-- Header -->
+            <div class="page-header">
+                <div class="header-content">
+                    <i class="fas fa-cog"></i>
+                    <div class="title-section">
+                        <h2 class="page-title">Relatórios de Configuração</h2>
+                        <p class="page-subtitle">Relatórios relacionados às configurações do sistema</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabela de Configuração de Relatórios -->
+            <div class="config-table-section">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover" id="reports-config-table">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Código</th>
+                                <th>Descrição</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>001</code></td>
+                                <td>Comercial</td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="editReportConfig('001', 'Comercial')" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><code>002</code></td>
+                                <td>Faturamento</td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="editReportConfig('002', 'Faturamento')" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><code>003</code></td>
+                                <td>Gerencial</td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="editReportConfig('003', 'Gerencial')" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><code>004</code></td>
+                                <td>Operacional</td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="editReportConfig('004', 'Operacional')" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><code>005</code></td>
+                                <td>Financeiro</td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="editReportConfig('005', 'Financeiro')" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</main>
+
+<script>
+// Funções específicas para relatórios de configuração
+function editReportConfig(code, description) {
+    // Redirecionar para a página de edição específica do submenu
+    const submenuMap = {
+        '001': 'comercial',
+        '002': 'faturamento', 
+        '003': 'gerencial',
+        '004': 'operacional',
+        '005': 'financeiro'
+    };
+    
+    const submenu = submenuMap[code];
+    if (submenu) {
+        window.location.href = `/relatorios/configuracao/${submenu}`;
+    } else {
+        alert('Submenu não encontrado');
+    }
+}
+
+function openReport(reportType) {
+    // Implementar lógica específica para cada tipo de relatório
+    console.log('Abrindo relatório:', reportType);
+    // TODO: Implementar modal ou página específica
+}
+
+function exportReport(reportType) {
+    // Implementar exportação específica
+    console.log('Exportando relatório:', reportType);
+    // TODO: Implementar exportação real
+}
+</script>
+
+{% endblock %}

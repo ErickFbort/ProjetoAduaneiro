@@ -1,0 +1,124 @@
+{% extends "reports/base_report.html" %}
+
+{% set report_title = "Faturamento" %}
+{% set report_subtitle = "Relatórios relacionados ao faturamento e cobrança" %}
+{% set report_icon = "fas fa-building" %}
+
+{% block report_content %}
+<div class="reports-grid">
+    <!-- Relatório de Faturas -->
+    <div class="report-card" data-report="invoices">
+        <div class="report-icon">
+            <i class="fas fa-file-invoice"></i>
+        </div>
+        <div class="report-content">
+            <h4>Relatório de Faturas</h4>
+            <p>Análise de faturas emitidas e status de pagamento</p>
+            <div class="report-stats">
+                <span class="stat-item">
+                    <i class="fas fa-money-bill text-success"></i>
+                    Faturas pagas
+                </span>
+            </div>
+        </div>
+        <div class="report-actions">
+            <button class="btn btn-primary btn-sm" onclick="openReport('invoices')">
+                <i class="fas fa-eye"></i> Visualizar
+            </button>
+            <button class="btn btn-outline-primary btn-sm" onclick="exportReport('invoices')">
+                <i class="fas fa-download"></i> Exportar
+            </button>
+        </div>
+    </div>
+
+    <!-- Relatório de Receitas -->
+    <div class="report-card" data-report="revenue">
+        <div class="report-icon">
+            <i class="fas fa-chart-pie"></i>
+        </div>
+        <div class="report-content">
+            <h4>Relatório de Receitas</h4>
+            <p>Análise de receitas por período e categoria</p>
+            <div class="report-stats">
+                <span class="stat-item">
+                    <i class="fas fa-trending-up text-primary"></i>
+                    Crescimento de receita
+                </span>
+            </div>
+        </div>
+        <div class="report-actions">
+            <button class="btn btn-primary btn-sm" onclick="openReport('revenue')">
+                <i class="fas fa-eye"></i> Visualizar
+            </button>
+            <button class="btn btn-outline-primary btn-sm" onclick="exportReport('revenue')">
+                <i class="fas fa-download"></i> Exportar
+            </button>
+        </div>
+    </div>
+
+    <!-- Relatório de Inadimplência -->
+    <div class="report-card" data-report="overdue">
+        <div class="report-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <div class="report-content">
+            <h4>Relatório de Inadimplência</h4>
+            <p>Análise de contas em atraso e cobrança</p>
+            <div class="report-stats">
+                <span class="stat-item">
+                    <i class="fas fa-clock text-warning"></i>
+                    Contas em atraso
+                </span>
+            </div>
+        </div>
+        <div class="report-actions">
+            <button class="btn btn-primary btn-sm" onclick="openReport('overdue')">
+                <i class="fas fa-eye"></i> Visualizar
+            </button>
+            <button class="btn btn-outline-primary btn-sm" onclick="exportReport('overdue')">
+                <i class="fas fa-download"></i> Exportar
+            </button>
+        </div>
+    </div>
+
+    <!-- Relatório de Comissões -->
+    <div class="report-card" data-report="commissions">
+        <div class="report-icon">
+            <i class="fas fa-percentage"></i>
+        </div>
+        <div class="report-content">
+            <h4>Relatório de Comissões</h4>
+            <p>Cálculo e análise de comissões por vendedor</p>
+            <div class="report-stats">
+                <span class="stat-item">
+                    <i class="fas fa-users text-info"></i>
+                    Vendedores ativos
+                </span>
+            </div>
+        </div>
+        <div class="report-actions">
+            <button class="btn btn-primary btn-sm" onclick="openReport('commissions')">
+                <i class="fas fa-eye"></i> Visualizar
+            </button>
+            <button class="btn btn-outline-primary btn-sm" onclick="exportReport('commissions')">
+                <i class="fas fa-download"></i> Exportar
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block report_scripts %}
+<script>
+// Funções específicas para relatórios de faturamento
+function openReport(reportType) {
+    console.log('Abrindo relatório de faturamento:', reportType);
+    // TODO: Implementar lógica específica
+}
+
+function exportReport(reportType) {
+    console.log('Exportando relatório de faturamento:', reportType);
+    // TODO: Implementar exportação real
+}
+</script>
+{% endblock %}
