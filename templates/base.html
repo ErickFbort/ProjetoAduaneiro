@@ -11,6 +11,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/reports.css') }}" rel="stylesheet">
     
     {% block extra_css %}{% endblock %}
 </head>
@@ -22,7 +23,13 @@
     <!-- Custom JS -->
     <script src="{{ url_for('static', filename='js/config.js') }}"></script>
     <script src="{{ url_for('static', filename='js/utils.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <!-- All Reports Data -->
+    <script src="{{ url_for('static', filename='js/all-reports-data.js') }}"></script>
+    
+    <!-- Reports Utils -->
+    <script src="{{ url_for('static', filename='js/reports-utils.js') }}"></script>
+    <!-- Reports Sync System -->
+    <script src="{{ url_for('static', filename='js/reports-sync.js') }}"></script>
     
     {% block extra_js %}{% endblock %}
 </body>

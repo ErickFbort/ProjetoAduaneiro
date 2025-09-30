@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Configuração - Relatórios Faturamento{% endblock %}
+{% block title %}Configuração - Relatórios Comercial{% endblock %}
 
 {% block body_class %}main-body{% endblock %}
 
@@ -15,8 +15,8 @@
                 <div class="header-content">
                     <i class="fas fa-cog"></i>
                     <div class="title-section">
-                        <h2 class="page-title">Configuração de Relatórios - Faturamento</h2>
-                        <p class="page-subtitle">Configure os relatórios de faturamento e cobrança</p>
+                        <h2 class="page-title">Configuração de Relatórios - Comercial</h2>
+                        <p class="page-subtitle">Configure os relatórios comerciais e de vendas</p>
                     </div>
                 </div>
             </div>
@@ -25,6 +25,9 @@
             <div class="reports-config-section">
                 <div class="config-header">
                     <h5><i class="fas fa-list me-2"></i>Relatórios</h5>
+                    <button class="btn btn-sm btn-outline-warning" onclick="resetToDefaultReports()" title="Resetar para relatórios padrão">
+                        <i class="fas fa-undo me-1"></i>Resetar Padrão
+                    </button>
                 </div>
                 
                 <div class="config-content">
@@ -100,20 +103,38 @@
 
 <script>
 // ========================================
-// DADOS DOS RELATÓRIOS DE FATURAMENTO
+// DADOS DOS RELATÓRIOS COMERCIAIS
 // ========================================
 
-const faturamentoReportsData = {
-    'baixas-guias': {
-        name: 'Baixas de Guias',
+const comercialReportsData = {
+    'cargas-armazenadas-60': {
+        name: 'Cargas Armazenadas +60 Dias',
         fields: '001*,002*,003,018',
-        icon: 'fa-file-invoice-dollar',
+        icon: 'fa-warehouse',
+        color: 'warning'
+    },
+    'cargas-consignatario': {
+        name: 'Cargas Armazenadas por Consignatário',
+        fields: '001*,002*,003*,009',
+        icon: 'fa-building',
+        color: 'info'
+    },
+    'cargas-isencao': {
+        name: 'Cargas com Isenção',
+        fields: '001*,002,003*,018,006,008',
+        icon: 'fa-gift',
         color: 'success'
     },
     'cargas-entregues': {
         name: 'Cargas Entregues',
-        fields: '001*,002*,003*,006,008,009,011,018',
+        fields: '001*,002*,003*,004,006,008,009,014,018',
         icon: 'fa-truck',
+        color: 'success'
+    },
+    'cargas-entregues-processo': {
+        name: 'Cargas Entregues (Processo)',
+        fields: '001*,002*,003*,004,006,008,009,014,018',
+        icon: 'fa-cogs',
         color: 'primary'
     },
     'cargas-entregues-dta': {
@@ -122,82 +143,58 @@ const faturamentoReportsData = {
         icon: 'fa-file-alt',
         color: 'info'
     },
-    'cargas-recebidas-natureza': {
-        name: 'Cargas Recebidas por Natureza',
-        fields: '001*,002,003*,017,018',
-        icon: 'fa-warehouse',
-        color: 'warning'
+    'clientes-correntistas': {
+        name: 'Clientes Correntistas',
+        fields: '001*,002*,003,006,008,018',
+        icon: 'fa-user-tie',
+        color: 'primary'
     },
     'custodia': {
         name: 'Custódia',
-        fields: '001*,002,003*,018',
+        fields: '001*,002,003*,018,006,008,009',
         icon: 'fa-shield-alt',
         color: 'warning'
     },
-    'guias-canceladas': {
-        name: 'Guias Canceladas',
-        fields: '001*,002*,003*,018',
-        icon: 'fa-times-circle',
+    'dapes-sem-carga': {
+        name: 'DAPES Sem Carga em Aberto',
+        fields: '001*,002*,003,006,008,007,018',
+        icon: 'fa-exclamation-triangle',
         color: 'danger'
     },
-    'guias-emitidas-funcionarios': {
-        name: 'Guias Emitidas por Funcionários',
-        fields: '001*,002*,003,018',
-        icon: 'fa-user-tie',
+    'demonstrativo-cargas': {
+        name: 'Demonstrativo Cargas Analítico',
+        fields: '001*,002,003*,018',
+        icon: 'fa-chart-pie',
         color: 'info'
     },
-    'guias-faturadas': {
-        name: 'Guias Faturadas',
-        fields: '001*,002*,003,018',
-        icon: 'fa-check-circle',
+    'descontos': {
+        name: 'Descontos',
+        fields: '001*,002,003,018,006,008',
+        icon: 'fa-percent',
         color: 'success'
     },
-    'pagamentos-estornados': {
-        name: 'Pagamentos Estornados',
-        fields: '001*,002*,003*,018',
-        icon: 'fa-undo',
-        color: 'danger'
+    'exportacoes': {
+        name: 'Exportações',
+        fields: '001*,002*,003,006,008,018,027',
+        icon: 'fa-ship',
+        color: 'primary'
     },
-    'processos-cancelados': {
-        name: 'Processos Cancelados',
-        fields: '001*,002*,003*,018',
-        icon: 'fa-ban',
-        color: 'danger'
-    },
-    'quantidade-guias-funcionarios': {
-        name: 'Quantidade Guias por Funcionários',
-        fields: '001*,002*,003,018',
-        icon: 'fa-chart-bar',
+    'perfil-cliente': {
+        name: 'Perfil de Cliente',
+        fields: '001*,002,003,006,008,018,024,025',
+        icon: 'fa-user-circle',
         color: 'info'
-    },
-    'relatorio-pagamentos-divergentes': {
-        name: 'Relatório de Pagamentos Divergentes',
-        fields: '001*,002*,003*,018',
-        icon: 'fa-exclamation-triangle',
-        color: 'warning'
     },
     'servicos-faturamento': {
         name: 'Serviços x Faturamento',
-        fields: '001*,002*,003*,006,007,008,009,018',
+        fields: '001*,002*,003,006,007,008,009,018',
         icon: 'fa-calculator',
         color: 'success'
     },
-    'validacao-cobrancas-esperadas': {
-        name: 'Validação Cobranças Esperadas',
-        fields: '001*,002*,003*,018',
-        icon: 'fa-search-dollar',
-        color: 'primary'
-    },
-    'validacao-guias-pos-fechamento': {
-        name: 'Validação Guias Pós-Fechamento',
-        fields: '001*,002*,003*,018',
-        icon: 'fa-clipboard-check',
-        color: 'info'
-    },
-    'validacao-guias-pre-fechamento': {
-        name: 'Validação Guias Pré-Fechamento',
-        fields: '001*,002*,003*,018',
-        icon: 'fa-clipboard-list',
+    'vistorias': {
+        name: 'Vistorias',
+        fields: '001*,002,003,018,006,008,021',
+        icon: 'fa-search',
         color: 'warning'
     }
 };
@@ -211,20 +208,27 @@ let currentEditIndex = -1;
 
 // Carregar relatórios salvos
 function loadReports() {
-    const saved = localStorage.getItem('faturamentoReports');
+    const saved = localStorage.getItem('comercialReports');
     if (saved) {
         reportsList = JSON.parse(saved);
     } else {
-        // Relatórios padrão
+        // Relatórios padrão - todos os relatórios do módulo comercial
         reportsList = [
-            { id: 'baixas-guias', name: 'Baixas de Guias', fields: '001*,002*,003,018' },
-            { id: 'cargas-entregues', name: 'Cargas Entregues', fields: '001*,002*,003*,006,008,009,011,018' },
+            { id: 'cargas-armazenadas-60', name: 'Cargas Armazenadas +60 Dias', fields: '001*,002*,003,018' },
+            { id: 'cargas-consignatario', name: 'Cargas Armazenadas por Consignatário', fields: '001*,002*,003*,009' },
+            { id: 'cargas-isencao', name: 'Cargas com Isenção', fields: '001*,002,003*,018,006,008' },
+            { id: 'cargas-entregues', name: 'Cargas Entregues', fields: '001*,002*,003*,004,006,008,009,014,018' },
+            { id: 'cargas-entregues-processo', name: 'Cargas Entregues (Processo)', fields: '001*,002*,003*,004,006,008,009,014,018' },
             { id: 'cargas-entregues-dta', name: 'Cargas Entregues DTA', fields: '001*,002*,003,004,006,008,018' },
-            { id: 'cargas-recebidas-natureza', name: 'Cargas Recebidas por Natureza', fields: '001*,002,003*,017,018' },
-            { id: 'custodia', name: 'Custódia', fields: '001*,002,003*,018' },
-            { id: 'guias-canceladas', name: 'Guias Canceladas', fields: '001*,002*,003*,018' },
-            { id: 'guias-emitidas-funcionarios', name: 'Guias Emitidas por Funcionários', fields: '001*,002*,003,018' },
-            { id: 'guias-faturadas', name: 'Guias Faturadas', fields: '001*,002*,003,018' }
+            { id: 'clientes-correntistas', name: 'Clientes Correntistas', fields: '001*,002*,003,006,008,018' },
+            { id: 'custodia', name: 'Custódia', fields: '001*,002,003*,018,006,008,009' },
+            { id: 'dapes-sem-carga', name: 'DAPES Sem Carga em Aberto', fields: '001*,002*,003,006,008,007,018' },
+            { id: 'demonstrativo-cargas', name: 'Demonstrativo Cargas Analítico', fields: '001*,002,003*,018' },
+            { id: 'descontos', name: 'Descontos', fields: '001*,002,003,018,006,008' },
+            { id: 'exportacoes', name: 'Exportações', fields: '001*,002*,003,006,008,018,027' },
+            { id: 'perfil-cliente', name: 'Perfil de Cliente', fields: '001*,002,003,006,008,018,024,025' },
+            { id: 'servicos-faturamento', name: 'Serviços x Faturamento', fields: '001*,002*,003,006,007,008,009,018' },
+            { id: 'vistorias', name: 'Vistorias', fields: '001*,002,003,018,006,008,021' }
         ];
         saveReports();
     }
@@ -233,11 +237,11 @@ function loadReports() {
 
 // Salvar relatórios
 function saveReports() {
-    localStorage.setItem('faturamentoReports', JSON.stringify(reportsList));
+    localStorage.setItem('comercialReports', JSON.stringify(reportsList));
     
     // Notificar sistema de sincronização
     if (window.reportsSync) {
-        window.reportsSync.notifyModulesUpdate('faturamento', JSON.stringify(reportsList));
+        window.reportsSync.notifyModulesUpdate('comercial', JSON.stringify(reportsList));
     }
 }
 
@@ -342,6 +346,19 @@ function showNotification(message, type = 'info') {
             notification.parentNode.removeChild(notification);
         }
     }, 3000);
+}
+
+// Resetar para relatórios padrão
+function resetToDefaultReports() {
+    if (confirm('Tem certeza que deseja resetar todos os relatórios para o padrão? Isso irá remover todas as configurações personalizadas.')) {
+        // Limpar localStorage
+        localStorage.removeItem('comercialReports');
+        
+        // Recarregar relatórios
+        loadReports();
+        
+        showNotification('Relatórios resetados para o padrão!', 'success');
+    }
 }
 
 // Carregar opções do dropdown

@@ -32,22 +32,7 @@
                             <label for="reportSelect" class="form-label">Selecione o Relatório</label>
                             <select class="form-select" id="reportSelect" onchange="selectReportFromDropdown()">
                                 <option value="">Selecione...</option>
-                                <option value="baixas-guias">Baixas de Guias</option>
-                                <option value="cargas-entregues">Cargas Entregues</option>
-                                <option value="cargas-entregues-dta">Cargas Entregues DTA</option>
-                                <option value="cargas-recebidas-natureza">Cargas Recebidas por Natureza</option>
-                                <option value="custodia">Custódia</option>
-                                <option value="guias-canceladas">Guias Canceladas</option>
-                                <option value="guias-emitidas-funcionarios">Guias Emitidas por Funcionários</option>
-                                <option value="guias-faturadas">Guias Faturadas</option>
-                                <option value="pagamentos-estornados">Pagamentos Estornados</option>
-                                <option value="processos-cancelados">Processos Cancelados</option>
-                                <option value="quantidade-guias-funcionarios">Quantidade Guias por Funcionários</option>
-                                <option value="relatorio-pagamentos-divergentes">Relatório de Pagamentos Divergentes</option>
-                                <option value="servicos-faturamento">Serviços x Faturamento</option>
-                                <option value="validacao-cobrancas-esperadas">Validação Cobranças Esperadas</option>
-                                <option value="validacao-guias-pos-fechamento">Validação Guias Pós-Fechamento</option>
-                                <option value="validacao-guias-pre-fechamento">Validação Guias Pré-Fechamento</option>
+                                <!-- Opções serão carregadas dinamicamente dos relatórios configurados -->
                             </select>
                         </div>
                         <div class="col-md-4 d-flex align-items-end">
@@ -73,126 +58,8 @@
             </div>
 
             <!-- Grid de Relatórios -->
-            <div class="reports-grid">
-                <!-- Baixas de Guias -->
-                <div class="report-card" data-report="baixas-guias">
-                    <div class="report-header">
-                        <button class="btn-favorite" onclick="toggleFavorite('baixas-guias')" title="Adicionar aos favoritos">
-                            <i class="far fa-star"></i>
-                        </button>
-                    </div>
-                    <div class="report-icon">
-                        <i class="fas fa-file-invoice-dollar"></i>
-                    </div>
-                    <div class="report-content">
-                        <h4>Baixas de Guias</h4>
-                        <p>Relatório de baixas de guias de faturamento</p>
-                        <div class="report-stats">
-                            <span class="stat-item">
-                                <i class="fas fa-check-circle text-success"></i>
-                                Guias baixadas
-                            </span>
-                        </div>
-                    </div>
-                    <div class="report-actions">
-                        <button class="btn btn-primary btn-sm" onclick="openReport('baixas-guias')">
-                            <i class="fas fa-eye"></i> Visualizar
-                        </button>
-                        <button class="btn btn-outline-primary btn-sm" onclick="exportReport('baixas-guias')">
-                            <i class="fas fa-download"></i> Exportar
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Cargas Entregues -->
-                <div class="report-card" data-report="cargas-entregues">
-                    <div class="report-header">
-                        <button class="btn-favorite" onclick="toggleFavorite('cargas-entregues')" title="Adicionar aos favoritos">
-                            <i class="far fa-star"></i>
-                        </button>
-                    </div>
-                    <div class="report-icon">
-                        <i class="fas fa-truck"></i>
-                    </div>
-                    <div class="report-content">
-                        <h4>Cargas Entregues</h4>
-                        <p>Relatório de cargas entregues para faturamento</p>
-                        <div class="report-stats">
-                            <span class="stat-item">
-                                <i class="fas fa-truck text-primary"></i>
-                                Cargas entregues
-                            </span>
-                        </div>
-                    </div>
-                    <div class="report-actions">
-                        <button class="btn btn-primary btn-sm" onclick="openReport('cargas-entregues')">
-                            <i class="fas fa-eye"></i> Visualizar
-                        </button>
-                        <button class="btn btn-outline-primary btn-sm" onclick="exportReport('cargas-entregues')">
-                            <i class="fas fa-download"></i> Exportar
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Guias Faturadas -->
-                <div class="report-card" data-report="guias-faturadas">
-                    <div class="report-header">
-                        <button class="btn-favorite" onclick="toggleFavorite('guias-faturadas')" title="Adicionar aos favoritos">
-                            <i class="far fa-star"></i>
-                        </button>
-                    </div>
-                    <div class="report-icon">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                    <div class="report-content">
-                        <h4>Guias Faturadas</h4>
-                        <p>Relatório de guias que foram faturadas</p>
-                        <div class="report-stats">
-                            <span class="stat-item">
-                                <i class="fas fa-check-circle text-success"></i>
-                                Guias faturadas
-                            </span>
-                        </div>
-                    </div>
-                    <div class="report-actions">
-                        <button class="btn btn-primary btn-sm" onclick="openReport('guias-faturadas')">
-                            <i class="fas fa-eye"></i> Visualizar
-                        </button>
-                        <button class="btn btn-outline-primary btn-sm" onclick="exportReport('guias-faturadas')">
-                            <i class="fas fa-download"></i> Exportar
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Serviços x Faturamento -->
-                <div class="report-card" data-report="servicos-faturamento">
-                    <div class="report-header">
-                        <button class="btn-favorite" onclick="toggleFavorite('servicos-faturamento')" title="Adicionar aos favoritos">
-                            <i class="far fa-star"></i>
-                        </button>
-                    </div>
-                    <div class="report-icon">
-                        <i class="fas fa-calculator"></i>
-                    </div>
-                    <div class="report-content">
-                        <h4>Serviços x Faturamento</h4>
-                        <p>Análise de serviços versus faturamento</p>
-                        <div class="report-stats">
-                            <span class="stat-item">
-                                <i class="fas fa-calculator text-info"></i>
-                                Serviços faturados
-                            </span>
-                        </div>
-                    </div>
-                    <div class="report-actions">
-                        <button class="btn btn-primary btn-sm" onclick="openReport('servicos-faturamento')">
-                            <i class="fas fa-eye"></i> Visualizar
-                        </button>
-                        <button class="btn btn-outline-primary btn-sm" onclick="exportReport('servicos-faturamento')">
-                            <i class="fas fa-download"></i> Exportar
-                        </button>
-                    </div>
-                </div>
+            <div class="reports-grid" id="reportsGrid">
+                <!-- Relatórios serão carregados dinamicamente dos configurados -->
             </div>
         </div>
     </div>
@@ -262,11 +129,12 @@
 // DADOS DOS RELATÓRIOS DE FATURAMENTO
 // ========================================
 
+// Dados base dos relatórios (mesmos do configurador)
 const faturamentoReportsData = {
     'baixas-guias': {
         name: 'Baixas de Guias',
         description: 'Relatório de baixas de guias de faturamento',
-        fields: ['001*', '002*', '003', '018'],
+        fields: '001*,002*,003,018',
         icon: 'fa-file-invoice-dollar',
         color: 'success',
         columns: ['ID', 'Guia', 'Data Baixa', 'Valor', 'Status'],
@@ -279,7 +147,7 @@ const faturamentoReportsData = {
     'cargas-entregues': {
         name: 'Cargas Entregues',
         description: 'Relatório de cargas entregues para faturamento',
-        fields: ['001*', '002*', '003*', '006', '008', '009', '011', '018'],
+        fields: '001*,002*,003*,006,008,009,011,018',
         icon: 'fa-truck',
         color: 'primary',
         columns: ['ID', 'Cliente', 'Data Entrega', 'Valor', 'Status'],
@@ -289,10 +157,75 @@ const faturamentoReportsData = {
             ['003', 'Indústria DEF Ltda', '2024-01-25', 'R$ 4.200,00', 'Entregue']
         ]
     },
+    'cargas-entregues-dta': {
+        name: 'Cargas Entregues DTA',
+        description: 'Relatório de cargas entregues com DTA',
+        fields: '001*,002*,003,004,006,008,018',
+        icon: 'fa-file-alt',
+        color: 'info',
+        columns: ['ID', 'DTA', 'Cliente', 'Data Entrega', 'Valor'],
+        sampleData: [
+            ['001', 'DTA-2024-001', 'Empresa ABC Ltda', '2024-01-15', 'R$ 5.000,00'],
+            ['002', 'DTA-2024-002', 'Comércio XYZ S/A', '2024-01-20', 'R$ 3.500,00'],
+            ['003', 'DTA-2024-003', 'Indústria DEF Ltda', '2024-01-25', 'R$ 4.200,00']
+        ]
+    },
+    'cargas-recebidas-natureza': {
+        name: 'Cargas Recebidas por Natureza',
+        description: 'Relatório de cargas recebidas por natureza',
+        fields: '001*,002,003*,017,018',
+        icon: 'fa-warehouse',
+        color: 'warning',
+        columns: ['ID', 'Natureza', 'Cliente', 'Data Recebimento', 'Valor'],
+        sampleData: [
+            ['001', 'Importação', 'Empresa ABC Ltda', '2024-01-15', 'R$ 5.000,00'],
+            ['002', 'Exportação', 'Comércio XYZ S/A', '2024-01-20', 'R$ 3.500,00'],
+            ['003', 'Nacional', 'Indústria DEF Ltda', '2024-01-25', 'R$ 4.200,00']
+        ]
+    },
+    'custodia': {
+        name: 'Custódia',
+        description: 'Relatório de cargas em custódia',
+        fields: '001*,002,003*,018',
+        icon: 'fa-shield-alt',
+        color: 'warning',
+        columns: ['ID', 'Cliente', 'Data Entrada', 'Tipo Custódia', 'Status'],
+        sampleData: [
+            ['001', 'Empresa ABC Ltda', '2024-01-15', 'Custódia Judicial', 'Ativa'],
+            ['002', 'Comércio XYZ S/A', '2024-01-20', 'Custódia Administrativa', 'Ativa'],
+            ['003', 'Indústria DEF Ltda', '2024-01-25', 'Custódia Fiscal', 'Ativa']
+        ]
+    },
+    'guias-canceladas': {
+        name: 'Guias Canceladas',
+        description: 'Relatório de guias canceladas',
+        fields: '001*,002*,003*,018',
+        icon: 'fa-times-circle',
+        color: 'danger',
+        columns: ['ID', 'Guia', 'Data Cancelamento', 'Motivo', 'Status'],
+        sampleData: [
+            ['001', 'GUI-2024-001', '2024-01-15', 'Erro de digitação', 'Cancelada'],
+            ['002', 'GUI-2024-002', '2024-01-20', 'Cliente desistiu', 'Cancelada'],
+            ['003', 'GUI-2024-003', '2024-01-25', 'Documentação incompleta', 'Cancelada']
+        ]
+    },
+    'guias-emitidas-funcionarios': {
+        name: 'Guias Emitidas por Funcionários',
+        description: 'Relatório de guias emitidas por funcionários',
+        fields: '001*,002*,003,018',
+        icon: 'fa-user-tie',
+        color: 'info',
+        columns: ['Funcionário', 'Quantidade', 'Período', 'Valor Total'],
+        sampleData: [
+            ['João Silva', '25', 'Janeiro 2024', 'R$ 15.000,00'],
+            ['Maria Santos', '18', 'Janeiro 2024', 'R$ 12.500,00'],
+            ['Pedro Costa', '22', 'Janeiro 2024', 'R$ 18.200,00']
+        ]
+    },
     'guias-faturadas': {
         name: 'Guias Faturadas',
         description: 'Relatório de guias que foram faturadas',
-        fields: ['001*', '002*', '003', '018'],
+        fields: '001*,002*,003,018',
         icon: 'fa-check-circle',
         color: 'success',
         columns: ['ID', 'Guia', 'Data Faturamento', 'Valor', 'Status'],
@@ -302,17 +235,108 @@ const faturamentoReportsData = {
             ['003', 'GUI-2024-003', '2024-01-25', 'R$ 1.800,00', 'Faturada']
         ]
     },
+    'pagamentos-estornados': {
+        name: 'Pagamentos Estornados',
+        description: 'Relatório de pagamentos estornados',
+        fields: '001*,002*,003*,018',
+        icon: 'fa-undo',
+        color: 'danger',
+        columns: ['ID', 'Cliente', 'Data Estorno', 'Valor', 'Motivo'],
+        sampleData: [
+            ['001', 'Empresa ABC Ltda', '2024-01-15', 'R$ 1.500,00', 'Erro de processamento'],
+            ['002', 'Comércio XYZ S/A', '2024-01-20', 'R$ 2.300,00', 'Solicitação do cliente'],
+            ['003', 'Indústria DEF Ltda', '2024-01-25', 'R$ 1.800,00', 'Duplicidade']
+        ]
+    },
+    'processos-cancelados': {
+        name: 'Processos Cancelados',
+        description: 'Relatório de processos cancelados',
+        fields: '001*,002*,003*,018',
+        icon: 'fa-ban',
+        color: 'danger',
+        columns: ['ID', 'Processo', 'Data Cancelamento', 'Motivo', 'Status'],
+        sampleData: [
+            ['001', 'PROC-2024-001', '2024-01-15', 'Documentação incompleta', 'Cancelado'],
+            ['002', 'PROC-2024-002', '2024-01-20', 'Cliente desistiu', 'Cancelado'],
+            ['003', 'PROC-2024-003', '2024-01-25', 'Prazo vencido', 'Cancelado']
+        ]
+    },
+    'quantidade-guias-funcionarios': {
+        name: 'Quantidade Guias por Funcionários',
+        description: 'Relatório de quantidade de guias por funcionários',
+        fields: '001*,002*,003,018',
+        icon: 'fa-chart-bar',
+        color: 'info',
+        columns: ['Funcionário', 'Quantidade', 'Período', 'Média Diária'],
+        sampleData: [
+            ['João Silva', '150', 'Janeiro 2024', '5.0'],
+            ['Maria Santos', '120', 'Janeiro 2024', '4.0'],
+            ['Pedro Costa', '180', 'Janeiro 2024', '6.0']
+        ]
+    },
+    'relatorio-pagamentos-divergentes': {
+        name: 'Relatório de Pagamentos Divergentes',
+        description: 'Relatório de pagamentos com divergências',
+        fields: '001*,002*,003*,018',
+        icon: 'fa-exclamation-triangle',
+        color: 'warning',
+        columns: ['ID', 'Cliente', 'Valor Esperado', 'Valor Pago', 'Diferença'],
+        sampleData: [
+            ['001', 'Empresa ABC Ltda', 'R$ 1.500,00', 'R$ 1.450,00', 'R$ -50,00'],
+            ['002', 'Comércio XYZ S/A', 'R$ 2.300,00', 'R$ 2.350,00', 'R$ 50,00'],
+            ['003', 'Indústria DEF Ltda', 'R$ 1.800,00', 'R$ 1.800,00', 'R$ 0,00']
+        ]
+    },
     'servicos-faturamento': {
         name: 'Serviços x Faturamento',
         description: 'Análise de serviços versus faturamento',
-        fields: ['001*', '002*', '003*', '006', '007', '008', '009', '018'],
+        fields: '001*,002*,003*,006,007,008,009,018',
         icon: 'fa-calculator',
-        color: 'info',
+        color: 'success',
         columns: ['Serviço', 'Quantidade', 'Valor Unitário', 'Total'],
         sampleData: [
             ['Armazenagem', '150', 'R$ 50,00', 'R$ 7.500,00'],
             ['Movimentação', '300', 'R$ 25,00', 'R$ 7.500,00'],
             ['Inspeção', '75', 'R$ 100,00', 'R$ 7.500,00']
+        ]
+    },
+    'validacao-cobrancas-esperadas': {
+        name: 'Validação Cobranças Esperadas',
+        description: 'Relatório de validação de cobranças esperadas',
+        fields: '001*,002*,003*,018',
+        icon: 'fa-search-dollar',
+        color: 'primary',
+        columns: ['ID', 'Cliente', 'Valor Esperado', 'Status', 'Observações'],
+        sampleData: [
+            ['001', 'Empresa ABC Ltda', 'R$ 1.500,00', 'Validado', 'OK'],
+            ['002', 'Comércio XYZ S/A', 'R$ 2.300,00', 'Pendente', 'Aguardando documentação'],
+            ['003', 'Indústria DEF Ltda', 'R$ 1.800,00', 'Divergente', 'Valor diferente']
+        ]
+    },
+    'validacao-guias-pos-fechamento': {
+        name: 'Validação Guias Pós-Fechamento',
+        description: 'Relatório de validação de guias pós-fechamento',
+        fields: '001*,002*,003*,018',
+        icon: 'fa-clipboard-check',
+        color: 'info',
+        columns: ['ID', 'Guia', 'Data Fechamento', 'Status', 'Observações'],
+        sampleData: [
+            ['001', 'GUI-2024-001', '2024-01-15', 'Validada', 'Processo concluído'],
+            ['002', 'GUI-2024-002', '2024-01-20', 'Pendente', 'Aguardando aprovação'],
+            ['003', 'GUI-2024-003', '2024-01-25', 'Rejeitada', 'Documentação incompleta']
+        ]
+    },
+    'validacao-guias-pre-fechamento': {
+        name: 'Validação Guias Pré-Fechamento',
+        description: 'Relatório de validação de guias pré-fechamento',
+        fields: '001*,002*,003*,018',
+        icon: 'fa-clipboard-list',
+        color: 'warning',
+        columns: ['ID', 'Guia', 'Data Validação', 'Status', 'Próxima Ação'],
+        sampleData: [
+            ['001', 'GUI-2024-001', '2024-01-15', 'Aprovada', 'Fechar processo'],
+            ['002', 'GUI-2024-002', '2024-01-20', 'Pendente', 'Aguardar documentos'],
+            ['003', 'GUI-2024-003', '2024-01-25', 'Rejeitada', 'Corrigir inconsistências']
         ]
     }
 };
@@ -323,13 +347,142 @@ const faturamentoReportsData = {
 
 let currentReportType = null;
 let reportModal = null;
+let configuredReports = [];
+
+// Carregar relatórios configurados
+function loadConfiguredReports() {
+    const saved = localStorage.getItem('faturamentoReports');
+    if (saved) {
+        configuredReports = JSON.parse(saved);
+    } else {
+        // Relatórios padrão (mesmos do configurador)
+        configuredReports = [
+            { id: 'baixas-guias', name: 'Baixas de Guias', fields: '001*,002*,003,018' },
+            { id: 'cargas-entregues', name: 'Cargas Entregues', fields: '001*,002*,003*,006,008,009,011,018' },
+            { id: 'cargas-entregues-dta', name: 'Cargas Entregues DTA', fields: '001*,002*,003,004,006,008,018' },
+            { id: 'cargas-recebidas-natureza', name: 'Cargas Recebidas por Natureza', fields: '001*,002,003*,017,018' },
+            { id: 'custodia', name: 'Custódia', fields: '001*,002,003*,018' },
+            { id: 'guias-canceladas', name: 'Guias Canceladas', fields: '001*,002*,003*,018' },
+            { id: 'guias-emitidas-funcionarios', name: 'Guias Emitidas por Funcionários', fields: '001*,002*,003,018' },
+            { id: 'guias-faturadas', name: 'Guias Faturadas', fields: '001*,002*,003,018' },
+            { id: 'pagamentos-estornados', name: 'Pagamentos Estornados', fields: '001*,002*,003*,018' },
+            { id: 'processos-cancelados', name: 'Processos Cancelados', fields: '001*,002*,003*,018' },
+            { id: 'quantidade-guias-funcionarios', name: 'Quantidade Guias por Funcionários', fields: '001*,002*,003,018' },
+            { id: 'relatorio-pagamentos-divergentes', name: 'Relatório de Pagamentos Divergentes', fields: '001*,002*,003*,018' },
+            { id: 'servicos-faturamento', name: 'Serviços x Faturamento', fields: '001*,002*,003*,006,007,008,009,018' },
+            { id: 'validacao-cobrancas-esperadas', name: 'Validação Cobranças Esperadas', fields: '001*,002*,003*,018' },
+            { id: 'validacao-guias-pos-fechamento', name: 'Validação Guias Pós-Fechamento', fields: '001*,002*,003*,018' },
+            { id: 'validacao-guias-pre-fechamento', name: 'Validação Guias Pré-Fechamento', fields: '001*,002*,003*,018' }
+        ];
+    }
+    
+    // Enriquecer com dados do sistema centralizado
+    configuredReports = configuredReports.map(report => {
+        if (window.ALL_REPORTS_DATA && window.ALL_REPORTS_DATA[report.id]) {
+            const centralData = window.ALL_REPORTS_DATA[report.id];
+            return {
+                ...report,
+                icon: centralData.icon,
+                color: centralData.color,
+                description: centralData.description || report.description || 'Relatório personalizado'
+            };
+        }
+        return report;
+    });
+    
+    // Carregar dropdown e cards
+    loadDropdownOptions();
+    loadReportCards();
+}
+
+// Carregar opções do dropdown
+function loadDropdownOptions() {
+    const select = document.getElementById('reportSelect');
+    select.innerHTML = '<option value="">Selecione...</option>';
+    
+    configuredReports.forEach(report => {
+        const option = document.createElement('option');
+        option.value = report.id;
+        option.textContent = report.name;
+        select.appendChild(option);
+    });
+}
+
+// Carregar cards de relatórios
+function loadReportCards() {
+    const grid = document.getElementById('reportsGrid');
+    grid.innerHTML = '';
+    
+    configuredReports.forEach(report => {
+        const reportData = faturamentoReportsData[report.id];
+        if (reportData) {
+            const card = createReportCard(report.id, reportData);
+            grid.appendChild(card);
+        }
+    });
+}
+
+// Criar card de relatório
+function createReportCard(reportId, reportData) {
+    const card = document.createElement('div');
+    card.className = 'report-card';
+    card.setAttribute('data-report', reportId);
+    
+    card.innerHTML = `
+        <div class="report-header">
+            <button class="btn-favorite" onclick="toggleFavorite('${reportId}')" title="Adicionar aos favoritos">
+                <i class="far fa-star"></i>
+            </button>
+        </div>
+        <div class="report-icon">
+            <i class="fas ${reportData.icon}"></i>
+        </div>
+        <div class="report-content">
+            <h4>${reportData.name}</h4>
+            <p>${reportData.description}</p>
+            <div class="report-stats">
+                <span class="stat-item">
+                    <i class="fas fa-cog text-info"></i>
+                    Campos: ${reportData.fields}
+                </span>
+            </div>
+        </div>
+        <div class="report-actions">
+            <button class="btn btn-primary btn-sm" onclick="openReport('${reportId}')">
+                <i class="fas fa-eye"></i> Visualizar
+            </button>
+            <button class="btn btn-outline-primary btn-sm" onclick="exportReport('${reportId}')">
+                <i class="fas fa-download"></i> Exportar
+            </button>
+        </div>
+    `;
+    
+    return card;
+}
 
 // Abrir relatório
 function openReport(reportType) {
     console.log('Abrindo relatório de faturamento:', reportType);
     
     currentReportType = reportType;
-    const report = faturamentoReportsData[reportType];
+    
+    // Primeiro, tentar obter do sistema centralizado
+    let report = null;
+    if (window.ALL_REPORTS_DATA && window.ALL_REPORTS_DATA[reportType]) {
+        const reportData = window.ALL_REPORTS_DATA[reportType];
+        report = {
+            name: reportData.name,
+            description: reportData.description || 'Relatório personalizado',
+            fields: reportData.fields,
+            icon: reportData.icon,
+            color: reportData.color,
+            columns: getDefaultColumns(reportType),
+            sampleData: getDefaultSampleData(reportType)
+        };
+    } else {
+        // Fallback para dados locais
+        report = faturamentoReportsData[reportType];
+    }
     
     if (!report) {
         alert('Relatório não encontrado!');
@@ -345,6 +498,8 @@ function openReport(reportType) {
     }
     reportModal.show();
 }
+
+// Funções utilitárias movidas para reports-utils.js
 
 // Configurar modal do relatório
 function setupReportModal(report) {
@@ -453,51 +608,10 @@ function updateFavoriteButton(reportType, isFavorite) {
 // Atualizar seção de favoritos
 function updateFavoritesSection() {
     const favorites = loadFavorites();
-    const section = document.getElementById('favorites-section');
-    const container = document.getElementById('favoritesContainer');
-    
-    if (favorites.length === 0) {
-        section.style.display = 'none';
-        return;
-    }
-    
-    section.style.display = 'block';
-    container.innerHTML = '';
-    
-    favorites.forEach(reportType => {
-        const report = faturamentoReportsData[reportType];
-        if (report) {
-            const card = createFavoriteCard(reportType, report);
-            container.appendChild(card);
-        }
-    });
+    updateFavoritesSectionCentral(favorites, 'favoritesContainer', 'faturamento');
 }
 
-// Criar card de favorito
-function createFavoriteCard(reportType, report) {
-    const card = document.createElement('div');
-    card.className = 'favorite-card';
-    card.innerHTML = `
-        <div class="favorite-content">
-            <div class="favorite-icon">
-                <i class="fas ${report.icon}"></i>
-            </div>
-            <div class="favorite-info">
-                <h6>${report.name}</h6>
-                <p>${report.description}</p>
-            </div>
-        </div>
-        <div class="favorite-actions">
-            <button class="btn btn-sm btn-primary" onclick="openReport('${reportType}')" title="Abrir relatório">
-                <i class="fas fa-eye"></i>
-            </button>
-            <button class="btn btn-sm btn-outline-danger" onclick="toggleFavorite('${reportType}')" title="Remover dos favoritos">
-                <i class="fas fa-trash"></i>
-            </button>
-        </div>
-    `;
-    return card;
-}
+// Função createFavoriteCard movida para reports-utils.js
 
 // Limpar todos os favoritos
 function clearAllFavorites() {
@@ -559,8 +673,12 @@ function openSelectedReport() {
     }
 }
 
-// Inicializar favoritos ao carregar a página
+// Inicializar página
 document.addEventListener('DOMContentLoaded', function() {
+    // O sistema de sincronização automática já carrega os relatórios
+    // Apenas inicializar funcionalidades específicas do módulo
+    
+    // Carregar favoritos
     const favorites = loadFavorites();
     
     // Atualizar botões de favorito
@@ -576,331 +694,5 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<style>
-/* ========================================
-   SISTEMA DE SELEÇÃO RÁPIDA - ESTILOS
-   ======================================== */
-
-/* Seção de Seleção Rápida */
-.quick-select-section {
-    background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
-    border: 1px solid #bbdefb;
-    border-radius: 10px;
-    padding: 20px;
-    margin-bottom: 30px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-
-.quick-select-header {
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #2196f3;
-}
-
-.quick-select-header h5 {
-    margin: 0;
-    color: #1976d2;
-    font-weight: 600;
-}
-
-.quick-select-content .form-label {
-    font-weight: 600;
-    color: #424242;
-    margin-bottom: 8px;
-}
-
-.quick-select-content .form-select {
-    border: 2px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 10px 15px;
-    font-size: 14px;
-    transition: all 0.3s ease;
-}
-
-.quick-select-content .form-select:focus {
-    border-color: #2196f3;
-    box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
-}
-
-.quick-select-content .btn {
-    border-radius: 8px;
-    padding: 10px 20px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-}
-
-.quick-select-content .btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-.quick-select-content .btn:not(:disabled):hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
-}
-
-/* ========================================
-   SISTEMA DE FAVORITOS - ESTILOS
-   ======================================== */
-
-/* Seção de Favoritos */
-.favorites-section {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    border: 1px solid #dee2e6;
-    border-radius: 10px;
-    padding: 20px;
-    margin-bottom: 30px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-
-.favorites-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #ffc107;
-}
-
-.favorites-header h5 {
-    margin: 0;
-    color: #495057;
-    font-weight: 600;
-}
-
-.favorites-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 15px;
-}
-
-.favorite-card {
-    background: white;
-    border: 1px solid #e9ecef;
-    border-radius: 8px;
-    padding: 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-.favorite-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-}
-
-.favorite-content {
-    display: flex;
-    align-items: center;
-    flex: 1;
-}
-
-.favorite-icon {
-    width: 40px;
-    height: 40px;
-    background: linear-gradient(135deg, #ffc107, #ff8f00);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 15px;
-    flex-shrink: 0;
-}
-
-.favorite-icon i {
-    color: white;
-    font-size: 18px;
-    line-height: 1;
-}
-
-.favorite-info h6 {
-    margin: 0 0 5px 0;
-    color: #495057;
-    font-weight: 600;
-    font-size: 14px;
-}
-
-.favorite-info p {
-    margin: 0;
-    color: #6c757d;
-    font-size: 12px;
-    line-height: 1.3;
-}
-
-.favorite-actions {
-    display: flex;
-    gap: 5px;
-    flex-shrink: 0;
-}
-
-.favorite-actions .btn {
-    width: 32px;
-    height: 32px;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 6px;
-    font-size: 12px;
-    line-height: 1;
-}
-
-.favorite-actions .btn i {
-    font-size: 12px;
-    line-height: 1;
-}
-
-/* ========================================
-   CARDS DE RELATÓRIOS - ESTILOS
-   ======================================== */
-
-.reports-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 20px;
-    margin-bottom: 30px;
-}
-
-.report-card {
-    background: white;
-    border: 1px solid #e9ecef;
-    border-radius: 12px;
-    padding: 20px;
-    transition: all 0.3s ease;
-    position: relative;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-
-.report-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-}
-
-.report-header {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-}
-
-.btn-favorite {
-    width: 36px;
-    height: 36px;
-    border: none;
-    background: rgba(255, 193, 7, 0.1);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    padding: 0;
-    line-height: 1;
-}
-
-.btn-favorite:hover {
-    background: rgba(255, 193, 7, 0.2);
-    transform: scale(1.1);
-}
-
-.btn-favorite i {
-    font-size: 18px;
-    line-height: 1;
-    color: #ffc107;
-}
-
-.report-icon {
-    width: 60px;
-    height: 60px;
-    background: linear-gradient(135deg, #2196f3, #1976d2);
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 15px;
-}
-
-.report-icon i {
-    font-size: 24px;
-    color: white;
-}
-
-.report-content h4 {
-    color: #495057;
-    font-weight: 600;
-    margin-bottom: 8px;
-    font-size: 18px;
-}
-
-.report-content p {
-    color: #6c757d;
-    margin-bottom: 15px;
-    font-size: 14px;
-    line-height: 1.4;
-}
-
-.report-stats {
-    margin-bottom: 15px;
-}
-
-.stat-item {
-    display: inline-flex;
-    align-items: center;
-    background: #f8f9fa;
-    padding: 5px 10px;
-    border-radius: 15px;
-    font-size: 12px;
-    color: #495057;
-    margin-right: 10px;
-}
-
-.stat-item i {
-    margin-right: 5px;
-    font-size: 14px;
-}
-
-.report-actions {
-    display: flex;
-    gap: 10px;
-}
-
-.report-actions .btn {
-    flex: 1;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 14px;
-    padding: 8px 16px;
-    transition: all 0.3s ease;
-}
-
-.report-actions .btn:hover {
-    transform: translateY(-1px);
-}
-
-/* Responsividade */
-@media (max-width: 768px) {
-    .reports-grid {
-        grid-template-columns: 1fr;
-        gap: 15px;
-    }
-    
-    .favorites-container {
-        grid-template-columns: 1fr;
-    }
-    
-    .favorite-card {
-        flex-direction: column;
-        text-align: center;
-    }
-    
-    .favorite-content {
-        margin-bottom: 10px;
-    }
-    
-    .favorite-actions {
-        justify-content: center;
-    }
-}
-</style>
+<!-- Estilos movidos para reports.css -->
 {% endblock %}

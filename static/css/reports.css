@@ -1,0 +1,268 @@
+/**
+ * Estilos Centralizados para Relatórios
+ * Estilos comuns compartilhados entre todos os módulos de relatórios
+ */
+
+/* Cards de Favoritos */
+.favorite-card {
+    background: white;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.favorite-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+.favorite-content {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+.favorite-icon {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    color: white;
+    font-size: 20px;
+}
+
+.favorite-info h6 {
+    margin: 0 0 5px 0;
+    color: #333;
+    font-weight: 600;
+}
+
+.favorite-info p {
+    margin: 0;
+    color: #666;
+    font-size: 14px;
+}
+
+.favorite-actions {
+    display: flex;
+    gap: 8px;
+}
+
+/* Responsividade para Cards de Favoritos */
+@media (max-width: 768px) {
+    .favorite-card {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .favorite-content {
+        margin-bottom: 10px;
+    }
+    
+    .favorite-actions {
+        justify-content: center;
+    }
+}
+
+/* Estilos para Cards de Relatórios */
+.report-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border: 1px solid #e9ecef;
+    position: relative;
+    overflow: hidden;
+}
+
+.report-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.report-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+}
+
+.report-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+}
+
+.btn-favorite {
+    background: none;
+    border: none;
+    color: #ccc;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 5px;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-favorite:hover {
+    color: #ffc107;
+    background: rgba(255, 193, 7, 0.1);
+}
+
+.btn-favorite.active {
+    color: #ffc107;
+}
+
+.report-content h4 {
+    color: #333;
+    margin-bottom: 10px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.report-content p {
+    color: #666;
+    margin-bottom: 15px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.report-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: #666;
+    background: #f8f9fa;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.report-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: auto;
+}
+
+/* Responsividade para Cards de Relatórios */
+@media (max-width: 768px) {
+    .report-card {
+        padding: 15px;
+    }
+    
+    .report-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .report-icon {
+        margin-bottom: 10px;
+    }
+    
+    .report-actions {
+        justify-content: center;
+    }
+}
+
+/* Grid de Relatórios */
+.reports-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px 0;
+}
+
+@media (max-width: 768px) {
+    .reports-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        padding: 15px 0;
+    }
+}
+
+/* Seção de Favoritos */
+#favorites-section {
+    margin-top: 30px;
+}
+
+.favorites-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+    .favorites-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Botões de Ação */
+.btn-report {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.btn-report:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Cores específicas por módulo */
+.module-faturamento .report-icon {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+}
+
+.module-comercial .report-icon {
+    background: linear-gradient(135deg, #007bff 0%, #6610f2 100%);
+}
+
+.module-operacional .report-icon {
+    background: linear-gradient(135deg, #17a2b8 0%, #6f42c1 100%);
+}
+
+.module-gerencial .report-icon {
+    background: linear-gradient(135deg, #fd7e14 0%, #e83e8c 100%);
+}
+
+.module-financeiro .report-icon {
+    background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+}
