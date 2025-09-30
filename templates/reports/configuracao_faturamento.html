@@ -1,0 +1,546 @@
+{% extends "base.html" %}
+
+{% block title %}Configuração - Relatórios Faturamento{% endblock %}
+
+{% block body_class %}main-body{% endblock %}
+
+{% block content %}
+{% include 'partials/sidebar.html' %}
+
+<main class="content main-content--shifted">
+    <div class="content-section active">
+        <div class="container-fluid">
+            <!-- Header -->
+            <div class="page-header">
+                <div class="header-content">
+                    <i class="fas fa-cog"></i>
+                    <div class="title-section">
+                        <h2 class="page-title">Configuração de Relatórios - Faturamento</h2>
+                        <p class="page-subtitle">Configure os relatórios de faturamento e cobrança</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Seção de Relatórios -->
+            <div class="reports-config-section">
+                <div class="config-header">
+                    <h5><i class="fas fa-list me-2"></i>Relatórios</h5>
+                </div>
+                
+                <div class="config-content">
+                    <!-- Tabela de Relatórios -->
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="reportsTable">
+                            <thead>
+                                <tr>
+                                    <th width="5%">#</th>
+                                    <th width="35%">Relatório</th>
+                                    <th width="45%">Campos</th>
+                                    <th width="15%">Opções</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reportsTableBody">
+                                <!-- Relatórios serão carregados dinamicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Adicionar Novo Relatório -->
+                    <div class="add-report-section">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="newReportSelect" class="form-label">Adicionar Novo Relatório</label>
+                                <select class="form-select" id="newReportSelect">
+                                    <option value="">Selecione...</option>
+                                    <option value="baixas-guias">Baixas de Guias</option>
+                                    <option value="cargas-entregues">Cargas Entregues</option>
+                                    <option value="cargas-entregues-dta">Cargas Entregues DTA</option>
+                                    <option value="cargas-recebidas-natureza">Cargas Recebidas por Natureza</option>
+                                    <option value="custodia">Custódia</option>
+                                    <option value="guias-canceladas">Guias Canceladas</option>
+                                    <option value="guias-emitidas-funcionarios">Guias Emitidas por Funcionários</option>
+                                    <option value="guias-faturadas">Guias Faturadas</option>
+                                    <option value="pagamentos-estornados">Pagamentos Estornados</option>
+                                    <option value="processos-cancelados">Processos Cancelados</option>
+                                    <option value="quantidade-guias-funcionarios">Quantidade Guias por Funcionários</option>
+                                    <option value="relatorio-pagamentos-divergentes">Relatório de Pagamentos Divergentes</option>
+                                    <option value="servicos-faturamento">Serviços x Faturamento</option>
+                                    <option value="validacao-cobrancas-esperadas">Validação Cobranças Esperadas</option>
+                                    <option value="validacao-guias-pos-fechamento">Validação Guias Pós-Fechamento</option>
+                                    <option value="validacao-guias-pre-fechamento">Validação Guias Pré-Fechamento</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="newReportFields" class="form-label">Campos (separados por vírgula)</label>
+                                <input type="text" class="form-control" id="newReportFields" placeholder="Ex: 001*,002*,003*,018">
+                            </div>
+                            <div class="col-md-2 d-flex align-items-end">
+                                <button class="btn btn-primary w-100" onclick="addNewReport()">
+                                    <i class="fas fa-plus me-1"></i>Adicionar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Modal de Edição -->
+<div class="modal fade" id="editReportModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Editar Relatório</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="editReportName" class="form-label">Nome do Relatório</label>
+                    <input type="text" class="form-control" id="editReportName">
+                </div>
+                <div class="mb-3">
+                    <label for="editReportFields" class="form-label">Campos</label>
+                    <input type="text" class="form-control" id="editReportFields" placeholder="Ex: 001*,002*,003*,018">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="saveReportEdit()">Salvar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// ========================================
+// DADOS DOS RELATÓRIOS DE FATURAMENTO
+// ========================================
+
+const faturamentoReportsData = {
+    'baixas-guias': {
+        name: 'Baixas de Guias',
+        fields: '001*,002*,003,018',
+        icon: 'fa-file-invoice-dollar',
+        color: 'success'
+    },
+    'cargas-entregues': {
+        name: 'Cargas Entregues',
+        fields: '001*,002*,003*,006,008,009,011,018',
+        icon: 'fa-truck',
+        color: 'primary'
+    },
+    'cargas-entregues-dta': {
+        name: 'Cargas Entregues DTA',
+        fields: '001*,002*,003,004,006,008,018',
+        icon: 'fa-file-alt',
+        color: 'info'
+    },
+    'cargas-recebidas-natureza': {
+        name: 'Cargas Recebidas por Natureza',
+        fields: '001*,002,003*,017,018',
+        icon: 'fa-warehouse',
+        color: 'warning'
+    },
+    'custodia': {
+        name: 'Custódia',
+        fields: '001*,002,003*,018',
+        icon: 'fa-shield-alt',
+        color: 'warning'
+    },
+    'guias-canceladas': {
+        name: 'Guias Canceladas',
+        fields: '001*,002*,003*,018',
+        icon: 'fa-times-circle',
+        color: 'danger'
+    },
+    'guias-emitidas-funcionarios': {
+        name: 'Guias Emitidas por Funcionários',
+        fields: '001*,002*,003,018',
+        icon: 'fa-user-tie',
+        color: 'info'
+    },
+    'guias-faturadas': {
+        name: 'Guias Faturadas',
+        fields: '001*,002*,003,018',
+        icon: 'fa-check-circle',
+        color: 'success'
+    },
+    'pagamentos-estornados': {
+        name: 'Pagamentos Estornados',
+        fields: '001*,002*,003*,018',
+        icon: 'fa-undo',
+        color: 'danger'
+    },
+    'processos-cancelados': {
+        name: 'Processos Cancelados',
+        fields: '001*,002*,003*,018',
+        icon: 'fa-ban',
+        color: 'danger'
+    },
+    'quantidade-guias-funcionarios': {
+        name: 'Quantidade Guias por Funcionários',
+        fields: '001*,002*,003,018',
+        icon: 'fa-chart-bar',
+        color: 'info'
+    },
+    'relatorio-pagamentos-divergentes': {
+        name: 'Relatório de Pagamentos Divergentes',
+        fields: '001*,002*,003*,018',
+        icon: 'fa-exclamation-triangle',
+        color: 'warning'
+    },
+    'servicos-faturamento': {
+        name: 'Serviços x Faturamento',
+        fields: '001*,002*,003*,006,007,008,009,018',
+        icon: 'fa-calculator',
+        color: 'success'
+    },
+    'validacao-cobrancas-esperadas': {
+        name: 'Validação Cobranças Esperadas',
+        fields: '001*,002*,003*,018',
+        icon: 'fa-search-dollar',
+        color: 'primary'
+    },
+    'validacao-guias-pos-fechamento': {
+        name: 'Validação Guias Pós-Fechamento',
+        fields: '001*,002*,003*,018',
+        icon: 'fa-clipboard-check',
+        color: 'info'
+    },
+    'validacao-guias-pre-fechamento': {
+        name: 'Validação Guias Pré-Fechamento',
+        fields: '001*,002*,003*,018',
+        icon: 'fa-clipboard-list',
+        color: 'warning'
+    }
+};
+
+// ========================================
+// FUNÇÕES PRINCIPAIS
+// ========================================
+
+let reportsList = [];
+let currentEditIndex = -1;
+
+// Carregar relatórios salvos
+function loadReports() {
+    const saved = localStorage.getItem('faturamentoReports');
+    if (saved) {
+        reportsList = JSON.parse(saved);
+    } else {
+        // Relatórios padrão
+        reportsList = [
+            { id: 'baixas-guias', name: 'Baixas de Guias', fields: '001*,002*,003,018' },
+            { id: 'cargas-entregues', name: 'Cargas Entregues', fields: '001*,002*,003*,006,008,009,011,018' },
+            { id: 'cargas-entregues-dta', name: 'Cargas Entregues DTA', fields: '001*,002*,003,004,006,008,018' },
+            { id: 'cargas-recebidas-natureza', name: 'Cargas Recebidas por Natureza', fields: '001*,002,003*,017,018' },
+            { id: 'custodia', name: 'Custódia', fields: '001*,002,003*,018' },
+            { id: 'guias-canceladas', name: 'Guias Canceladas', fields: '001*,002*,003*,018' },
+            { id: 'guias-emitidas-funcionarios', name: 'Guias Emitidas por Funcionários', fields: '001*,002*,003,018' },
+            { id: 'guias-faturadas', name: 'Guias Faturadas', fields: '001*,002*,003,018' }
+        ];
+        saveReports();
+    }
+    renderReportsTable();
+}
+
+// Salvar relatórios
+function saveReports() {
+    localStorage.setItem('faturamentoReports', JSON.stringify(reportsList));
+}
+
+// Renderizar tabela de relatórios
+function renderReportsTable() {
+    const tbody = document.getElementById('reportsTableBody');
+    tbody.innerHTML = '';
+    
+    reportsList.forEach((report, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>
+                <div class="input-group">
+                    <input type="text" class="form-control" value="${report.name}" readonly>
+                    <span class="input-group-text">
+                        <i class="fas fa-chevron-down"></i>
+                    </span>
+                </div>
+            </td>
+            <td>
+                <input type="text" class="form-control" value="${report.fields}" readonly>
+            </td>
+            <td>
+                <div class="btn-group" role="group">
+                    <button class="btn btn-sm btn-outline-primary" onclick="editReport(${index})" title="Editar">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" onclick="deleteReport(${index})" title="Excluir">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+// Adicionar novo relatório
+function addNewReport() {
+    const select = document.getElementById('newReportSelect');
+    const fields = document.getElementById('newReportFields');
+    
+    if (!select.value) {
+        alert('Selecione um relatório!');
+        return;
+    }
+    
+    if (!fields.value.trim()) {
+        alert('Informe os campos do relatório!');
+        return;
+    }
+    
+    const reportData = faturamentoReportsData[select.value];
+    if (!reportData) {
+        alert('Relatório não encontrado!');
+        return;
+    }
+    
+    // Verificar se já existe
+    if (reportsList.find(r => r.id === select.value)) {
+        alert('Este relatório já foi adicionado!');
+        return;
+    }
+    
+    const newReport = {
+        id: select.value,
+        name: reportData.name,
+        fields: fields.value.trim()
+    };
+    
+    reportsList.push(newReport);
+    saveReports();
+    renderReportsTable();
+    
+    // Limpar campos
+    select.value = '';
+    fields.value = '';
+    
+    // Mostrar sucesso
+    showNotification('Relatório adicionado com sucesso!', 'success');
+}
+
+// Editar relatório
+function editReport(index) {
+    currentEditIndex = index;
+    const report = reportsList[index];
+    
+    document.getElementById('editReportName').value = report.name;
+    document.getElementById('editReportFields').value = report.fields;
+    
+    const modal = new bootstrap.Modal(document.getElementById('editReportModal'));
+    modal.show();
+}
+
+// Salvar edição
+function saveReportEdit() {
+    if (currentEditIndex === -1) return;
+    
+    const name = document.getElementById('editReportName').value.trim();
+    const fields = document.getElementById('editReportFields').value.trim();
+    
+    if (!name || !fields) {
+        alert('Preencha todos os campos!');
+        return;
+    }
+    
+    reportsList[currentEditIndex].name = name;
+    reportsList[currentEditIndex].fields = fields;
+    
+    saveReports();
+    renderReportsTable();
+    
+    const modal = bootstrap.Modal.getInstance(document.getElementById('editReportModal'));
+    modal.hide();
+    
+    showNotification('Relatório atualizado com sucesso!', 'success');
+}
+
+// Excluir relatório
+function deleteReport(index) {
+    if (confirm('Tem certeza que deseja excluir este relatório?')) {
+        reportsList.splice(index, 1);
+        saveReports();
+        renderReportsTable();
+        showNotification('Relatório excluído com sucesso!', 'info');
+    }
+}
+
+// Mostrar notificação
+function showNotification(message, type = 'info') {
+    // Criar elemento de notificação
+    const notification = document.createElement('div');
+    notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+    notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+    notification.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Remover após 3 segundos
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+        }
+    }, 3000);
+}
+
+// Inicializar página
+document.addEventListener('DOMContentLoaded', function() {
+    loadReports();
+});
+</script>
+
+<style>
+/* ========================================
+   CONFIGURAÇÃO DE RELATÓRIOS - ESTILOS
+   ======================================== */
+
+.reports-config-section {
+    background: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.config-header {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.config-header h5 {
+    margin: 0;
+    color: #495057;
+    font-weight: 600;
+}
+
+.config-content .table {
+    margin-bottom: 0;
+}
+
+.config-content .table thead th {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+    font-weight: 600;
+    color: #495057;
+    padding: 15px 12px;
+}
+
+.config-content .table tbody td {
+    padding: 15px 12px;
+    vertical-align: middle;
+    border-bottom: 1px solid #f1f3f4;
+}
+
+.config-content .form-control {
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.config-content .form-control:focus {
+    border-color: #2196f3;
+    box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
+}
+
+.config-content .form-control[readonly] {
+    background-color: #f8f9fa;
+    cursor: default;
+}
+
+.config-content .input-group-text {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    color: #6c757d;
+}
+
+.add-report-section {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.add-report-section .form-label {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 8px;
+}
+
+.add-report-section .btn {
+    border-radius: 6px;
+    padding: 10px 20px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.add-report-section .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}
+
+.btn-group .btn {
+    margin-right: 5px;
+}
+
+.btn-group .btn:last-child {
+    margin-right: 0;
+}
+
+.btn-outline-primary {
+    border-color: #2196f3;
+    color: #2196f3;
+}
+
+.btn-outline-primary:hover {
+    background-color: #2196f3;
+    border-color: #2196f3;
+    color: white;
+}
+
+.btn-outline-danger {
+    border-color: #dc3545;
+    color: #dc3545;
+}
+
+.btn-outline-danger:hover {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: white;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .reports-config-section {
+        padding: 15px;
+    }
+    
+    .config-content .table {
+        font-size: 14px;
+    }
+    
+    .add-report-section .row > div {
+        margin-bottom: 15px;
+    }
+}
+</style>
+{% endblock %}

@@ -21,12 +21,67 @@
                 </div>
             </div>
 
+            <!-- Barra de Seleção Rápida -->
+            <div class="quick-select-section">
+                <div class="quick-select-header">
+                    <h5><i class="fas fa-list me-2"></i>Seleção Rápida de Relatórios</h5>
+                </div>
+                <div class="quick-select-content">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <label for="reportSelect" class="form-label">Selecione o Relatório</label>
+                            <select class="form-select" id="reportSelect" onchange="selectReportFromDropdown()">
+                                <option value="">Selecione...</option>
+                                <option value="cargas-armazenadas-60">Cargas Armazenadas +60 Dias</option>
+                                <option value="cargas-consignatario">Cargas Armazenadas por Consignatário</option>
+                                <option value="cargas-isencao">Cargas com Isenção</option>
+                                <option value="cargas-entregues">Cargas Entregues</option>
+                                <option value="cargas-entregues-processo">Cargas Entregues (Processo)</option>
+                                <option value="cargas-entregues-dta">Cargas Entregues DTA</option>
+                                <option value="clientes-correntistas">Clientes Correntistas</option>
+                                <option value="custodia">Custódia</option>
+                                <option value="dapes-sem-carga">DAPES Sem Carga em Aberto</option>
+                                <option value="demonstrativo-cargas">Demonstrativo Cargas Analítico</option>
+                                <option value="descontos">Descontos</option>
+                                <option value="exportacoes">Exportações</option>
+                                <option value="perfil-cliente">Perfil de Cliente</option>
+                                <option value="servicos-faturamento">Serviços x Faturamento</option>
+                                <option value="vistorias">Vistorias</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-end">
+                            <button class="btn btn-primary w-100" onclick="openSelectedReport()" id="openReportBtn" disabled>
+                                <i class="fas fa-eye me-2"></i>Abrir Relatório
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Área de Favoritos -->
+            <div id="favorites-section" class="favorites-section" style="display: none;">
+                <div class="favorites-header">
+                    <h5><i class="fas fa-star text-warning me-2"></i>Relatórios Favoritos</h5>
+                    <button class="btn btn-sm btn-outline-secondary" onclick="clearAllFavorites()">
+                        <i class="fas fa-trash"></i> Limpar Todos
+                    </button>
+                </div>
+                <div id="favorites-container" class="favorites-container">
+                    <!-- Favoritos serão inseridos aqui dinamicamente -->
+                </div>
+            </div>
+
             <!-- Cards de Relatórios Comerciais -->
             <div class="reports-grid">
                 <!-- Cargas Armazenadas +60 Dias -->
                 <div class="report-card" data-report="cargas-armazenadas-60">
-                    <div class="report-icon">
-                        <i class="fas fa-warehouse"></i>
+                    <div class="report-header">
+                        <div class="report-icon">
+                            <i class="fas fa-warehouse"></i>
+                        </div>
+                        <button class="btn-favorite" onclick="toggleFavorite('cargas-armazenadas-60')" title="Adicionar aos favoritos">
+                            <i class="far fa-star"></i>
+                        </button>
                     </div>
                     <div class="report-content">
                         <h4>Cargas Armazenadas +60 Dias</h4>
@@ -50,8 +105,13 @@
 
                 <!-- Cargas Armazenadas por Consignatário -->
                 <div class="report-card" data-report="cargas-consignatario">
-                    <div class="report-icon">
-                        <i class="fas fa-building"></i>
+                    <div class="report-header">
+                        <div class="report-icon">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <button class="btn-favorite" onclick="toggleFavorite('cargas-consignatario')" title="Adicionar aos favoritos">
+                            <i class="far fa-star"></i>
+                        </button>
                     </div>
                     <div class="report-content">
                         <h4>Cargas Armazenadas por Consignatário</h4>
@@ -75,8 +135,13 @@
 
                 <!-- Cargas com Isenção -->
                 <div class="report-card" data-report="cargas-isencao">
-                    <div class="report-icon">
-                        <i class="fas fa-gift"></i>
+                    <div class="report-header">
+                        <div class="report-icon">
+                            <i class="fas fa-gift"></i>
+                        </div>
+                        <button class="btn-favorite" onclick="toggleFavorite('cargas-isencao')" title="Adicionar aos favoritos">
+                            <i class="far fa-star"></i>
+                        </button>
                     </div>
                     <div class="report-content">
                         <h4>Cargas com Isenção</h4>
@@ -100,8 +165,13 @@
 
                 <!-- Cargas Entregues -->
                 <div class="report-card" data-report="cargas-entregues">
-                    <div class="report-icon">
-                        <i class="fas fa-truck"></i>
+                    <div class="report-header">
+                        <div class="report-icon">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <button class="btn-favorite" onclick="toggleFavorite('cargas-entregues')" title="Adicionar aos favoritos">
+                            <i class="far fa-star"></i>
+                        </button>
                     </div>
                     <div class="report-content">
                         <h4>Cargas Entregues</h4>
@@ -125,8 +195,13 @@
 
                 <!-- Cargas Entregues (Processo) -->
                 <div class="report-card" data-report="cargas-entregues-processo">
-                    <div class="report-icon">
-                        <i class="fas fa-cogs"></i>
+                    <div class="report-header">
+                        <div class="report-icon">
+                            <i class="fas fa-cogs"></i>
+                        </div>
+                        <button class="btn-favorite" onclick="toggleFavorite('cargas-entregues-processo')" title="Adicionar aos favoritos">
+                            <i class="far fa-star"></i>
+                        </button>
                     </div>
                     <div class="report-content">
                         <h4>Cargas Entregues (Processo)</h4>
@@ -150,8 +225,13 @@
 
                 <!-- Cargas Entregues DTA -->
                 <div class="report-card" data-report="cargas-entregues-dta">
-                    <div class="report-icon">
-                        <i class="fas fa-file-alt"></i>
+                    <div class="report-header">
+                        <div class="report-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <button class="btn-favorite" onclick="toggleFavorite('cargas-entregues-dta')" title="Adicionar aos favoritos">
+                            <i class="far fa-star"></i>
+                        </button>
                     </div>
                     <div class="report-content">
                         <h4>Cargas Entregues DTA</h4>
@@ -175,8 +255,13 @@
 
                 <!-- Clientes Correntistas -->
                 <div class="report-card" data-report="clientes-correntistas">
-                    <div class="report-icon">
-                        <i class="fas fa-user-tie"></i>
+                    <div class="report-header">
+                        <div class="report-icon">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                        <button class="btn-favorite" onclick="toggleFavorite('clientes-correntistas')" title="Adicionar aos favoritos">
+                            <i class="far fa-star"></i>
+                        </button>
                     </div>
                     <div class="report-content">
                         <h4>Clientes Correntistas</h4>
@@ -200,8 +285,13 @@
 
                 <!-- Custódia -->
                 <div class="report-card" data-report="custodia">
-                    <div class="report-icon">
-                        <i class="fas fa-shield-alt"></i>
+                    <div class="report-header">
+                        <div class="report-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <button class="btn-favorite" onclick="toggleFavorite('custodia')" title="Adicionar aos favoritos">
+                            <i class="far fa-star"></i>
+                        </button>
                     </div>
                     <div class="report-content">
                         <h4>Custódia</h4>
@@ -225,8 +315,13 @@
 
                 <!-- DAPES Sem Carga em Aberto -->
                 <div class="report-card" data-report="dapes-sem-carga">
-                    <div class="report-icon">
-                        <i class="fas fa-exclamation-triangle"></i>
+                    <div class="report-header">
+                        <div class="report-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <button class="btn-favorite" onclick="toggleFavorite('dapes-sem-carga')" title="Adicionar aos favoritos">
+                            <i class="far fa-star"></i>
+                        </button>
                     </div>
                     <div class="report-content">
                         <h4>DAPES Sem Carga em Aberto</h4>
@@ -250,8 +345,13 @@
 
                 <!-- Demonstrativo Cargas Analítico -->
                 <div class="report-card" data-report="demonstrativo-cargas">
-                    <div class="report-icon">
-                        <i class="fas fa-chart-pie"></i>
+                    <div class="report-header">
+                        <div class="report-icon">
+                            <i class="fas fa-chart-pie"></i>
+                        </div>
+                        <button class="btn-favorite" onclick="toggleFavorite('demonstrativo-cargas')" title="Adicionar aos favoritos">
+                            <i class="far fa-star"></i>
+                        </button>
                     </div>
                     <div class="report-content">
                         <h4>Demonstrativo Cargas Analítico</h4>
@@ -275,8 +375,13 @@
 
                 <!-- Descontos -->
                 <div class="report-card" data-report="descontos">
-                    <div class="report-icon">
-                        <i class="fas fa-percent"></i>
+                    <div class="report-header">
+                        <div class="report-icon">
+                            <i class="fas fa-percent"></i>
+                        </div>
+                        <button class="btn-favorite" onclick="toggleFavorite('descontos')" title="Adicionar aos favoritos">
+                            <i class="far fa-star"></i>
+                        </button>
                     </div>
                     <div class="report-content">
                         <h4>Descontos</h4>
@@ -300,8 +405,13 @@
 
                 <!-- Exportações -->
                 <div class="report-card" data-report="exportacoes">
-                    <div class="report-icon">
-                        <i class="fas fa-ship"></i>
+                    <div class="report-header">
+                        <div class="report-icon">
+                            <i class="fas fa-ship"></i>
+                        </div>
+                        <button class="btn-favorite" onclick="toggleFavorite('exportacoes')" title="Adicionar aos favoritos">
+                            <i class="far fa-star"></i>
+                        </button>
                     </div>
                     <div class="report-content">
                         <h4>Exportações</h4>
@@ -325,8 +435,13 @@
 
                 <!-- Perfil de Cliente -->
                 <div class="report-card" data-report="perfil-cliente">
-                    <div class="report-icon">
-                        <i class="fas fa-user-circle"></i>
+                    <div class="report-header">
+                        <div class="report-icon">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        <button class="btn-favorite" onclick="toggleFavorite('perfil-cliente')" title="Adicionar aos favoritos">
+                            <i class="far fa-star"></i>
+                        </button>
                     </div>
                     <div class="report-content">
                         <h4>Perfil de Cliente</h4>
@@ -350,8 +465,13 @@
 
                 <!-- Serviços x Faturamento -->
                 <div class="report-card" data-report="servicos-faturamento">
-                    <div class="report-icon">
-                        <i class="fas fa-calculator"></i>
+                    <div class="report-header">
+                        <div class="report-icon">
+                            <i class="fas fa-calculator"></i>
+                        </div>
+                        <button class="btn-favorite" onclick="toggleFavorite('servicos-faturamento')" title="Adicionar aos favoritos">
+                            <i class="far fa-star"></i>
+                        </button>
                     </div>
                     <div class="report-content">
                         <h4>Serviços x Faturamento</h4>
@@ -375,8 +495,13 @@
 
                 <!-- Vistorias -->
                 <div class="report-card" data-report="vistorias">
-                    <div class="report-icon">
-                        <i class="fas fa-search"></i>
+                    <div class="report-header">
+                        <div class="report-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <button class="btn-favorite" onclick="toggleFavorite('vistorias')" title="Adicionar aos favoritos">
+                            <i class="far fa-star"></i>
+                        </button>
                     </div>
                     <div class="report-content">
                         <h4>Vistorias</h4>
@@ -571,6 +696,136 @@ const reportsData = {
             ['Empresa ABC Ltda', '12.345.678/0001-90', '2024-01-25', 'R$ 15.000,00', 'Ativo'],
             ['Comércio XYZ S/A', '98.765.432/0001-10', '2024-01-20', 'R$ 8.500,00', 'Ativo'],
             ['Indústria DEF Ltda', '11.222.333/0001-44', '2024-01-18', 'R$ 12.300,00', 'Ativo']
+        ]
+    },
+    'cargas-entregues-processo': {
+        name: 'Cargas Entregues (Processo)',
+        description: 'Relatório de cargas entregues por processo',
+        fields: ['001*', '002*', '003*', '004', '006', '008', '009', '014', '018'],
+        icon: 'fa-cogs',
+        color: 'primary',
+        columns: ['ID', 'Processo', 'Cliente', 'Data Entrega', 'Status'],
+        sampleData: [
+            ['001', 'PROC-2024-001', 'Empresa ABC Ltda', '2024-01-20', 'Concluído'],
+            ['002', 'PROC-2024-002', 'Comércio XYZ S/A', '2024-01-22', 'Em Andamento'],
+            ['003', 'PROC-2024-003', 'Indústria DEF Ltda', '2024-01-25', 'Concluído']
+        ]
+    },
+    'cargas-entregues-dta': {
+        name: 'Cargas Entregues DTA',
+        description: 'Relatório de cargas entregues com DTA',
+        fields: ['001*', '002*', '003', '004', '006', '008', '018'],
+        icon: 'fa-file-alt',
+        color: 'info',
+        columns: ['ID', 'DTA', 'Cliente', 'Data Entrega', 'Valor'],
+        sampleData: [
+            ['001', 'DTA-2024-001', 'Empresa ABC Ltda', '2024-01-20', 'R$ 15.000,00'],
+            ['002', 'DTA-2024-002', 'Comércio XYZ S/A', '2024-01-22', 'R$ 8.500,00'],
+            ['003', 'DTA-2024-003', 'Indústria DEF Ltda', '2024-01-25', 'R$ 12.300,00']
+        ]
+    },
+    'custodia': {
+        name: 'Custódia',
+        description: 'Relatório de cargas em custódia',
+        fields: ['001*', '002', '003*', '018', '006', '008', '009'],
+        icon: 'fa-shield-alt',
+        color: 'warning',
+        columns: ['ID', 'Cliente', 'Data Entrada', 'Tipo Custódia', 'Status'],
+        sampleData: [
+            ['001', 'Empresa ABC Ltda', '2024-01-15', 'Custódia Judicial', 'Ativa'],
+            ['002', 'Comércio XYZ S/A', '2024-01-20', 'Custódia Administrativa', 'Ativa'],
+            ['003', 'Indústria DEF Ltda', '2024-01-25', 'Custódia Fiscal', 'Ativa']
+        ]
+    },
+    'dapes-sem-carga': {
+        name: 'DAPES Sem Carga em Aberto',
+        description: 'Relatório de DAPES sem carga em aberto',
+        fields: ['001*', '002*', '003', '006', '008', '007', '018'],
+        icon: 'fa-exclamation-triangle',
+        color: 'danger',
+        columns: ['DAPES', 'Cliente', 'Data Emissão', 'Status', 'Observações'],
+        sampleData: [
+            ['DAPES-001', 'Empresa ABC Ltda', '2024-01-15', 'Pendente', 'Aguardando documentação'],
+            ['DAPES-002', 'Comércio XYZ S/A', '2024-01-20', 'Pendente', 'Em análise'],
+            ['DAPES-003', 'Indústria DEF Ltda', '2024-01-25', 'Pendente', 'Aguardando liberação']
+        ]
+    },
+    'demonstrativo-cargas': {
+        name: 'Demonstrativo Cargas Analítico',
+        description: 'Demonstrativo analítico de cargas',
+        fields: ['001*', '002', '003*', '018'],
+        icon: 'fa-chart-pie',
+        color: 'info',
+        columns: ['Período', 'Total Cargas', 'Valor Total', 'Crescimento'],
+        sampleData: [
+            ['Janeiro 2024', '150', 'R$ 450.000,00', '+15%'],
+            ['Fevereiro 2024', '180', 'R$ 520.000,00', '+12%'],
+            ['Março 2024', '165', 'R$ 480.000,00', '+8%']
+        ]
+    },
+    'descontos': {
+        name: 'Descontos',
+        description: 'Relatório de descontos aplicados',
+        fields: ['001*', '002', '003', '018', '006', '008'],
+        icon: 'fa-percent',
+        color: 'success',
+        columns: ['ID', 'Cliente', 'Tipo Desconto', 'Valor', 'Data'],
+        sampleData: [
+            ['001', 'Empresa ABC Ltda', 'Desconto por Volume', 'R$ 2.500,00', '2024-01-15'],
+            ['002', 'Comércio XYZ S/A', 'Desconto Promocional', 'R$ 1.200,00', '2024-01-20'],
+            ['003', 'Indústria DEF Ltda', 'Desconto Fidelidade', 'R$ 3.000,00', '2024-01-25']
+        ]
+    },
+    'exportacoes': {
+        name: 'Exportações',
+        description: 'Relatório de operações de exportação',
+        fields: ['001*', '002*', '003', '006', '008', '018', '027'],
+        icon: 'fa-ship',
+        color: 'primary',
+        columns: ['ID', 'Cliente', 'Destino', 'Data Exportação', 'Valor'],
+        sampleData: [
+            ['001', 'Empresa ABC Ltda', 'China', '2024-01-15', 'R$ 25.000,00'],
+            ['002', 'Comércio XYZ S/A', 'EUA', '2024-01-20', 'R$ 18.500,00'],
+            ['003', 'Indústria DEF Ltda', 'Alemanha', '2024-01-25', 'R$ 32.000,00']
+        ]
+    },
+    'perfil-cliente': {
+        name: 'Perfil de Cliente',
+        description: 'Relatório de perfil dos clientes',
+        fields: ['001*', '002', '003', '006', '008', '018', '024', '025'],
+        icon: 'fa-user-circle',
+        color: 'info',
+        columns: ['Cliente', 'Segmento', 'Última Compra', 'Faturamento Total'],
+        sampleData: [
+            ['Empresa ABC Ltda', 'Grande Porte', '2024-01-25', 'R$ 150.000,00'],
+            ['Comércio XYZ S/A', 'Médio Porte', '2024-01-20', 'R$ 85.000,00'],
+            ['Indústria DEF Ltda', 'Grande Porte', '2024-01-18', 'R$ 120.000,00']
+        ]
+    },
+    'servicos-faturamento': {
+        name: 'Serviços x Faturamento',
+        description: 'Relatório de serviços versus faturamento',
+        fields: ['001*', '002*', '003', '006', '007', '008', '009', '018'],
+        icon: 'fa-calculator',
+        color: 'success',
+        columns: ['Serviço', 'Quantidade', 'Valor Unitário', 'Total'],
+        sampleData: [
+            ['Armazenagem', '150', 'R$ 50,00', 'R$ 7.500,00'],
+            ['Movimentação', '300', 'R$ 25,00', 'R$ 7.500,00'],
+            ['Inspeção', '75', 'R$ 100,00', 'R$ 7.500,00']
+        ]
+    },
+    'vistorias': {
+        name: 'Vistorias',
+        description: 'Relatório de vistorias realizadas',
+        fields: ['001*', '002', '003', '018', '006', '008', '021'],
+        icon: 'fa-search',
+        color: 'warning',
+        columns: ['ID', 'Cliente', 'Data Vistoria', 'Tipo', 'Status'],
+        sampleData: [
+            ['001', 'Empresa ABC Ltda', '2024-01-15', 'Vistoria de Entrada', 'Aprovada'],
+            ['002', 'Comércio XYZ S/A', '2024-01-20', 'Vistoria de Saída', 'Pendente'],
+            ['003', 'Indústria DEF Ltda', '2024-01-25', 'Vistoria de Segurança', 'Aprovada']
         ]
     }
 };
@@ -777,6 +1032,482 @@ function exportReport(reportType) {
     // TODO: Implementar exportação real
     // Exemplo: window.location.href = `/api/reports/comercial/${reportType}/export?format=pdf`;
 }
+
+// ========================================
+// SISTEMA DE FAVORITOS
+// ========================================
+
+// Carregar favoritos do localStorage
+function loadFavorites() {
+    const favorites = JSON.parse(localStorage.getItem('reportFavorites') || '[]');
+    return favorites;
+}
+
+// Salvar favoritos no localStorage
+function saveFavorites(favorites) {
+    localStorage.setItem('reportFavorites', JSON.stringify(favorites));
+}
+
+// Alternar favorito
+function toggleFavorite(reportType) {
+    const favorites = loadFavorites();
+    const index = favorites.indexOf(reportType);
+    
+    if (index > -1) {
+        // Remover dos favoritos
+        favorites.splice(index, 1);
+        updateFavoriteButton(reportType, false);
+    } else {
+        // Adicionar aos favoritos
+        favorites.push(reportType);
+        updateFavoriteButton(reportType, true);
+    }
+    
+    saveFavorites(favorites);
+    updateFavoritesSection();
+}
+
+// Atualizar botão de favorito
+function updateFavoriteButton(reportType, isFavorite) {
+    const button = document.querySelector(`[data-report="${reportType}"] .btn-favorite i`);
+    if (button) {
+        if (isFavorite) {
+            button.className = 'fas fa-star';
+            button.parentElement.title = 'Remover dos favoritos';
+        } else {
+            button.className = 'far fa-star';
+            button.parentElement.title = 'Adicionar aos favoritos';
+        }
+    }
+}
+
+// Atualizar seção de favoritos
+function updateFavoritesSection() {
+    const favorites = loadFavorites();
+    const favoritesSection = document.getElementById('favorites-section');
+    const favoritesContainer = document.getElementById('favorites-container');
+    
+    if (favorites.length === 0) {
+        favoritesSection.style.display = 'none';
+        return;
+    }
+    
+    favoritesSection.style.display = 'block';
+    favoritesContainer.innerHTML = '';
+    
+    favorites.forEach(reportType => {
+        const report = reportsData[reportType];
+        if (report) {
+            const favoriteCard = createFavoriteCard(reportType, report);
+            favoritesContainer.appendChild(favoriteCard);
+        }
+    });
+}
+
+// Criar card de favorito
+function createFavoriteCard(reportType, report) {
+    const card = document.createElement('div');
+    card.className = 'favorite-card';
+    card.innerHTML = `
+        <div class="favorite-content">
+            <div class="favorite-icon">
+                <i class="${report.icon}"></i>
+            </div>
+            <div class="favorite-info">
+                <h6>${report.name}</h6>
+                <p>${report.description}</p>
+            </div>
+        </div>
+        <div class="favorite-actions">
+            <button class="btn btn-sm btn-primary" onclick="openReport('${reportType}')">
+                <i class="fas fa-eye"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-primary" onclick="exportReport('${reportType}')">
+                <i class="fas fa-download"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-danger" onclick="toggleFavorite('${reportType}')" title="Remover dos favoritos">
+                <i class="fas fa-star"></i>
+            </button>
+        </div>
+    `;
+    return card;
+}
+
+// Limpar todos os favoritos
+function clearAllFavorites() {
+    if (confirm('Tem certeza que deseja remover todos os favoritos?')) {
+        saveFavorites([]);
+        updateFavoritesSection();
+        
+        // Atualizar todos os botões de favorito
+        document.querySelectorAll('.btn-favorite i').forEach(icon => {
+            icon.className = 'far fa-star';
+            icon.parentElement.title = 'Adicionar aos favoritos';
+        });
+    }
+}
+
+// ========================================
+// SISTEMA DE SELEÇÃO RÁPIDA
+// ========================================
+
+// Selecionar relatório do dropdown
+function selectReportFromDropdown() {
+    const select = document.getElementById('reportSelect');
+    const openBtn = document.getElementById('openReportBtn');
+    
+    if (select.value) {
+        openBtn.disabled = false;
+        openBtn.innerHTML = '<i class="fas fa-eye me-2"></i>Abrir Relatório';
+    } else {
+        openBtn.disabled = true;
+        openBtn.innerHTML = '<i class="fas fa-eye me-2"></i>Abrir Relatório';
+    }
+}
+
+// Abrir relatório selecionado
+function openSelectedReport() {
+    const select = document.getElementById('reportSelect');
+    const reportType = select.value;
+    
+    if (reportType) {
+        openReport(reportType);
+        // Scroll para o card do relatório
+        const reportCard = document.querySelector(`[data-report="${reportType}"]`);
+        if (reportCard) {
+            reportCard.scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'center' 
+            });
+            
+            // Destacar o card temporariamente
+            reportCard.style.border = '2px solid #007bff';
+            reportCard.style.boxShadow = '0 0 15px rgba(0, 123, 255, 0.3)';
+            
+            setTimeout(() => {
+                reportCard.style.border = '';
+                reportCard.style.boxShadow = '';
+            }, 2000);
+        }
+    }
+}
+
+// Inicializar favoritos ao carregar a página
+document.addEventListener('DOMContentLoaded', function() {
+    const favorites = loadFavorites();
+    
+    // Atualizar botões de favorito
+    favorites.forEach(reportType => {
+        updateFavoriteButton(reportType, true);
+    });
+    
+    // Atualizar seção de favoritos
+    updateFavoritesSection();
+    
+    // Inicializar dropdown
+    selectReportFromDropdown();
+});
+
 </script>
+
+<style>
+/* ========================================
+   SISTEMA DE SELEÇÃO RÁPIDA - ESTILOS
+   ======================================== */
+
+/* Seção de Seleção Rápida */
+.quick-select-section {
+    background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+    border: 1px solid #bbdefb;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.quick-select-header {
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #2196f3;
+}
+
+.quick-select-header h5 {
+    margin: 0;
+    color: #1976d2;
+    font-weight: 600;
+}
+
+.quick-select-content .form-label {
+    font-weight: 600;
+    color: #424242;
+    margin-bottom: 8px;
+}
+
+.quick-select-content .form-select {
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 10px 15px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.quick-select-content .form-select:focus {
+    border-color: #2196f3;
+    box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+}
+
+.quick-select-content .btn {
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.quick-select-content .btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.quick-select-content .btn:not(:disabled):hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+}
+
+/* ========================================
+   SISTEMA DE FAVORITOS - ESTILOS
+   ======================================== */
+
+/* Seção de Favoritos */
+.favorites-section {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.favorites-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #ffc107;
+}
+
+.favorites-header h5 {
+    margin: 0;
+    color: #495057;
+    font-weight: 600;
+}
+
+.favorites-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 15px;
+}
+
+/* Card de Favorito */
+.favorite-card {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.favorite-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+.favorite-content {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+.favorite-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #ffc107, #ff8c00);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    color: white;
+    font-size: 18px;
+    line-height: 1;
+}
+
+.favorite-icon i {
+    font-size: 18px;
+    line-height: 1;
+}
+
+.favorite-info h6 {
+    margin: 0 0 5px 0;
+    color: #495057;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.favorite-info p {
+    margin: 0;
+    color: #6c757d;
+    font-size: 12px;
+    line-height: 1.3;
+}
+
+.favorite-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.favorite-actions .btn {
+    padding: 6px 8px;
+    font-size: 12px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+}
+
+.favorite-actions .btn i {
+    font-size: 14px;
+    line-height: 1;
+    width: 14px;
+    height: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Botão de Favorito nos Cards */
+.report-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+}
+
+.btn-favorite {
+    background: none;
+    border: none;
+    color: #6c757d;
+    font-size: 16px;
+    padding: 6px 8px;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.btn-favorite:hover {
+    background: #f8f9fa;
+    color: #ffc107;
+    transform: scale(1.1);
+}
+
+.btn-favorite i.fas.fa-star {
+    color: #ffc107;
+    font-size: 18px;
+    line-height: 1;
+}
+
+.btn-favorite i.far.fa-star {
+    color: #6c757d;
+    font-size: 18px;
+    line-height: 1;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .favorites-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .favorite-card {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+    
+    .favorite-content {
+        margin-bottom: 10px;
+    }
+    
+    .favorite-actions {
+        justify-content: center;
+    }
+}
+
+/* Animação de entrada */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.favorite-card {
+    animation: fadeInUp 0.3s ease;
+}
+
+/* Efeito de destaque para novos favoritos */
+.favorite-card.new-favorite {
+    border-color: #ffc107;
+    box-shadow: 0 0 0 2px rgba(255, 193, 7, 0.2);
+}
+
+/* Padronização de todos os ícones */
+.btn i, .favorite-icon i, .btn-favorite i {
+    display: inline-block;
+    vertical-align: middle;
+    text-align: center;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Garantir proporção consistente para todos os botões de ação */
+.favorite-actions .btn,
+.btn-favorite {
+    min-width: 32px;
+    min-height: 32px;
+    box-sizing: border-box;
+}
+
+/* Ícones específicos para botões de ação - regras já aplicadas acima */
+
+/* Ícone de estrela nos botões de favorito */
+.btn-favorite i.fa-star {
+    font-size: 18px;
+    line-height: 1;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+</style>
 
 {% endblock %}
