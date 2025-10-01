@@ -50,12 +50,39 @@
 
                     <!-- Adicionar Novo Relatório -->
                     <div class="add-report-section">
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <h6 class="text-muted mb-3">
+                                    <i class="fas fa-plus-circle me-2"></i>Adicionar Relatórios
+                                </h6>
+                            </div>
+                        </div>
+                        
+                        <!-- Seleção de Fonte -->
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label class="form-label">Fonte dos Relatórios</label>
+                                <div class="btn-group w-100" role="group">
+                                    <input type="radio" class="btn-check" name="reportSource" id="financeiroReports" value="financeiro" checked>
+                                    <label class="btn btn-outline-primary" for="financeiroReports">
+                                        <i class="fas fa-chart-pie me-2"></i>Relatórios Financeiros
+                                    </label>
+                                    
+                                    <input type="radio" class="btn-check" name="reportSource" id="allReports" value="all">
+                                    <label class="btn btn-outline-success" for="allReports">
+                                        <i class="fas fa-globe me-2"></i>Todos os Relatórios
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Dropdown de Relatórios -->
                         <div class="row">
                             <div class="col-md-6">
-                                <label for="newReportSelect" class="form-label">Adicionar Novo Relatório</label>
+                                <label for="newReportSelect" class="form-label">Selecionar Relatório</label>
                                 <select class="form-select" id="newReportSelect">
                                     <option value="">Selecione...</option>
-                                    <!-- Opções serão carregadas dinamicamente de todos os módulos -->
+                                    <!-- Opções serão carregadas dinamicamente -->
                                 </select>
                             </div>
                             <div class="col-md-4">
@@ -66,6 +93,17 @@
                                 <button class="btn btn-primary w-100" onclick="addNewReport()">
                                     <i class="fas fa-plus me-1"></i>Adicionar
                                 </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Informação sobre Todos os Relatórios -->
+                        <div class="row mt-3" id="allReportsInfo" style="display: none;">
+                            <div class="col-12">
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    <strong>Todos os Relatórios:</strong> Esta opção permite adicionar qualquer relatório do sistema 
+                                    (Comercial, Faturamento, Financeiro, Operacional e Gerencial) ao módulo atual.
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -182,14 +220,31 @@ function renderReportsTable() {
     
     reportsList.forEach((report, index) => {
         const row = document.createElement('tr');
+        
+        // Determinar cor e ícone baseado na fonte
+        let sourceBadge = '';
+        if (report.source === 'all') {
+            const categoryColors = {
+                'comercial': 'primary',
+                'faturamento': 'success',
+                'financeiro': 'warning',
+                'operacional': 'info',
+                'gerencial': 'dark'
+            };
+            const color = categoryColors[report.category] || 'secondary';
+            sourceBadge = `<span class="badge bg-${color}">${report.category}</span>`;
+        } else {
+            sourceBadge = '<span class="badge bg-warning">Financeiro</span>';
+        }
+        
         row.innerHTML = `
             <td>${index + 1}</td>
             <td>
-                <div class="input-group">
-                    <input type="text" class="form-control" value="${report.name}" readonly>
-                    <span class="input-group-text">
-                        <i class="fas fa-chevron-down"></i>
-                    </span>
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1">
+                        <div class="fw-bold">${report.name}</div>
+                        <div class="small text-muted">${sourceBadge}</div>
+                    </div>
                 </div>
             </td>
             <td>
@@ -294,26 +349,85 @@ function showNotification(message, type = 'info') {
 // Carregar opções do dropdown
 function loadReportOptions() {
     const select = document.getElementById('newReportSelect');
+    const sourceRadios = document.querySelectorAll('input[name="reportSource"]');
+    
+    // Adicionar listeners para mudança de fonte
+    sourceRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            updateReportOptions();
+            updateInfoDisplay();
+        });
+    });
+    
+    // Carregar opções iniciais
+    updateReportOptions();
+}
+
+// Atualizar opções do dropdown baseado na fonte selecionada
+function updateReportOptions() {
+    const select = document.getElementById('newReportSelect');
+    const selectedSource = document.querySelector('input[name="reportSource"]:checked').value;
+    
     select.innerHTML = '<option value="">Selecione...</option>';
     
-    if (window.getAllReportsOptions) {
-        const options = window.getAllReportsOptions();
-        
-        options.forEach(group => {
-            // Adicionar cabeçalho do grupo
-            const groupOption = document.createElement('optgroup');
-            groupOption.label = group.group;
+    if (selectedSource === 'all') {
+        // Carregar todos os relatórios
+        if (window.getAllReportsForDropdown) {
+            const options = window.getAllReportsForDropdown();
             
-            group.reports.forEach(report => {
-                const option = document.createElement('option');
-                option.value = report.id;
-                option.textContent = report.name;
-                option.dataset.fields = report.fields;
-                groupOption.appendChild(option);
+            options.forEach(group => {
+                const groupOption = document.createElement('optgroup');
+                groupOption.label = group.group;
+                
+                group.reports.forEach(report => {
+                    const option = document.createElement('option');
+                    option.value = report.id;
+                    option.textContent = report.name;
+                    option.dataset.fields = report.fields;
+                    option.dataset.icon = report.icon;
+                    option.dataset.color = report.color;
+                    groupOption.appendChild(option);
+                });
+                
+                select.appendChild(groupOption);
             });
+        }
+    } else {
+        // Carregar apenas relatórios financeiros
+        if (window.getAllReportsOptions) {
+            const options = window.getAllReportsOptions();
             
-            select.appendChild(groupOption);
-        });
+            options.forEach(group => {
+                if (group.group.toLowerCase().includes('financeiro')) {
+                    const groupOption = document.createElement('optgroup');
+                    groupOption.label = group.group;
+                    
+                    group.reports.forEach(report => {
+                        const option = document.createElement('option');
+                        option.value = report.id;
+                        option.textContent = report.name;
+                        option.dataset.fields = report.fields;
+                        option.dataset.icon = report.icon;
+                        option.dataset.color = report.color;
+                        groupOption.appendChild(option);
+                    });
+                    
+                    select.appendChild(groupOption);
+                }
+            });
+        }
+    }
+}
+
+// Atualizar exibição da informação
+function updateInfoDisplay() {
+    const selectedSource = document.querySelector('input[name="reportSource"]:checked').value;
+    const infoDiv = document.getElementById('allReportsInfo');
+    
+    if (selectedSource === 'all') {
+        infoDiv.style.display = 'block';
+    } else {
+        infoDiv.style.display = 'none';
     }
 }
 
@@ -333,6 +447,7 @@ function updateReportFields() {
 function addNewReport() {
     const select = document.getElementById('newReportSelect');
     const fields = document.getElementById('newReportFields');
+    const selectedSource = document.querySelector('input[name="reportSource"]:checked').value;
     
     if (!select.value) {
         alert('Selecione um relatório!');
@@ -350,8 +465,14 @@ function addNewReport() {
         return;
     }
     
-    // Obter dados do relatório
-    const reportData = window.ALL_REPORTS_DATA[select.value];
+    // Obter dados do relatório baseado na fonte
+    let reportData = null;
+    if (selectedSource === 'all') {
+        reportData = window.ALL_REPORTS_COMPLETE[select.value];
+    } else {
+        reportData = window.ALL_REPORTS_DATA[select.value];
+    }
+    
     if (!reportData) {
         alert('Relatório não encontrado!');
         return;
@@ -360,7 +481,9 @@ function addNewReport() {
     const newReport = {
         id: select.value,
         name: reportData.name,
-        fields: fields.value.trim()
+        fields: fields.value.trim(),
+        source: selectedSource,
+        category: reportData.category || 'financeiro'
     };
     
     reportsList.push(newReport);
@@ -372,7 +495,8 @@ function addNewReport() {
     fields.value = '';
     
     // Mostrar sucesso
-    showNotification('Relatório adicionado com sucesso!', 'success');
+    const sourceText = selectedSource === 'all' ? ' (Todos os Relatórios)' : ' (Financeiro)';
+    showNotification(`Relatório adicionado com sucesso!${sourceText}`, 'success');
 }
 
 // Inicializar página

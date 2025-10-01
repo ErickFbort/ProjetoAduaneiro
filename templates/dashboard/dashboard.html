@@ -47,46 +47,6 @@
             </div>
             <div class="quick-actions-grid-main" id="favorite-actions">
                 <!-- Ações favoritas serão carregadas dinamicamente -->
-                <div class="quick-action-card animate-on-scroll scale-in delay-2" data-module="usuarios">
-                    <div class="action-icon">
-                        <i class="fas fa-user-plus"></i>
-                    </div>
-                    <h3>Usuários</h3>
-                    <p>Gerenciar usuários do sistema</p>
-                    <div class="action-badge">
-                        <i class="fas fa-star"></i>
-                    </div>
-                </div>
-                <div class="quick-action-card animate-on-scroll scale-in delay-3" data-module="veiculos">
-                    <div class="action-icon">
-                        <i class="fas fa-truck"></i>
-                    </div>
-                    <h3>Veículos</h3>
-                    <p>Gerenciar frota de veículos</p>
-                    <div class="action-badge">
-                        <i class="fas fa-star"></i>
-                    </div>
-                </div>
-                <div class="quick-action-card animate-on-scroll scale-in delay-4" data-module="entidades">
-                    <div class="action-icon">
-                        <i class="fas fa-building"></i>
-                    </div>
-                    <h3>Entidades</h3>
-                    <p>Gerenciar entidades/clientes</p>
-                    <div class="action-badge">
-                        <i class="fas fa-star"></i>
-                    </div>
-                </div>
-                <div class="quick-action-card animate-on-scroll scale-in delay-5" data-module="relatorios">
-                    <div class="action-icon">
-                        <i class="fas fa-chart-bar"></i>
-                    </div>
-                    <h3>Relatórios</h3>
-                    <p>Gerar relatórios do sistema</p>
-                    <div class="action-badge">
-                        <i class="fas fa-star"></i>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -664,10 +624,6 @@ function viewTerminalDetails(terminalCode) {
     new bootstrap.Modal(document.getElementById('terminalModal')).show();
 }
 
-// Mostrar relatórios
-function showReports() {
-    FeedbackManager.showInfo('Funcionalidade de relatórios em desenvolvimento');
-}
 
 // Abrir post do LinkedIn
 function openLinkedInPost(url) {
@@ -784,7 +740,7 @@ let favoriteModules = {
     'relatorios': {
         name: 'Relatórios',
         icon: 'fas fa-chart-bar',
-        url: '#',
+        url: "{{ url_for('reports.relatorios_main') }}",
         description: 'Gerar relatórios do sistema'
     },
     'processos': {
@@ -847,11 +803,7 @@ function renderFavorites() {
             card.className = `quick-action-card animate-on-scroll scale-in delay-${index + 2}`;
             card.setAttribute('data-module', moduleId);
             card.onclick = () => {
-                if (module.url !== '#') {
-                    window.location.href = module.url;
-                } else {
-                    showReports();
-                }
+                window.location.href = module.url;
             };
             
             card.innerHTML = `
