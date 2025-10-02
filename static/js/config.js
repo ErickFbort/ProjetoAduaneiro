@@ -23,6 +23,16 @@ const AppConfig = {
                 { path: '/relatorios/gerencial', name: 'Gerencial', icon: 'fas fa-users-cog' },
                 { path: '/relatorios/operacional', name: 'Operacional', icon: 'fas fa-truck' }
             ]
+        },
+        web_clientes: {
+            name: 'Web Cliente',
+            icon: 'fas fa-user-tie',
+            routes: [
+                { path: '/web-clientes/processos', name: 'Processos', icon: 'fas fa-clipboard-list' },
+                { path: '/web-clientes/dape-sem-carga', name: 'DAPE sem Carga', icon: 'fas fa-file-alt' },
+                { path: '/web-clientes/agendamento-carregamento', name: 'Agendamento de Carregamento', icon: 'fas fa-truck-loading' },
+                { path: '/web-clientes/agendamento-vistorias', name: 'Agendamento de Vistorias', icon: 'fas fa-search' }
+            ]
         }
     },
 

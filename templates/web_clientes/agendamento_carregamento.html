@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Agendamento de Carregamento - Web Cliente{% endblock %}
+
+{% block body_class %}main-body{% endblock %}
+
+{% block content %}
+{% include 'partials/sidebar.html' %}
+
+<main class="content main-content--shifted">
+    <div class="content-section active">
+        <div class="container-fluid">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2>Agendamento de Carregamento</h2>
+                    <p class="lead mb-0">Agende e gerencie carregamentos de mercadorias</p>
+                </div>
+                <a href="{{ url_for('web_clientes.web_clientes') }}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left"></i> Voltar
+                </a>
+            </div>
+            
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="text-center py-5">
+                                <i class="fas fa-truck-loading fa-4x text-muted mb-3"></i>
+                                <h4 class="text-muted">Módulo em Desenvolvimento</h4>
+                                <p class="text-muted">Esta funcionalidade será implementada em breve.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+{% block extra_js %}
+<!-- JavaScript gerenciado pelo utils.js -->
+{% endblock %}
+{% endblock %}

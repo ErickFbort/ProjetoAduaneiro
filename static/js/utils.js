@@ -47,6 +47,7 @@ const SidebarManager = {
     getCurrentModule(path) {
         if (path.startsWith('/cadastros')) return 'cadastros';
         if (path.startsWith('/relatorios')) return 'relatorios';
+        if (path.startsWith('/web-clientes')) return 'web_clientes';
         return null;
     },
 
@@ -70,7 +71,7 @@ const SidebarManager = {
             <li><a href="/dashboard" class="nav-link ${currentPath === '/dashboard' ? 'active' : ''}"><i class="fas fa-home"></i> <span>Home</span></a></li>
             <li><a href="#operacional" class="nav-link"><i class="fas fa-tasks"></i> <span>Operacional</span></a></li>
             <li><a href="#faturamento" class="nav-link"><i class="fas fa-file-invoice-dollar"></i> <span>Faturamento</span></a></li>
-            <li><a href="#web-cliente" class="nav-link"><i class="fas fa-user-tie"></i> <span>Web Cliente</span></a></li>
+            <li><a href="/web-clientes" class="nav-link ${currentPath === '/web-clientes' ? 'active' : ''}"><i class="fas fa-user-tie"></i> <span>Web Cliente</span></a></li>
             <li><a href="#portal-adm" class="nav-link"><i class="fas fa-user-shield"></i> <span>Portal ADM</span></a></li>
             <li><a href="/cadastros" class="nav-link"><i class="fas fa-edit"></i> <span>Cadastros</span></a></li>
             <li><a href="/relatorios" class="nav-link ${currentPath === '/relatorios' ? 'active' : ''}"><i class="fas fa-chart-bar"></i> <span>Relatórios</span></a></li>

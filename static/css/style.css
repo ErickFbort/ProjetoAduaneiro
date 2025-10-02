@@ -144,7 +144,8 @@ body {
 }
 
 .sidebar-links a {
-  display: block;
+  display: flex;
+  align-items: flex-start;
   padding: 1rem 1.5rem;
   color: #fff;
   text-decoration: none;
@@ -152,6 +153,7 @@ body {
   width: 100%; /* Garante que o link preencha 100% da largura do LI */
   position: relative;
   overflow: hidden;
+  min-height: 60px;
 }
 
 .sidebar-links a:hover {
@@ -167,11 +169,29 @@ body {
   margin-right: 1rem;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   display: inline-block;
+  flex-shrink: 0;
+  margin-top: 2px;
+  width: 16px;
+  text-align: center;
 }
 
 .sidebar-links a span {
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   display: inline-block;
+  vertical-align: top;
+  line-height: 1.2;
+  white-space: normal;
+  word-wrap: break-word;
+  flex: 1;
+  margin-top: 2px;
+}
+
+/* Formatação específica para sidebar expandida */
+.sidebar:not(.sidebar-collapsed) .sidebar-links a span {
+  white-space: normal;
+  word-wrap: break-word;
+  overflow: visible;
+  text-overflow: initial;
 }
 
 /* Nova classe para a barra lateral recolhida */
@@ -198,15 +218,21 @@ body {
 }
 
 .sidebar-collapsed .sidebar-links a {
-  padding: 1rem 0;
+  padding: 0.75rem 0;
   text-align: center;
   justify-content: center;
+  align-items: center;
+  min-height: 50px;
+  display: flex;
+  flex-direction: column;
 }
 
 .sidebar-collapsed .sidebar-links a i {
-  margin-right: 0;
-  font-size: 1.2rem;
+  margin: 0;
+  font-size: 1rem;
   transform: scale(1);
+  display: block;
+  text-align: center;
 }
 
 .sidebar-collapsed .sidebar-links a span {
@@ -214,6 +240,8 @@ body {
   transform: translateX(-10px);
   width: 0;
   overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 /* Mostra o logo e o texto quando a barra recolhida recebe HOVER */
@@ -229,12 +257,18 @@ body {
   padding: 1rem 1.5rem;
   text-align: left;
   justify-content: flex-start;
+  align-items: flex-start;
+  min-height: 60px;
+  display: flex;
+  flex-direction: row;
 }
 
 .sidebar-collapsed:hover .sidebar-links a i {
   margin-right: 1rem;
   font-size: 1rem;
   transform: scale(1);
+  display: inline-block;
+  text-align: left;
 }
 
 .sidebar-collapsed:hover .sidebar-links a span {
@@ -242,6 +276,9 @@ body {
   transform: translateX(0);
   width: auto;
   overflow: visible;
+  white-space: normal;
+  word-wrap: break-word;
+  text-overflow: initial;
 }
 
 /* Conteúdo principal ajustado para a barra lateral */
@@ -1325,6 +1362,11 @@ td:last-child {
     font-size: 2rem;
     color: white;
     margin-right: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.5rem;
+    height: 2.5rem;
 }
 
 .page-header .header-text,
@@ -3737,6 +3779,201 @@ td:last-child {
     
     .reports-config-section h3 {
         font-size: 1.1rem;
+    }
+}
+
+/* ========================================
+   TELA DE PROCESSOS - WEB CLIENTE
+   ======================================== */
+
+.processos-table {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    font-size: 0.85rem;
+}
+
+.processos-table thead {
+    background: #000000 !important;
+}
+
+.processos-table thead tr {
+    background: #000000 !important;
+}
+
+.processos-table thead th {
+    background: #000000 !important;
+    color: white !important;
+    border: none !important;
+    font-weight: 600;
+    padding: 0.75rem 0.5rem;
+    font-size: 0.8rem;
+    text-align: center;
+    vertical-align: middle;
+    border-bottom: 2px solid #000000 !important;
+}
+
+.processos-table .table-header {
+    background: #000000 !important;
+    color: white !important;
+}
+
+.processos-table .table-header th {
+    background: #000000 !important;
+    color: white !important;
+    border: none !important;
+    font-weight: 600;
+    padding: 0.75rem 0.5rem;
+    font-size: 0.8rem;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.processos-table .processo-row {
+    transition: all 0.3s ease;
+}
+
+.processos-table .processo-row:hover {
+    background-color: rgba(0, 123, 255, 0.05);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.processos-table .processo-row td {
+    padding: 0.75rem 0.5rem;
+    vertical-align: middle;
+    border-bottom: 1px solid #dee2e6;
+    font-size: 0.8rem;
+}
+
+.processos-table .small {
+    font-size: 0.75rem !important;
+}
+
+/* Botões de ação diretos na tabela de processos */
+.processos-table .btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    line-height: 1.2;
+    border-radius: 0.25rem;
+}
+
+.processos-table .btn-sm i {
+    font-size: 0.75rem;
+}
+
+/* Container dos botões de ação */
+.processos-table .d-flex.gap-1 {
+    gap: 0.5rem !important;
+    justify-content: center;
+    padding: 0.5rem;
+}
+
+/* Ações da tabela - layout e espaçamento */
+.table-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.table-actions .actions-left .btn {
+    height: 38px;
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Formatação do "Itens por página" */
+.items-per-page-container {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: #f8f9fa;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    border: 1px solid #dee2e6;
+    height: 38px;
+    min-width: 200px;
+}
+
+.items-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #495057;
+    white-space: nowrap;
+}
+
+.items-select {
+    min-width: 80px;
+    font-size: 0.875rem;
+    padding: 0.375rem 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    background-color: white;
+}
+
+.items-select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Botões do filtro avançado - tamanho reduzido */
+.advanced-filters .btn {
+    padding: 0.5rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.advanced-filters .btn-secondary {
+    min-width: 140px;
+}
+
+.advanced-filters .btn-primary {
+    min-width: 120px;
+}
+
+.advanced-filters .d-flex.justify-content-between {
+    gap: 1rem;
+}
+
+/* Célula de ações com padding adicional */
+.processos-table td:last-child {
+    padding: 0.75rem 1rem !important;
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* Responsividade da tabela */
+@media (max-width: 1200px) {
+    .processos-table {
+        font-size: 0.75rem;
+    }
+    
+    .processos-table th,
+    .processos-table td {
+        padding: 0.5rem 0.25rem;
+    }
+    
+    .processos-table .btn-sm {
+        padding: 0.2rem 0.4rem;
+        font-size: 0.7rem;
+    }
+    
+    .processos-table .btn-sm i {
+        font-size: 0.7rem;
+    }
+    
+    .processos-table td:last-child {
+        padding: 0.5rem 0.75rem !important;
+    }
+    
+    .processos-table .d-flex.gap-1 {
+        gap: 0.4rem !important;
+        padding: 0.25rem;
     }
 }
 
