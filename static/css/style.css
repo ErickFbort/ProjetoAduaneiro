@@ -4163,3 +4163,253 @@ td:last-child {
         max-width: calc(100vw - 10px);
     }
 }
+
+/* ======================
+   Modal de Cadastro de Processo
+====================== */
+.cadastro-tabs {
+  margin-bottom: 2rem;
+}
+
+.tab-buttons {
+  display: flex;
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 4px;
+  margin-bottom: 1.5rem;
+}
+
+.tab-btn {
+  flex: 1;
+  background: none;
+  border: none;
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  color: #6c757d;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.tab-btn:hover {
+  background: #e9ecef;
+  color: #495057;
+}
+
+.tab-btn.active {
+  background: #fff;
+  color: var(--primary-color);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tab-btn i {
+  font-size: 1.1rem;
+}
+
+.tab-content {
+  min-height: 400px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.tab-pane {
+  display: none;
+}
+
+.tab-pane.active {
+  display: block;
+}
+
+.form-section {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid #e9ecef;
+}
+
+.form-section:last-child {
+  margin-bottom: 0;
+}
+
+.section-title {
+  color: var(--primary-color);
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-label {
+  font-weight: 500;
+  color: #495057;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.form-label.required::after {
+  content: " *";
+  color: #dc3545;
+}
+
+.form-control, .form-select {
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  padding: 0.75rem;
+  font-size: 0.95rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 0 0.2rem rgba(0, 119, 204, 0.25);
+  outline: 0;
+}
+
+.form-control::placeholder {
+  color: #6c757d;
+  font-style: italic;
+}
+
+.btn-solicitar-faturamento {
+  background: #ffc107;
+  border: 1px solid #ffc107;
+  color: #212529;
+  font-weight: 500;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.btn-solicitar-faturamento:hover {
+  background: #e0a800;
+  border-color: #d39e00;
+  color: #212529;
+}
+
+.btn-salvar {
+  background: var(--primary-color);
+  border: 1px solid var(--primary-color);
+  color: white;
+  font-weight: 500;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.btn-salvar:hover {
+  background: #002244;
+  border-color: #002244;
+  color: white;
+}
+
+.btn-descartar {
+  background: #6c757d;
+  border: 1px solid #6c757d;
+  color: white;
+  font-weight: 500;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.btn-descartar:hover {
+  background: #5a6268;
+  border-color: #545b62;
+  color: white;
+}
+
+.adicoes-section {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e9ecef;
+}
+
+.adicoes-table {
+  margin-bottom: 0;
+}
+
+.adicoes-table th {
+  background: #f8f9fa;
+  font-weight: 600;
+  color: #495057;
+  border-bottom: 2px solid #dee2e6;
+  padding: 0.75rem;
+}
+
+.adicoes-table td {
+  padding: 0.75rem;
+  vertical-align: middle;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.adicoes-table tbody tr:hover {
+  background: #f8f9fa;
+}
+
+/* Estilos específicos para o modal de cadastro */
+#cadastroProcessoModal .modal-dialog {
+  max-width: 95%;
+}
+
+#cadastroProcessoModal .modal-body {
+  padding: 1.5rem;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+#cadastroProcessoModal .modal-header {
+  background: var(--primary-color);
+  color: white;
+  border-bottom: none;
+  padding: 1rem 1.5rem;
+}
+
+#cadastroProcessoModal .modal-title {
+  font-weight: 600;
+  font-size: 1.25rem;
+}
+
+#cadastroProcessoModal .btn-close {
+  filter: invert(1);
+}
+
+#cadastroProcessoModal .modal-footer {
+  background: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+  padding: 1rem 1.5rem;
+}
+
+/* Responsividade para o modal de cadastro */
+@media (max-width: 768px) {
+  .tab-buttons {
+    flex-direction: column;
+  }
+  
+  .tab-btn {
+    margin-bottom: 4px;
+  }
+  
+  .form-section {
+    padding: 1rem;
+  }
+  
+  #cadastroProcessoModal .modal-dialog {
+    margin: 0.5rem;
+    max-width: calc(100% - 1rem);
+  }
+  
+  .btn-solicitar-faturamento {
+    margin-top: 1rem;
+  }
+}

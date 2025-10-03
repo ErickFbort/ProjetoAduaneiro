@@ -35,6 +35,13 @@ class ProcessosManager {
         document.getElementById('advancedSearch')?.addEventListener('click', () => this.showAdvancedSearch());
         document.getElementById('cadastrarProcesso')?.addEventListener('click', () => this.showCadastroModal());
         
+        // Modal de cadastro
+        document.getElementById('descartarAlteracoesCadastro')?.addEventListener('click', () => this.descartarAlteracoesCadastro());
+        document.querySelector('.btn-salvar')?.addEventListener('click', () => this.salvarProcessoCadastro());
+        
+        // Controle de abas do modal de cadastro
+        this.setupCadastroTabs();
+        
         // Modal buttons
         document.getElementById('alterarStatus')?.addEventListener('click', () => this.alterarStatus());
         document.getElementById('descartarAlteracoes')?.addEventListener('click', () => this.descartarAlteracoes());
@@ -846,6 +853,173 @@ class ProcessosManager {
     fichaLote() {
         alert('Funcionalidade de ficha lote será implementada em breve.');
     }
+    
+    // ======================
+    // Modal de Cadastro de Processo
+    // ======================
+    
+    showCadastroModal() {
+        const modal = new bootstrap.Modal(document.getElementById('cadastroProcessoModal'));
+        modal.show();
+        this.resetCadastroForm();
+    }
+    
+    setupCadastroTabs() {
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        const tabPanes = document.querySelectorAll('.tab-pane');
+        
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const targetTab = button.getAttribute('data-tab');
+                
+                // Remove active class from all buttons and panes
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                tabPanes.forEach(pane => pane.classList.remove('active'));
+                
+                // Add active class to clicked button and corresponding pane
+                button.classList.add('active');
+                document.getElementById(`${targetTab}-tab`).classList.add('active');
+            });
+        });
+    }
+    
+    resetCadastroForm() {
+        // Reset all form fields
+        const form = document.getElementById('cadastroProcessoForm');
+        if (form) {
+            form.reset();
+        }
+        
+        const cargaForm = document.getElementById('cargaForm');
+        if (cargaForm) {
+            cargaForm.reset();
+        }
+        
+        // Reset to first tab
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        const tabPanes = document.querySelectorAll('.tab-pane');
+        
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        tabPanes.forEach(pane => pane.classList.remove('active'));
+        
+        document.querySelector('[data-tab="processo"]').classList.add('active');
+        document.getElementById('processo-tab').classList.add('active');
+    }
+    
+    descartarAlteracoesCadastro() {
+        if (confirm('Tem certeza que deseja descartar todas as alterações?')) {
+            this.resetCadastroForm();
+            const modal = bootstrap.Modal.getInstance(document.getElementById('cadastroProcessoModal'));
+            modal.hide();
+        }
+    }
+    
+    salvarProcessoCadastro() {
+        // Validar formulário
+        if (!this.validateCadastroForm()) {
+            return;
+        }
+        
+        // Coletar dados do formulário
+        const formData = this.collectCadastroFormData();
+        
+        console.log('Dados do processo:', formData);
+        
+        // Simular salvamento
+        this.showNotification('Processo cadastrado com sucesso!', 'success');
+        
+        // Fechar modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById('cadastroProcessoModal'));
+        modal.hide();
+        
+        // Recarregar lista de processos
+        this.loadProcessos();
+    }
+    
+    validateCadastroForm() {
+        const requiredFields = [
+            'despachanteCadastro',
+            'clienteCadastro', 
+            'naturezaOperacaoCadastro',
+            'tabelaAplicada',
+            'receberGuiasCadastro'
+        ];
+        
+        let isValid = true;
+        
+        requiredFields.forEach(fieldId => {
+            const field = document.getElementById(fieldId);
+            if (field && !field.value.trim()) {
+                field.classList.add('is-invalid');
+                isValid = false;
+            } else if (field) {
+                field.classList.remove('is-invalid');
+            }
+        });
+        
+        if (!isValid) {
+            this.showNotification('Por favor, preencha todos os campos obrigatórios.', 'error');
+        }
+        
+        return isValid;
+    }
+    
+    collectCadastroFormData() {
+        return {
+            // Detalhes
+            despachante: document.getElementById('despachanteCadastro')?.value || '',
+            cliente: document.getElementById('clienteCadastro')?.value || '',
+            naturezaOperacao: document.getElementById('naturezaOperacaoCadastro')?.value || '',
+            tabelaAplicada: document.getElementById('tabelaAplicada')?.value || '',
+            dataPontoZero: document.getElementById('dataPontoZeroCadastro')?.value || '',
+            referenciaCliente: document.getElementById('referenciaClienteCadastro')?.value || '',
+            previsaoCarregamento: document.getElementById('previsaoCarregamentoCadastro')?.value || '',
+            observacao: document.getElementById('observacaoCadastro')?.value || '',
+            reexportacao: document.getElementById('reexportacaoCadastro')?.value || '',
+            receberGuias: document.getElementById('receberGuiasCadastro')?.value || '',
+            emailGuias: document.getElementById('emailGuiasCadastro')?.value || '',
+            impedimentoCarga: document.getElementById('impedimentoCargaCadastro')?.value || '',
+            statusFaturamento: document.getElementById('statusFaturamentoCadastro')?.value || '',
+            observacaoInterna: document.getElementById('observacaoInternaCadastro')?.value || '',
+            
+            // Carga
+            regimeAduaneiro: document.getElementById('regimeAduaneiroCadastro')?.value || '',
+            objetivoImportacao: document.getElementById('objetivoImportacaoCadastro')?.value || '',
+            tipoCarga: document.getElementById('tipoCargaCadastro')?.value || '',
+            imoDgr: document.getElementById('imoDgrCadastro')?.value || '',
+            volume: document.getElementById('volumeCadastro')?.value || '',
+            pesoBruto: document.getElementById('pesoBrutoCadastro')?.value || '',
+            valorCif: document.getElementById('valorCifCadastro')?.value || '',
+            valorFrete: document.getElementById('valorFreteCadastro')?.value || '',
+            valorSeguro: document.getElementById('valorSeguroCadastro')?.value || '',
+            valorFob: document.getElementById('valorFobCadastro')?.value || '',
+            moedaFrete: document.getElementById('moedaFreteCadastro')?.value || '',
+            moedaSeguro: document.getElementById('moedaSeguroCadastro')?.value || '',
+            moedaFob: document.getElementById('moedaFobCadastro')?.value || '',
+            embalagemMadeira: document.getElementById('embalagemMadeiraCadastro')?.value || '',
+            controleTemperatura: document.getElementById('controleTemperaturaCadastro')?.value || ''
+        };
+    }
+    
+    showNotification(message, type = 'info') {
+        // Criar elemento de notificação
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${type === 'error' ? 'danger' : type} alert-dismissible fade show position-fixed`;
+        alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+        alertDiv.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        
+        document.body.appendChild(alertDiv);
+        
+        // Remover após 5 segundos
+        setTimeout(() => {
+            if (alertDiv.parentNode) {
+                alertDiv.parentNode.removeChild(alertDiv);
+            }
+        }, 5000);
+    }
 }
 
 // Funções globais para filtros
@@ -888,6 +1062,13 @@ function clearAdvancedFilters() {
 function refreshTable() {
     if (window.processosManager) {
         window.processosManager.loadProcessos();
+    }
+}
+
+function fecharCadastroProcesso() {
+    const modal = bootstrap.Modal.getInstance(document.getElementById('cadastroProcessoModal'));
+    if (modal) {
+        modal.hide();
     }
 }
 

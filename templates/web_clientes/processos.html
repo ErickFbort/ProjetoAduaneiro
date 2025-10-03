@@ -245,6 +245,421 @@
     </div>
 </main>
 
+<!-- Modal de Cadastro de Processo -->
+<div class="modal fade" id="cadastroProcessoModal" tabindex="-1" aria-labelledby="cadastroProcessoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cadastroProcessoModalLabel">
+                    <i class="fas fa-arrow-left me-2" onclick="fecharCadastroProcesso()"></i>
+                    Cadastro de Processo
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Navegação por Abas -->
+                <div class="cadastro-tabs">
+                    <div class="tab-buttons">
+                        <button class="tab-btn active" data-tab="processo">
+                            <i class="fas fa-clipboard-list"></i> Processo
+                        </button>
+                        <button class="tab-btn" data-tab="historico">
+                            <i class="fas fa-history"></i> Histórico
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Conteúdo das Abas -->
+                <div class="tab-content">
+                    <!-- Aba Processo (Todas as informações) -->
+                    <div class="tab-pane active" id="processo-tab">
+                        <div class="form-section">
+                            <h6 class="section-title">Detalhes</h6>
+                            <form id="cadastroProcessoForm">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="despachanteCadastro" class="form-label required">Despachante / Responsável</label>
+                                            <input type="text" 
+                                                   class="form-control" 
+                                                   id="despachanteCadastro" 
+                                                   placeholder="Digite 3 ou mais caracteres para pesquisar o DESPACHANTE"
+                                                   required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="clienteCadastro" class="form-label required">Cliente / Consignatário</label>
+                                            <input type="text" 
+                                                   class="form-control" 
+                                                   id="clienteCadastro" 
+                                                   placeholder="Digite 3 ou mais caracteres para pesquisar o CLIENTE / CONSIGNATÁRIO"
+                                                   required>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="naturezaOperacaoCadastro" class="form-label required">Natureza de Operação</label>
+                                            <select class="form-select" id="naturezaOperacaoCadastro" required>
+                                                <option value="">Selecione...</option>
+                                                <option value="05.03">05.03 - Despacho De Exportacao - Aereo</option>
+                                                <option value="05.01">05.01 - Despacho De Exportacao - Maritimo</option>
+                                                <option value="05.02">05.02 - Despacho De Exportacao - Rodoviario</option>
+                                                <option value="01.01">01.01 - Despacho De Importacao - Aereo</option>
+                                                <option value="01.02">01.02 - Despacho De Importacao - Maritimo</option>
+                                                <option value="01.03">01.03 - Despacho De Importacao - Rodoviario</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="tabelaAplicada" class="form-label required">Tabela a ser aplicada</label>
+                                            <select class="form-select" id="tabelaAplicada" required>
+                                                <option value="">Selecione...</option>
+                                                <option value="tabela1">Tabela 1 - Exportação Aérea</option>
+                                                <option value="tabela2">Tabela 2 - Exportação Marítima</option>
+                                                <option value="tabela3">Tabela 3 - Exportação Rodoviária</option>
+                                                <option value="tabela4">Tabela 4 - Importação Aérea</option>
+                                                <option value="tabela5">Tabela 5 - Importação Marítima</option>
+                                                <option value="tabela6">Tabela 6 - Importação Rodoviária</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="dataPontoZeroCadastro" class="form-label">Data (Ponto Zero)</label>
+                                            <input type="date" class="form-control" id="dataPontoZeroCadastro">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="referenciaClienteCadastro" class="form-label">Referência do Cliente</label>
+                                            <input type="text" 
+                                                   class="form-control" 
+                                                   id="referenciaClienteCadastro" 
+                                                   placeholder="Referência do cliente">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="previsaoCarregamentoCadastro" class="form-label">Previsão Carregamento</label>
+                                            <input type="date" class="form-control" id="previsaoCarregamentoCadastro">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <label for="observacaoCadastro" class="form-label">Observação</label>
+                                            <textarea class="form-control" 
+                                                      id="observacaoCadastro" 
+                                                      rows="3" 
+                                                      placeholder="Observação"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="reexportacaoCadastro" class="form-label">Reexportação</label>
+                                            <select class="form-select" id="reexportacaoCadastro">
+                                                <option value="">Selecione...</option>
+                                                <option value="sim">Sim</option>
+                                                <option value="nao">Não</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="receberGuiasCadastro" class="form-label required">Receber Guias E-mail</label>
+                                            <select class="form-select" id="receberGuiasCadastro" required>
+                                                <option value="">Selecione...</option>
+                                                <option value="sim">Sim</option>
+                                                <option value="nao">Não</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="emailGuiasCadastro" class="form-label">E-mail Guias</label>
+                                            <input type="email" 
+                                                   class="form-control" 
+                                                   id="emailGuiasCadastro" 
+                                                   placeholder="E-mail Guia">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="impedimentoCargaCadastro" class="form-label">Impedimento da Carga</label>
+                                            <select class="form-select" id="impedimentoCargaCadastro">
+                                                <option value="">Selecione...</option>
+                                                <option value="sim">Sim</option>
+                                                <option value="nao">Não</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="statusFaturamentoCadastro" class="form-label">Status Faturamento</label>
+                                            <select class="form-select" id="statusFaturamentoCadastro">
+                                                <option value="">Selecione...</option>
+                                                <option value="pendente">Pendente</option>
+                                                <option value="processando">Processando</option>
+                                                <option value="faturado">Faturado</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <label for="observacaoInternaCadastro" class="form-label">Observação Interna</label>
+                                            <textarea class="form-control" 
+                                                      id="observacaoInternaCadastro" 
+                                                      rows="3" 
+                                                      placeholder="Observação Interna"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 d-flex flex-column align-items-end">
+                                        <button type="button" class="btn btn-primary btn-salvar mb-2">
+                                            <i class="fas fa-save"></i> Salvar
+                                        </button>
+                                        <button type="button" class="btn btn-warning btn-solicitar-faturamento mb-2">
+                                            <i class="fas fa-file-invoice-dollar"></i> Solicitar Faturamento
+                                        </button>
+                                        <button type="button" class="btn btn-secondary" id="descartarAlteracoesCadastro">
+                                            <i class="fas fa-times"></i> Descartar Alterações
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <!-- Seção Documentos -->
+                        <div class="form-section">
+                            <h6 class="section-title">Documentos</h6>
+                            <div class="form-group">
+                                <label for="naturezaOperacaoDocumentos" class="form-label">Selecione uma natureza de operação para listar os documentos</label>
+                                <select class="form-select" id="naturezaOperacaoDocumentos">
+                                    <option value="">Selecione uma natureza de operação para listar os documentos</option>
+                                    <option value="05.03">05.03 - Despacho De Exportacao - Aereo</option>
+                                    <option value="05.01">05.01 - Despacho De Exportacao - Maritimo</option>
+                                    <option value="05.02">05.02 - Despacho De Exportacao - Rodoviario</option>
+                                    <option value="01.01">01.01 - Despacho De Importacao - Aereo</option>
+                                    <option value="01.02">01.02 - Despacho De Importacao - Maritimo</option>
+                                    <option value="01.03">01.03 - Despacho De Importacao - Rodoviario</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Seção Carga -->
+                        <div class="form-section">
+                            <h6 class="section-title">Carga</h6>
+                            <form id="cargaForm">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="regimeAduaneiroCadastro" class="form-label">Regime Aduaneiro</label>
+                                            <select class="form-select" id="regimeAduaneiroCadastro">
+                                                <option value="">Selecione...</option>
+                                                <option value="exportacao_definitiva">Exportação Definitiva</option>
+                                                <option value="exportacao_temporaria">Exportação Temporária</option>
+                                                <option value="importacao_definitiva">Importação Definitiva</option>
+                                                <option value="importacao_temporaria">Importação Temporária</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="objetivoImportacaoCadastro" class="form-label">Objetivo da Importação/Exportação</label>
+                                            <select class="form-select" id="objetivoImportacaoCadastro">
+                                                <option value="">Selecione...</option>
+                                                <option value="comercial">Comercial</option>
+                                                <option value="industrial">Industrial</option>
+                                                <option value="pessoal">Pessoal</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="tipoCargaCadastro" class="form-label">Tipo da Carga</label>
+                                            <select class="form-select" id="tipoCargaCadastro">
+                                                <option value="">Selecione...</option>
+                                                <option value="geral">Carga Geral</option>
+                                                <option value="granel">Granel</option>
+                                                <option value="perigosa">Perigosa</option>
+                                                <option value="refrigerada">Refrigerada</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="imoDgrCadastro" class="form-label">IMO / DGR</label>
+                                            <select class="form-select" id="imoDgrCadastro">
+                                                <option value="">Selecione...</option>
+                                                <option value="nao">Não</option>
+                                                <option value="sim">Sim</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="volumeCadastro" class="form-label">Volume</label>
+                                            <input type="number" class="form-control" id="volumeCadastro" placeholder="Volume" step="0.01">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="pesoBrutoCadastro" class="form-label">Peso Bruto</label>
+                                            <input type="number" class="form-control" id="pesoBrutoCadastro" placeholder="Peso Bruto" step="0.00001">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="valorCifCadastro" class="form-label">Valor CIF</label>
+                                            <input type="number" class="form-control" id="valorCifCadastro" value="0,00" step="0.01">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="valorFreteCadastro" class="form-label">Valor Frete</label>
+                                            <input type="number" class="form-control" id="valorFreteCadastro" value="0,00" step="0.01">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="valorSeguroCadastro" class="form-label">Valor Seguro</label>
+                                            <input type="number" class="form-control" id="valorSeguroCadastro" value="0,00" step="0.01">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="valorFobCadastro" class="form-label">Valor Fob</label>
+                                            <input type="number" class="form-control" id="valorFobCadastro" value="0,00" step="0.01">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="moedaFreteCadastro" class="form-label">Moeda Frete</label>
+                                            <select class="form-select" id="moedaFreteCadastro">
+                                                <option value="">Selecione...</option>
+                                                <option value="USD">USD - Dólar Americano</option>
+                                                <option value="EUR">EUR - Euro</option>
+                                                <option value="BRL">BRL - Real Brasileiro</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="moedaSeguroCadastro" class="form-label">Moeda Seguro</label>
+                                            <select class="form-select" id="moedaSeguroCadastro">
+                                                <option value="">Selecione...</option>
+                                                <option value="USD">USD - Dólar Americano</option>
+                                                <option value="EUR">EUR - Euro</option>
+                                                <option value="BRL">BRL - Real Brasileiro</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="moedaFobCadastro" class="form-label">Moeda FOB</label>
+                                            <select class="form-select" id="moedaFobCadastro">
+                                                <option value="">Selecione...</option>
+                                                <option value="USD">USD - Dólar Americano</option>
+                                                <option value="EUR">EUR - Euro</option>
+                                                <option value="BRL">BRL - Real Brasileiro</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="embalagemMadeiraCadastro" class="form-label">Embalagem / Suporte de Madeira?</label>
+                                            <select class="form-select" id="embalagemMadeiraCadastro">
+                                                <option value="">Selecione...</option>
+                                                <option value="nao">Não</option>
+                                                <option value="sim">Sim</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="controleTemperaturaCadastro" class="form-label">Controle de Temperatura?</label>
+                                            <select class="form-select" id="controleTemperaturaCadastro">
+                                                <option value="">Selecione...</option>
+                                                <option value="nao">Não</option>
+                                                <option value="sim">Sim</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            
+                            <!-- Seção Adições -->
+                            <div class="adicoes-section">
+                                <h6 class="section-title">Adições</h6>
+                                <div class="table-responsive">
+                                    <table class="table table-sm adicoes-table">
+                                        <thead>
+                                            <tr>
+                                                <th width="5%">#</th>
+                                                <th width="15%">Regime Aduaneiro</th>
+                                                <th width="20%">Detalhamento da Carga</th>
+                                                <th width="15%">Objetivo Imp/Exp</th>
+                                                <th width="10%">Reimportação</th>
+                                                <th width="10%">Valor CIF</th>
+                                                <th width="10%">Moeda</th>
+                                                <th width="10%">Peso Líquido</th>
+                                                <th width="5%">Opções</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="adicoesTableBodyCadastro">
+                                            <tr>
+                                                <td colspan="9" class="text-center text-muted">Nenhuma adição para a carga</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Aba Histórico -->
+                    <div class="tab-pane" id="historico-tab">
+                        <div class="form-section">
+                            <h6 class="section-title">Histórico</h6>
+                            <div class="text-center text-muted">
+                                <i class="fas fa-history fa-3x mb-3"></i>
+                                <p>Nenhum histórico disponível para este processo.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <!-- Botões movidos para a seção de Observação Interna -->
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Modal de Visualização/Edição de Processo -->
 <div class="modal fade" id="processoModal" tabindex="-1" aria-labelledby="processoModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
