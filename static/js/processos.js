@@ -8,6 +8,50 @@ class ProcessosManager {
         this.processos = [];
         this.currentProcesso = null;
         
+        // Base de dados de documentos por natureza de operação
+        this.documentosPorNatureza = {
+            '05.03': { // Despacho De Exportacao - Aereo
+                obrigatorios: ['AIR WAY BILL / HAWB', 'DUE', 'NFE'],
+                opcionais: ['LPCO', 'OUTROS DOCUMENTOS']
+            },
+            '05.04': { // Despacho De Exportacao - Aereo Via Dta
+                obrigatorios: ['AIR WAY BILL / HAWB', 'DUE', 'NFE'],
+                opcionais: ['LPCO', 'OUTROS DOCUMENTOS']
+            },
+            '05.01': { // Despacho De Exportacao - Maritimo
+                obrigatorios: ['CONHECIMENTO DE EMBARQUE', 'DUE', 'NFE'],
+                opcionais: ['LPCO', 'OUTROS DOCUMENTOS']
+            },
+            '05.02': { // Despacho De Exportacao - Rodoviario
+                obrigatorios: ['CONHECIMENTO DE FRETE', 'DUE', 'NFE'],
+                opcionais: ['LPCO', 'OUTROS DOCUMENTOS']
+            },
+            '01.01': { // Despacho De Importacao - Aereo
+                obrigatorios: ['AIR WAY BILL / HAWB', 'DI/DUIMP', 'EXTRATO ICMS', 'NFE', 'AUT. CARREGAMENTO'],
+                opcionais: ['LPCO']
+            },
+            '01.02': { // Despacho De Importacao - Maritimo
+                obrigatorios: ['CONHECIMENTO DE EMBARQUE', 'DI/DUIMP', 'EXTRATO ICMS', 'NFE', 'AUT. CARREGAMENTO'],
+                opcionais: ['LPCO']
+            },
+            '01.03': { // Despacho De Importacao - Rodoviario
+                obrigatorios: ['CONHECIMENTO DE FRETE', 'DI/DUIMP', 'EXTRATO ICMS', 'NFE', 'AUT. CARREGAMENTO'],
+                opcionais: ['LPCO']
+            },
+            '05.05': { // Devolucao De Madeira Para Exterior
+                obrigatorios: [],
+                opcionais: ['LPCO', 'OUTROS DOCUMENTOS']
+            },
+            '05.06': { // Despacho De Importacao - Aereo Dsi
+                obrigatorios: ['AIR WAY BILL / HAWB', 'DSI/DUIMP', 'EXTRATO ICMS', 'AUT. CARREGAMENTO'],
+                opcionais: ['NFE', 'LPCO']
+            },
+            '05.08': { // Operacao Courier
+                obrigatorios: [],
+                opcionais: ['LPCO', 'OUTROS DOCUMENTOS']
+            }
+        };
+        
         this.init();
     }
     
@@ -33,7 +77,7 @@ class ProcessosManager {
         
         // Botões de ação
         document.getElementById('advancedSearch')?.addEventListener('click', () => this.showAdvancedSearch());
-        document.getElementById('cadastrarProcesso')?.addEventListener('click', () => this.showCadastroModal());
+        document.getElementById('cadastrarProcesso')?.addEventListener('click', () => this.redirectToCadastro());
         
         // Modal de cadastro
         document.getElementById('descartarAlteracoesCadastro')?.addEventListener('click', () => this.descartarAlteracoesCadastro());
@@ -41,6 +85,9 @@ class ProcessosManager {
         
         // Controle de abas do modal de cadastro
         this.setupCadastroTabs();
+        
+        // Controle de documentos dinâmicos baseado na natureza de operação
+        document.getElementById('naturezaOperacaoCadastro')?.addEventListener('change', (e) => this.loadDocumentos(e.target.value));
         
         // Modal buttons
         document.getElementById('alterarStatus')?.addEventListener('click', () => this.alterarStatus());
@@ -858,6 +905,11 @@ class ProcessosManager {
     // Modal de Cadastro de Processo
     // ======================
     
+    redirectToCadastro() {
+        // Redirecionar para a página de cadastro de processo
+        window.location.href = '/web-clientes/processos/cadastro';
+    }
+
     showCadastroModal() {
         const modal = new bootstrap.Modal(document.getElementById('cadastroProcessoModal'));
         modal.show();
@@ -904,6 +956,10 @@ class ProcessosManager {
         
         document.querySelector('[data-tab="processo"]').classList.add('active');
         document.getElementById('processo-tab').classList.add('active');
+        
+        // Reset documentos
+        this.resetDocumentoDetails();
+        document.getElementById('documentosLista').style.display = 'none';
     }
     
     descartarAlteracoesCadastro() {
@@ -1019,6 +1075,186 @@ class ProcessosManager {
                 alertDiv.parentNode.removeChild(alertDiv);
             }
         }, 5000);
+    }
+    
+    // Método para carregar documentos baseado na natureza de operação
+    loadDocumentos(naturezaOperacao) {
+        const documentosContainer = document.getElementById('documentosLista');
+        const documentosList = document.getElementById('documentosList');
+        const documentosDetails = document.getElementById('documentosDetails');
+        
+        if (!naturezaOperacao) {
+            documentosContainer.style.display = 'none';
+            return;
+        }
+        
+        const documentos = this.documentosPorNatureza[naturezaOperacao];
+        if (!documentos) {
+            documentosContainer.style.display = 'none';
+            return;
+        }
+        
+        // Limpar lista atual
+        documentosList.innerHTML = '';
+        
+        // Adicionar documentos obrigatórios
+        documentos.obrigatorios.forEach(doc => {
+            const docElement = this.createDocumentoElement(doc, true);
+            documentosList.appendChild(docElement);
+        });
+        
+        // Adicionar documentos opcionais
+        documentos.opcionais.forEach(doc => {
+            const docElement = this.createDocumentoElement(doc, false);
+            documentosList.appendChild(docElement);
+        });
+        
+        // Resetar detalhes
+        this.resetDocumentoDetails();
+        
+        // Mostrar container
+        documentosContainer.style.display = 'block';
+    }
+    
+    // Método para criar elemento de documento
+    createDocumentoElement(nome, obrigatorio) {
+        const docElement = document.createElement('div');
+        docElement.className = `documento-item ${obrigatorio ? 'obrigatorio' : ''}`;
+        docElement.dataset.documento = nome;
+        
+        const icon = document.createElement('i');
+        icon.className = `documento-icon fas ${obrigatorio ? 'fa-exclamation-triangle' : 'fa-file-alt'}`;
+        
+        const nomeElement = document.createElement('span');
+        nomeElement.className = 'documento-nome';
+        nomeElement.textContent = nome;
+        
+        docElement.appendChild(icon);
+        docElement.appendChild(nomeElement);
+        
+        // Adicionar evento de clique
+        docElement.addEventListener('click', () => {
+            this.selectDocumento(docElement, nome, obrigatorio);
+        });
+        
+        return docElement;
+    }
+    
+    // Método para selecionar documento e mostrar detalhes
+    selectDocumento(element, nome, obrigatorio) {
+        // Remover seleção anterior
+        document.querySelectorAll('.documento-item').forEach(item => {
+            item.classList.remove('active');
+        });
+        
+        // Selecionar documento atual
+        element.classList.add('active');
+        
+        // Mostrar detalhes do documento
+        this.showDocumentoDetails(nome, obrigatorio);
+    }
+    
+    // Método para mostrar detalhes do documento
+    showDocumentoDetails(nome, obrigatorio) {
+        const documentosDetails = document.getElementById('documentosDetails');
+        
+        // Limpar conteúdo anterior
+        documentosDetails.innerHTML = '';
+        
+        // Criar conteúdo dos detalhes
+        const detailsContent = document.createElement('div');
+        detailsContent.className = 'documento-details-content active';
+        
+        // Criar campos específicos baseados no tipo de documento
+        const fields = this.getDocumentoFields(nome);
+        const fieldsHtml = fields.map(field => `
+            <div class="documento-field">
+                <label for="${field.id}">${field.label}${field.required ? ' *' : ''}</label>
+                <input type="${field.type}" 
+                       id="${field.id}" 
+                       placeholder="${field.placeholder}"
+                       ${field.required ? 'required' : ''}>
+            </div>
+        `).join('');
+        
+        detailsContent.innerHTML = `
+            <div class="documento-fields">
+                ${fieldsHtml}
+            </div>
+            <div class="documento-upload" id="upload-${nome.replace(/[^a-zA-Z0-9]/g, '')}">
+                <button type="button" class="upload-button" onclick="document.getElementById('file-${nome.replace(/[^a-zA-Z0-9]/g, '')}').click()">
+                    Escolher Arquivo
+                </button>
+                <input type="file" id="file-${nome.replace(/[^a-zA-Z0-9]/g, '')}" style="display: none;" onchange="this.parentElement.querySelector('.upload-status').textContent = this.files[0] ? this.files[0].name : 'Nenhum arquivo escolhido'">
+                <div class="upload-status">Nenhum arquivo escolhido</div>
+                ${obrigatorio ? '<div class="upload-required">* anexo obrigatório</div>' : ''}
+            </div>
+        `;
+        
+        documentosDetails.appendChild(detailsContent);
+    }
+    
+    // Método para obter campos específicos de cada documento
+    getDocumentoFields(nome) {
+        const fieldsMap = {
+            'AIR WAY BILL / HAWB': [
+                { id: 'numeroAWB', label: 'NUMERO AWB', placeholder: 'NUMERO AWB', type: 'text', required: true },
+                { id: 'numeroHAWB', label: 'NUMERO HAWB', placeholder: 'NUMERO HAWB', type: 'text', required: false }
+            ],
+            'DI/DUIMP': [
+                { id: 'numeroDI', label: 'NUMERO DI', placeholder: 'NUMERO DI', type: 'text', required: true },
+                { id: 'numeroDUIMP', label: 'NUMERO DUIMP', placeholder: 'NUMERO DUIMP', type: 'text', required: false }
+            ],
+            'DSI/DUIMP': [
+                { id: 'numeroDSI', label: 'NUMERO DSI', placeholder: 'NUMERO DSI', type: 'text', required: true },
+                { id: 'numeroDUIMP', label: 'NUMERO DUIMP', placeholder: 'NUMERO DUIMP', type: 'text', required: false }
+            ],
+            'EXTRATO ICMS': [
+                { id: 'numeroExtrato', label: 'NUMERO EXTRATO', placeholder: 'NUMERO EXTRATO', type: 'text', required: true }
+            ],
+            'EXTRATO DE TRANSITO': [
+                { id: 'numeroExtratoTransito', label: 'NUMERO EXTRATO', placeholder: 'NUMERO EXTRATO', type: 'text', required: true }
+            ],
+            'NFE': [
+                { id: 'numeroNFE', label: 'NUMERO NFE', placeholder: 'NUMERO NFE', type: 'text', required: true }
+            ],
+            'AUT. CARREGAMENTO': [
+                { id: 'numeroAutorizacao', label: 'NUMERO AUTORIZAÇÃO', placeholder: 'NUMERO AUTORIZAÇÃO', type: 'text', required: true }
+            ],
+            'CONHECIMENTO DE EMBARQUE': [
+                { id: 'numeroConhecimento', label: 'NUMERO CONHECIMENTO', placeholder: 'NUMERO CONHECIMENTO', type: 'text', required: true }
+            ],
+            'CONHECIMENTO DE FRETE': [
+                { id: 'numeroConhecimentoFrete', label: 'NUMERO CONHECIMENTO', placeholder: 'NUMERO CONHECIMENTO', type: 'text', required: true }
+            ],
+            'DUE': [
+                { id: 'numeroDUE', label: 'NUMERO DUE', placeholder: 'NUMERO DUE', type: 'text', required: true }
+            ],
+            'LPCO': [
+                { id: 'numeroLPCO', label: 'NUMERO LPCO', placeholder: 'NUMERO LPCO', type: 'text', required: false }
+            ],
+            'OUTROS DOCUMENTOS': [
+                { id: 'descricaoOutros', label: 'DESCRIÇÃO', placeholder: 'Descreva o documento', type: 'text', required: false }
+            ],
+            'FICHAS DE SERVICO': [
+                { id: 'numeroFicha', label: 'NUMERO FICHA', placeholder: 'NUMERO FICHA', type: 'text', required: false }
+            ]
+        };
+        
+        return fieldsMap[nome] || [
+            { id: 'numeroDocumento', label: 'NUMERO', placeholder: 'NUMERO', type: 'text', required: true }
+        ];
+    }
+    
+    // Método para resetar detalhes do documento
+    resetDocumentoDetails() {
+        const documentosDetails = document.getElementById('documentosDetails');
+        documentosDetails.innerHTML = `
+            <div class="documento-placeholder">
+                <i class="fas fa-file-alt fa-3x text-muted mb-3"></i>
+                <h6 class="text-muted">Selecione um documento para visualizar os detalhes</h6>
+            </div>
+        `;
     }
 }
 

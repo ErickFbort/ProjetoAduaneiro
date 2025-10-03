@@ -3736,6 +3736,31 @@ td:last-child {
     align-items: center;
 }
 
+/* Layout específico para cabeçalho com ícone à esquerda */
+.page-header .header-title.d-flex {
+    align-items: center;
+    gap: 1rem;
+}
+
+.page-header .header-title.d-flex i {
+    font-size: 2rem;
+    color: white !important;
+    flex-shrink: 0;
+}
+
+.page-header .header-title.d-flex h2 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 700;
+    color: white;
+}
+
+.page-header .header-title.d-flex .header-subtitle {
+    margin: 0.25rem 0 0 0;
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
 .add-report-section {
     text-align: left;
 }
@@ -3770,6 +3795,24 @@ td:last-child {
     .page-header .header-content {
         flex-direction: column;
         align-items: flex-start;
+    }
+    
+    .page-header .header-title.d-flex {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .page-header .header-title.d-flex i {
+        font-size: 1.5rem;
+    }
+    
+    .page-header .header-title.d-flex h2 {
+        font-size: 1.5rem;
+    }
+    
+    .page-header .header-title.d-flex .header-subtitle {
+        font-size: 0.9rem;
     }
     
     .back-button {
@@ -4118,7 +4161,9 @@ td:last-child {
         font-size: 0.9rem;
     }
 }
-    
+
+/* Responsividade para modal de relatórios */
+@media (max-width: 768px) {
     .action-badge {
         width: 16px;
         height: 16px;
@@ -4165,33 +4210,89 @@ td:last-child {
 }
 
 /* ======================
+   Navegador de Seções
+====================== */
+.navegador-container {
+  margin-bottom: 1rem;
+}
+
+.navegador-btn {
+  background: #f8f9fa;
+  border: 2px solid #e9ecef;
+  color: #495057;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  min-width: 150px;
+}
+
+.navegador-btn:hover {
+  background: #e9ecef;
+  border-color: #dee2e6;
+  color: #495057;
+}
+
+.navegador-btn:focus {
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.navegador-menu {
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  min-width: 200px;
+}
+
+.navegador-item {
+  padding: 0.75rem 1rem;
+  color: #495057;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+}
+
+.navegador-item:hover {
+  background-color: #f8f9fa;
+  color: var(--primary-color);
+}
+
+.navegador-item i {
+  width: 20px;
+  text-align: center;
+  color: var(--primary-color);
+}
+
+/* ======================
    Modal de Cadastro de Processo
 ====================== */
 .cadastro-tabs {
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 
 .tab-buttons {
   display: flex;
   background: #f8f9fa;
-  border-radius: 8px;
-  padding: 4px;
-  margin-bottom: 1.5rem;
+  border-radius: 6px;
+  padding: 2px;
+  margin-bottom: 0.75rem;
 }
 
 .tab-btn {
   flex: 1;
   background: none;
   border: none;
-  padding: 12px 16px;
-  border-radius: 6px;
+  padding: 8px 12px;
+  border-radius: 4px;
   font-weight: 500;
   color: #6c757d;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
+  font-size: 0.9rem;
 }
 
 .tab-btn:hover {
@@ -4206,13 +4307,13 @@ td:last-child {
 }
 
 .tab-btn i {
-  font-size: 1.1rem;
+  font-size: 1rem;
 }
 
 .tab-content {
-  min-height: 400px;
-  max-height: 70vh;
-  overflow-y: auto;
+  min-height: auto;
+  max-height: none;
+  overflow: visible;
 }
 
 .tab-pane {
@@ -4225,9 +4326,9 @@ td:last-child {
 
 .form-section {
   background: #fff;
-  border-radius: 8px;
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 1rem;
   border: 1px solid #e9ecef;
 }
 
@@ -4238,20 +4339,22 @@ td:last-child {
 .section-title {
   color: var(--primary-color);
   font-weight: 600;
-  margin-bottom: 1.5rem;
-  padding-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.25rem;
   border-bottom: 2px solid #e9ecef;
+  font-size: 1rem;
 }
 
 .form-group {
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
 }
 
 .form-label {
   font-weight: 500;
   color: #495057;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
   display: block;
+  font-size: 0.9rem;
 }
 
 .form-label.required::after {
@@ -4261,10 +4364,11 @@ td:last-child {
 
 .form-control, .form-select {
   border: 1px solid #ced4da;
-  border-radius: 6px;
-  padding: 0.75rem;
-  font-size: 0.95rem;
+  border-radius: 4px;
+  padding: 0.375rem 0.5rem;
+  font-size: 0.85rem;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  height: calc(1.5em + 0.75rem + 2px);
 }
 
 .form-control:focus, .form-select:focus {
@@ -4283,10 +4387,12 @@ td:last-child {
   border: 1px solid #ffc107;
   color: #212529;
   font-weight: 500;
-  padding: 0.75rem 1.5rem;
-  border-radius: 6px;
+  padding: 0.375rem 0.75rem;
+  border-radius: 4px;
   transition: all 0.3s ease;
   width: 100%;
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
 }
 
 .btn-solicitar-faturamento:hover {
@@ -4300,10 +4406,12 @@ td:last-child {
   border: 1px solid var(--primary-color);
   color: white;
   font-weight: 500;
-  padding: 0.75rem 1.5rem;
-  border-radius: 6px;
+  padding: 0.375rem 0.75rem;
+  border-radius: 4px;
   transition: all 0.3s ease;
   width: 100%;
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
 }
 
 .btn-salvar:hover {
@@ -4317,10 +4425,12 @@ td:last-child {
   border: 1px solid #6c757d;
   color: white;
   font-weight: 500;
-  padding: 0.75rem 1.5rem;
-  border-radius: 6px;
+  padding: 0.375rem 0.75rem;
+  border-radius: 4px;
   transition: all 0.3s ease;
   width: 100%;
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
 }
 
 .btn-descartar:hover {
@@ -4362,10 +4472,191 @@ td:last-child {
   max-width: 95%;
 }
 
+#cadastroProcessoModal .modal-content {
+  background-color: #e9ecef;
+}
+
 #cadastroProcessoModal .modal-body {
   padding: 1.5rem;
   max-height: 80vh;
   overflow-y: auto;
+  background-color: #e9ecef;
+}
+
+#cadastroProcessoModal .form-section {
+  background-color: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Estilos para documentos */
+.documentos-container {
+  margin-top: 1rem;
+}
+
+.documentos-layout {
+  display: flex;
+  gap: 1.5rem;
+  min-height: 400px;
+}
+
+.documentos-sidebar {
+  flex: 0 0 300px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 1rem;
+  border: 1px solid #dee2e6;
+}
+
+.documentos-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.documento-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background-color: white;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  width: 100%;
+}
+
+.documento-item:hover {
+  background-color: #e9ecef;
+  border-color: #adb5bd;
+}
+
+.documento-item.active {
+  background-color: #e3f2fd;
+  border-color: #2196f3;
+  color: #1976d2;
+}
+
+.documento-item.obrigatorio {
+  border-left: 4px solid #ffc107;
+}
+
+.documento-item.obrigatorio .documento-icon {
+  color: #ffc107;
+  margin-right: 0.5rem;
+}
+
+.documento-item .documento-icon {
+  font-size: 1.1rem;
+  margin-right: 0.5rem;
+  flex-shrink: 0;
+}
+
+.documento-item .documento-nome {
+  font-weight: 500;
+  color: #495057;
+  flex: 1;
+}
+
+.documento-item.obrigatorio .documento-nome {
+  color: #212529;
+}
+
+.documentos-details {
+  flex: 1;
+  background-color: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  border: 1px solid #dee2e6;
+}
+
+.documento-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+}
+
+.documento-details-content {
+  display: none;
+}
+
+.documento-details-content.active {
+  display: block;
+}
+
+.documento-fields {
+  margin-bottom: 1.5rem;
+}
+
+.documento-field {
+  margin-bottom: 1rem;
+}
+
+.documento-field label {
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.documento-field input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.documento-field input:focus {
+  outline: none;
+  border-color: #2196f3;
+  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+}
+
+.documento-upload {
+  border: 2px dashed #dee2e6;
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-align: center;
+  background-color: #f8f9fa;
+}
+
+.documento-upload.has-file {
+  border-color: #28a745;
+  background-color: #d4edda;
+}
+
+.upload-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.upload-button:hover {
+  background-color: #0056b3;
+}
+
+.upload-status {
+  font-size: 0.85rem;
+  color: #6c757d;
+  margin-bottom: 0.5rem;
+}
+
+.upload-required {
+  color: #dc3545;
+  font-size: 0.85rem;
+  font-weight: 500;
 }
 
 #cadastroProcessoModal .modal-header {

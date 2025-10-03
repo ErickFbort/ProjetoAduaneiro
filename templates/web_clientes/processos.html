@@ -311,6 +311,10 @@
                                                 <option value="01.01">01.01 - Despacho De Importacao - Aereo</option>
                                                 <option value="01.02">01.02 - Despacho De Importacao - Maritimo</option>
                                                 <option value="01.03">01.03 - Despacho De Importacao - Rodoviario</option>
+                                                <option value="05.04">05.04 - Despacho De Exportacao - Aereo Via Dta</option>
+                                                <option value="05.05">05.05 - Devolucao De Madeira Para Exterior</option>
+                                                <option value="05.06">05.06 - Despacho De Importacao - Aereo Dsi</option>
+                                                <option value="05.08">05.08 - Operacao Courier</option>
                                             </select>
                                         </div>
                                     </div>
@@ -447,17 +451,25 @@
                         <!-- Seção Documentos -->
                         <div class="form-section">
                             <h6 class="section-title">Documentos</h6>
-                            <div class="form-group">
-                                <label for="naturezaOperacaoDocumentos" class="form-label">Selecione uma natureza de operação para listar os documentos</label>
-                                <select class="form-select" id="naturezaOperacaoDocumentos">
-                                    <option value="">Selecione uma natureza de operação para listar os documentos</option>
-                                    <option value="05.03">05.03 - Despacho De Exportacao - Aereo</option>
-                                    <option value="05.01">05.01 - Despacho De Exportacao - Maritimo</option>
-                                    <option value="05.02">05.02 - Despacho De Exportacao - Rodoviario</option>
-                                    <option value="01.01">01.01 - Despacho De Importacao - Aereo</option>
-                                    <option value="01.02">01.02 - Despacho De Importacao - Maritimo</option>
-                                    <option value="01.03">01.03 - Despacho De Importacao - Rodoviario</option>
-                                </select>
+                            
+                            <!-- Lista de Documentos -->
+                            <div id="documentosLista" class="documentos-container" style="display: none;">
+                                <div class="documentos-layout">
+                                    <!-- Lista de Documentos (Lado Esquerdo) -->
+                                    <div class="documentos-sidebar">
+                                        <div class="documentos-list" id="documentosList">
+                                            <!-- Documentos serão carregados dinamicamente -->
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Detalhes do Documento (Lado Direito) -->
+                                    <div class="documentos-details" id="documentosDetails">
+                                        <div class="documento-placeholder">
+                                            <i class="fas fa-file-alt fa-3x text-muted mb-3"></i>
+                                            <h6 class="text-muted">Selecione um documento para visualizar os detalhes</h6>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 

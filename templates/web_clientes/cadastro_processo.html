@@ -1,0 +1,522 @@
+{% extends "base.html" %}
+
+{% block title %}Cadastro de Processo - Sistema Aduaneiro{% endblock %}
+
+{% block body_class %}main-body{% endblock %}
+
+{% block content %}
+{% include 'partials/sidebar.html' %}
+
+<main class="content main-content--shifted">
+    <div class="content-section active">
+        <div class="container-fluid">
+            <!-- Cabeçalho da Página -->
+            <div class="page-header">
+                <div class="header-content">
+                    <div class="header-title d-flex align-items-center">
+                        <i class="fas fa-arrow-left fa-2x me-3" onclick="voltarParaProcessos()" style="cursor: pointer;"></i>
+                        <div>
+                            <h2 class="mb-0">Cadastro de Processo</h2>
+                            <p class="header-subtitle mb-0">Preencha as informações do processo aduaneiro</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navegador de Seções -->
+            <div class="navegador-container mb-3">
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary dropdown-toggle navegador-btn" type="button" id="navegadorDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-list me-2"></i> Navegação
+                    </button>
+                    <ul class="dropdown-menu navegador-menu" aria-labelledby="navegadorDropdown">
+                        <li><a class="dropdown-item navegador-item" href="#detalhes-section">
+                            <i class="fas fa-info-circle me-2"></i> Detalhes
+                        </a></li>
+                        <li><a class="dropdown-item navegador-item" href="#documentos-section">
+                            <i class="fas fa-file-alt me-2"></i> Documentos
+                        </a></li>
+                        <li><a class="dropdown-item navegador-item" href="#carga-section">
+                            <i class="fas fa-boxes me-2"></i> Cargas
+                        </a></li>
+                        <li><a class="dropdown-item navegador-item" href="#observacao-section">
+                            <i class="fas fa-comment me-2"></i> Observação Interna
+                        </a></li>
+                        <li><a class="dropdown-item navegador-item" href="#historico-section">
+                            <i class="fas fa-history me-2"></i> Histórico
+                        </a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Navegação por Abas -->
+            <div class="cadastro-tabs">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" data-tab="processo">
+                        <i class="fas fa-clipboard-list"></i> Processo
+                    </button>
+                    <button class="tab-btn" data-tab="historico">
+                        <i class="fas fa-history"></i> Histórico
+                    </button>
+                </div>
+            </div>
+
+            <!-- Conteúdo das Abas -->
+            <div class="tab-content">
+                <!-- Aba Processo (Todas as informações) -->
+                <div class="tab-pane active" id="processo-tab">
+                    <div class="form-section" id="detalhes-section">
+                        <h6 class="section-title">Detalhes</h6>
+                        <form id="cadastroProcessoForm">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="despachanteCadastro" class="form-label required">Despachante / Responsável</label>
+                                        <input type="text" 
+                                               class="form-control" 
+                                               id="despachanteCadastro" 
+                                               placeholder="Digite 3 ou mais caracteres para pesquisar o DESPACHANTE"
+                                               required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="clienteCadastro" class="form-label required">Cliente / Consignatário</label>
+                                        <input type="text" 
+                                               class="form-control" 
+                                               id="clienteCadastro" 
+                                               placeholder="Digite 3 ou mais caracteres para pesquisar o CLIENTE / CONSIGNATÁRIO"
+                                               required>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="naturezaOperacaoCadastro" class="form-label required">Natureza de Operação</label>
+                                        <select class="form-select" id="naturezaOperacaoCadastro" required>
+                                            <option value="">Selecione...</option>
+                                            <option value="05.03">05.03 - Despacho De Exportacao - Aereo</option>
+                                            <option value="05.01">05.01 - Despacho De Exportacao - Maritimo</option>
+                                            <option value="05.02">05.02 - Despacho De Exportacao - Rodoviario</option>
+                                            <option value="01.01">01.01 - Despacho De Importacao - Aereo</option>
+                                            <option value="01.02">01.02 - Despacho De Importacao - Maritimo</option>
+                                            <option value="01.03">01.03 - Despacho De Importacao - Rodoviario</option>
+                                            <option value="05.04">05.04 - Despacho De Exportacao - Aereo Via Dta</option>
+                                            <option value="05.05">05.05 - Devolucao De Madeira Para Exterior</option>
+                                            <option value="05.06">05.06 - Despacho De Importacao - Aereo Dsi</option>
+                                            <option value="05.08">05.08 - Operacao Courier</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="tabelaAplicada" class="form-label required">Tabela a ser aplicada</label>
+                                        <select class="form-select" id="tabelaAplicada" required>
+                                            <option value="">Selecione...</option>
+                                            <option value="tabela1">Tabela 1 - Importação</option>
+                                            <option value="tabela2">Tabela 2 - Exportação</option>
+                                            <option value="tabela3">Tabela 3 - Especial</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="referenciaCliente" class="form-label">Referência do Cliente</label>
+                                        <input type="text" 
+                                               class="form-control" 
+                                               id="referenciaCliente" 
+                                               placeholder="Referência do cliente">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="dataPontoZero" class="form-label">Data (Ponto Zero)</label>
+                                        <input type="date" 
+                                               class="form-control" 
+                                               id="dataPontoZero">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="previsaoCarregamento" class="form-label">Previsão Carregamento</label>
+                                        <input type="date" 
+                                               class="form-control" 
+                                               id="previsaoCarregamento">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="reexportacao" class="form-label">Reexportação</label>
+                                        <select class="form-select" id="reexportacao">
+                                            <option value="">Selecione...</option>
+                                            <option value="sim">Sim</option>
+                                            <option value="nao">Não</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="observacao" class="form-label">Observação</label>
+                                        <input type="text" 
+                                               class="form-control" 
+                                               id="observacao" 
+                                               placeholder="Observação">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </form>
+                    </div>
+                    
+                    <!-- Seção Documentos -->
+                    <div class="form-section" id="documentos-section">
+                        <h6 class="section-title">Documentos</h6>
+                        <p class="text-muted mb-3" style="font-size: 0.85rem;">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Selecione uma natureza de operação para listar os documentos
+                        </p>
+                        
+                        <!-- Lista de Documentos -->
+                        <div id="documentosLista" class="documentos-container" style="display: none;">
+                            <div class="documentos-layout">
+                                <!-- Lista de Documentos (Lado Esquerdo) -->
+                                <div class="documentos-sidebar">
+                                    <div class="documentos-list" id="documentosList">
+                                        <!-- Documentos serão carregados dinamicamente -->
+                                    </div>
+                                </div>
+                                
+                                <!-- Detalhes do Documento (Lado Direito) -->
+                                <div class="documentos-details" id="documentosDetails">
+                                    <div class="documento-placeholder">
+                                        <i class="fas fa-file-alt fa-3x text-muted mb-3"></i>
+                                        <h6 class="text-muted">Selecione um documento para visualizar os detalhes</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Seção Carga -->
+                    <div class="form-section" id="carga-section">
+                        <h6 class="section-title">Carga</h6>
+                        <form id="cargaForm">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="regimeAduaneiroCadastro" class="form-label">Regime Aduaneiro</label>
+                                        <select class="form-select" id="regimeAduaneiroCadastro">
+                                            <option value="">Selecione...</option>
+                                            <option value="exportacao_definitiva">Exportação Definitiva</option>
+                                            <option value="exportacao_temporaria">Exportação Temporária</option>
+                                            <option value="importacao_definitiva">Importação Definitiva</option>
+                                            <option value="importacao_temporaria">Importação Temporária</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="objetivoImportacaoCadastro" class="form-label">Objetivo da Importação/Exportação</label>
+                                        <select class="form-select" id="objetivoImportacaoCadastro">
+                                            <option value="">Selecione...</option>
+                                            <option value="comercial">Comercial</option>
+                                            <option value="industrial">Industrial</option>
+                                            <option value="pessoal">Pessoal</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="tipoCargaCadastro" class="form-label">Tipo da Carga</label>
+                                        <select class="form-select" id="tipoCargaCadastro">
+                                            <option value="">Selecione...</option>
+                                            <option value="geral">Carga Geral</option>
+                                            <option value="granel">Granel</option>
+                                            <option value="perigosa">Perigosa</option>
+                                            <option value="refrigerada">Refrigerada</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="imoDgrCadastro" class="form-label">IMO / DGR</label>
+                                        <input type="text" 
+                                               class="form-control" 
+                                               id="imoDgrCadastro" 
+                                               placeholder="IMO/DGR">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="imoDgrCadastro" class="form-label">IMO / DGR</label>
+                                        <input type="text" 
+                                               class="form-control" 
+                                               id="imoDgrCadastro" 
+                                               placeholder="Selecione...">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="volumeCadastro" class="form-label">Volume</label>
+                                        <input type="text" 
+                                               class="form-control" 
+                                               id="volumeCadastro" 
+                                               placeholder="Volume">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="pesoBrutoCadastro" class="form-label">Peso Bruto</label>
+                                        <input type="text" 
+                                               class="form-control" 
+                                               id="pesoBrutoCadastro" 
+                                               placeholder="Peso Bruto">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="valorCifCadastro" class="form-label">Valor CIF</label>
+                                        <input type="number" 
+                                               class="form-control" 
+                                               id="valorCifCadastro" 
+                                               placeholder="0,00"
+                                               step="0.01">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label for="valorFreteCadastro" class="form-label">Valor Frete</label>
+                                        <input type="number" 
+                                               class="form-control" 
+                                               id="valorFreteCadastro" 
+                                               placeholder="0,00"
+                                               step="0.01">
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label for="valorSeguroCadastro" class="form-label">Valor Seguro</label>
+                                        <input type="number" 
+                                               class="form-control" 
+                                               id="valorSeguroCadastro" 
+                                               placeholder="0,00"
+                                               step="0.01">
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label for="valorFobCadastro" class="form-label">Valor FOB</label>
+                                        <input type="number" 
+                                               class="form-control" 
+                                               id="valorFobCadastro" 
+                                               placeholder="0,00"
+                                               step="0.01">
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label for="moedaFreteCadastro" class="form-label">Moeda Frete</label>
+                                        <select class="form-select" id="moedaFreteCadastro">
+                                            <option value="">Selecione...</option>
+                                            <option value="USD">USD</option>
+                                            <option value="EUR">EUR</option>
+                                            <option value="BRL">BRL</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label for="moedaSeguroCadastro" class="form-label">Moeda Seguro</label>
+                                        <select class="form-select" id="moedaSeguroCadastro">
+                                            <option value="">Selecione...</option>
+                                            <option value="USD">USD</option>
+                                            <option value="EUR">EUR</option>
+                                            <option value="BRL">BRL</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label for="moedaFobCadastro" class="form-label">Moeda FOB</label>
+                                        <select class="form-select" id="moedaFobCadastro">
+                                            <option value="">Selecione...</option>
+                                            <option value="USD">USD</option>
+                                            <option value="EUR">EUR</option>
+                                            <option value="BRL">BRL</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="embalagemMadeiraCadastro" class="form-label">Embalagem / Suporte de Madeira?</label>
+                                        <select class="form-select" id="embalagemMadeiraCadastro">
+                                            <option value="">Selecione...</option>
+                                            <option value="sim">Sim</option>
+                                            <option value="nao">Não</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="controleTemperaturaCadastro" class="form-label">Controle de Temperatura?</label>
+                                        <select class="form-select" id="controleTemperaturaCadastro">
+                                            <option value="">Selecione...</option>
+                                            <option value="sim">Sim</option>
+                                            <option value="nao">Não</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Campos de Temperatura (aparecem quando controle de temperatura = Sim) -->
+                            <div class="row" id="camposTemperatura" style="display: none;">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="temperaturaMinimaCadastro" class="form-label">Temperatura Mínima (°C)</label>
+                                        <input type="number" 
+                                               class="form-control" 
+                                               id="temperaturaMinimaCadastro" 
+                                               placeholder="Ex: -20"
+                                               step="0.1">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="temperaturaMaximaCadastro" class="form-label">Temperatura Máxima (°C)</label>
+                                        <input type="number" 
+                                               class="form-control" 
+                                               id="temperaturaMaximaCadastro" 
+                                               placeholder="Ex: 25"
+                                               step="0.1">
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Seção Observação Interna -->
+                    <div class="form-section" id="observacao-section">
+                        <h6 class="section-title">Observação Interna</h6>
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <label for="observacaoInterna" class="form-label">Observação Interna</label>
+                                    <textarea class="form-control" 
+                                              id="observacaoInterna" 
+                                              rows="4" 
+                                              placeholder="Digite observações internas sobre o processo"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-4 d-flex flex-column align-items-end">
+                                <button type="button" class="btn btn-primary btn-salvar mb-2">
+                                    <i class="fas fa-save"></i> Salvar
+                                </button>
+                                <button type="button" class="btn btn-warning btn-solicitar-faturamento mb-2">
+                                    <i class="fas fa-file-invoice-dollar"></i> Solicitar Faturamento
+                                </button>
+                                <button type="button" class="btn btn-secondary" id="descartarAlteracoesCadastro">
+                                    <i class="fas fa-times"></i> Descartar Alterações
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Aba Histórico -->
+                <div class="tab-pane" id="historico-tab">
+                    <div class="form-section" id="historico-section">
+                        <h6 class="section-title">Histórico do Processo</h6>
+                        <div class="historico-container">
+                            <div class="historico-item">
+                                <div class="historico-data">15/01/2024 14:30</div>
+                                <div class="historico-descricao">Processo criado</div>
+                                <div class="historico-usuario">Sistema</div>
+                            </div>
+                            <div class="historico-item">
+                                <div class="historico-data">15/01/2024 15:45</div>
+                                <div class="historico-descricao">Documentos enviados</div>
+                                <div class="historico-usuario">João Silva</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/processos.js') }}"></script>
+<script>
+// Função para voltar para a lista de processos
+function voltarParaProcessos() {
+    window.location.href = "/web-clientes/processos";
+}
+
+// Inicializar o gerenciador de processos
+document.addEventListener('DOMContentLoaded', function() {
+    new ProcessosManager();
+    
+    // Controlar exibição dos campos de temperatura
+    const controleTemperatura = document.getElementById('controleTemperaturaCadastro');
+    const camposTemperatura = document.getElementById('camposTemperatura');
+    
+    if (controleTemperatura && camposTemperatura) {
+        controleTemperatura.addEventListener('change', function() {
+            if (this.value === 'sim') {
+                camposTemperatura.style.display = 'block';
+            } else {
+                camposTemperatura.style.display = 'none';
+                // Limpar os campos quando ocultar
+                document.getElementById('temperaturaMinimaCadastro').value = '';
+                document.getElementById('temperaturaMaximaCadastro').value = '';
+            }
+        });
+    }
+    
+    // Navegador de seções
+    const navegadorItems = document.querySelectorAll('.navegador-item');
+    navegadorItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href').substring(1);
+            const targetElement = document.getElementById(targetId);
+            
+            if (targetElement) {
+                // Se for a seção de histórico, ativar a aba correspondente
+                if (targetId === 'historico-section') {
+                    // Ativar aba de histórico
+                    document.querySelector('[data-tab="historico"]').click();
+                } else {
+                    // Ativar aba de processo
+                    document.querySelector('[data-tab="processo"]').click();
+                }
+                
+                // Scroll suave para a seção
+                setTimeout(() => {
+                    targetElement.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'start' 
+                    });
+                }, 100);
+            }
+        });
+    });
+});
+</script>
+{% endblock %}
+{% endblock %}

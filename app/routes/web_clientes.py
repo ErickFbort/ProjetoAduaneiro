@@ -19,6 +19,12 @@ def web_clientes_processos():
     """Página de Processos - Web Cliente"""
     return render_template('web_clientes/processos.html', user=current_user)
 
+@web_clientes_bp.route('/web-clientes/processos/cadastro')
+@login_required
+def web_clientes_cadastro_processo():
+    """Página de Cadastro de Processo - Web Cliente"""
+    return render_template('web_clientes/cadastro_processo.html', user=current_user)
+
 @web_clientes_bp.route('/web-clientes/dape-sem-carga')
 @login_required
 def web_clientes_dape_sem_carga():

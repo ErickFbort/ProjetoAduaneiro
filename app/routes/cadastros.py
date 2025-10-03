@@ -31,8 +31,9 @@ def create_mock_paginate(items):
 @cadastros_bp.route('/cadastros')
 @login_required
 def cadastros():
-    """Página principal de cadastros com sub-menus"""
-    return render_template('cadastros/cadastros_main.html')
+    """Redireciona diretamente para cadastro de usuários"""
+    from flask import redirect, url_for
+    return redirect(url_for('cadastros.cadastros_usuarios'))
 
 @cadastros_bp.route('/cadastros/usuarios')
 @login_required
