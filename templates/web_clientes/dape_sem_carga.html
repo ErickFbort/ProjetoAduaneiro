@@ -10,24 +10,170 @@
 <main class="content main-content--shifted">
     <div class="content-section active">
         <div class="container-fluid">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <div>
-                    <h2>DAPE sem Carga</h2>
-                    <p class="lead mb-0">Gerencie documentos de DAPE sem carga associada</p>
+            <!-- Header da página -->
+            <div class="page-header">
+                <div class="header-content">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-file-alt fa-2x text-white me-3"></i>
+                        <div class="header-text">
+                            <h2>DAPE sem Carga</h2>
+                            <p class="page-subtitle">Gerencie documentos de DAPE sem carga associada</p>
+                        </div>
+                    </div>
                 </div>
-                <a href="{{ url_for('web_clientes.web_clientes') }}" class="btn btn-outline-secondary">
-                    <i class="fas fa-arrow-left"></i> Voltar
-                </a>
             </div>
             
+            <!-- Seção DAPEs Pendente Faturamento -->
+            <div class="row mb-5">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header bg-light">
+                            <h4 class="mb-0 text-dark">
+                                <i class="fas fa-clock text-warning me-2"></i>
+                                DAPEs Pendente Faturamento
+                            </h4>
+                        </div>
+                        <div class="card-body">
+                            <!-- Controles de busca e filtros -->
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="items-per-page-container">
+                                            <span class="items-label">Itens por página</span>
+                                            <select class="items-select" id="itemsPerPagePendente">
+                                                <option value="10">10</option>
+                                                <option value="25">25</option>
+                                                <option value="50">50</option>
+                                                <option value="100">100</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="d-flex justify-content-end">
+                                        <div class="search-input-group">
+                                            <input type="text" class="search-input" id="searchPendente" placeholder="Pesquisar">
+                                            <button class="search-btn" id="searchBtnPendente">
+                                                <i class="fas fa-search"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Tabela DAPEs Pendente Faturamento -->
+                            <div class="table-responsive">
+                                <table class="table table-hover processos-table">
+                                    <thead class="table-header">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Entidade</th>
+                                            <th>Serviço</th>
+                                            <th>Quantidade</th>
+                                            <th>Data</th>
+                                            <th>Data final</th>
+                                            <th>Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="dapesPendenteTableBody">
+                                        <!-- Dados serão carregados via JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <!-- Paginação DAPEs Pendente -->
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <div>
+                                    <button class="btn btn-outline-success btn-sm" id="prevPagePendente">
+                                        <i class="fas fa-chevron-left"></i> Página Anterior
+                                    </button>
+                                </div>
+                                <div class="text-center">
+                                    <span id="paginationInfoPendente">Exibindo 1 a 10 de 2 registros</span>
+                                </div>
+                                <div>
+                                    <button class="btn btn-outline-success btn-sm" id="nextPagePendente">
+                                        Próxima Página <i class="fas fa-chevron-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Seção DAPEs Faturados -->
             <div class="row">
                 <div class="col-12">
                     <div class="card">
+                        <div class="card-header bg-light">
+                            <h4 class="mb-0 text-dark">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                DAPEs Faturados
+                            </h4>
+                        </div>
                         <div class="card-body">
-                            <div class="text-center py-5">
-                                <i class="fas fa-file-alt fa-4x text-muted mb-3"></i>
-                                <h4 class="text-muted">Módulo em Desenvolvimento</h4>
-                                <p class="text-muted">Esta funcionalidade será implementada em breve.</p>
+                            <!-- Controles de busca e filtros -->
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="items-per-page-container">
+                                            <span class="items-label">Itens por página</span>
+                                            <select class="items-select" id="itemsPerPageFaturado">
+                                                <option value="10">10</option>
+                                                <option value="25">25</option>
+                                                <option value="50">50</option>
+                                                <option value="100">100</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="d-flex justify-content-end">
+                                        <div class="search-input-group">
+                                            <input type="text" class="search-input" id="searchFaturado" placeholder="Pesquisar">
+                                            <button class="search-btn" id="searchBtnFaturado">
+                                                <i class="fas fa-search"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Tabela DAPEs Faturados -->
+                            <div class="table-responsive">
+                                <table class="table table-hover processos-table">
+                                    <thead class="table-header">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>CNPJ</th>
+                                            <th>Entidade</th>
+                                            <th>Guia</th>
+                                            <th>Status</th>
+                                            <th>Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="dapesFaturadoTableBody">
+                                        <!-- Dados serão carregados via JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <!-- Paginação DAPEs Faturados -->
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <div>
+                                    <button class="btn btn-outline-success btn-sm" id="prevPageFaturado">
+                                        <i class="fas fa-chevron-left"></i> Página Anterior
+                                    </button>
+                                </div>
+                                <div class="text-center">
+                                    <span id="paginationInfoFaturado">Exibindo 1 a 10 de 5 registros</span>
+                                </div>
+                                <div>
+                                    <button class="btn btn-outline-success btn-sm" id="nextPageFaturado">
+                                        Próxima Página <i class="fas fa-chevron-right"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -38,6 +184,6 @@
 </main>
 
 {% block extra_js %}
-<!-- JavaScript gerenciado pelo utils.js -->
+<script src="{{ url_for('static', filename='js/dape_sem_carga.js') }}"></script>
 {% endblock %}
 {% endblock %}

@@ -10,27 +10,116 @@
 <main class="content main-content--shifted">
     <div class="content-section active">
         <div class="container-fluid">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <div>
-                    <h2>Agendamento de Carregamento</h2>
-                    <p class="lead mb-0">Agende e gerencie carregamentos de mercadorias</p>
-                </div>
-                <a href="{{ url_for('web_clientes.web_clientes') }}" class="btn btn-outline-secondary">
-                    <i class="fas fa-arrow-left"></i> Voltar
-                </a>
-            </div>
-            
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="text-center py-5">
-                                <i class="fas fa-truck-loading fa-4x text-muted mb-3"></i>
-                                <h4 class="text-muted">Módulo em Desenvolvimento</h4>
-                                <p class="text-muted">Esta funcionalidade será implementada em breve.</p>
-                            </div>
+            <!-- Header da página -->
+            <div class="page-header">
+                <div class="header-content">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-truck-loading fa-2x text-white me-3"></i>
+                        <div class="header-text">
+                            <h2>Agendamento de Carregamento</h2>
+                            <p class="page-subtitle">Agende e gerencie carregamentos de mercadorias</p>
                         </div>
                     </div>
+                </div>
+            </div>
+            
+            <!-- Barra de Pesquisa e Filtros -->
+            <div class="search-section">
+                <div class="search-input-group">
+                    <form method="GET" class="search-form">
+                        <div class="input-group">
+                            <input type="text" 
+                                   name="search" 
+                                   id="searchInput"
+                                   class="form-control search-input" 
+                                   placeholder="Pesquisar por transportador, importador, motorista...">
+                            <button type="submit" class="btn btn-primary search-btn" id="searchBtn">
+                                <i class="fas fa-search"></i>
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary clear-btn" id="clearFilters">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </form>
+                    <button class="btn btn-outline-info filter-toggle" onclick="toggleAdvancedFilters()">
+                        <i class="fas fa-filter"></i> Filtros Avançados
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Filtros Avançados -->
+            <div id="advancedFilters" class="advanced-filters" style="display: none;">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="statusFilter" class="form-label">Status</label>
+                        <select class="form-select" id="statusFilter">
+                            <option value="">Todos os status</option>
+                            <option value="AGENDADO">Agendado</option>
+                            <option value="FINALIZADO">Finalizado</option>
+                            <option value="CANCELADO">Cancelado</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="dataInicioFilter" class="form-label">Data Início</label>
+                        <input type="date" class="form-control" id="dataInicioFilter">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="dataFimFilter" class="form-label">Data Fim</label>
+                        <input type="date" class="form-control" id="dataFimFilter">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="transportadorFilter" class="form-label">Transportador</label>
+                        <input type="text" class="form-control" id="transportadorFilter" placeholder="Nome do transportador">
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <button class="btn btn-primary" onclick="applyAdvancedFilters()">
+                            <i class="fas fa-search"></i> Aplicar Filtros
+                        </button>
+                        <button class="btn btn-outline-secondary" onclick="clearAdvancedFilters()">
+                            <i class="fas fa-times"></i> Limpar Filtros
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tabela de Agendamentos -->
+            <div class="table-container">
+                <table class="table table-hover processos-table">
+                    <thead class="table-header">
+                        <tr>
+                            <th>Status</th>
+                            <th>Transportador</th>
+                            <th>Importador</th>
+                            <th>DI</th>
+                            <th>Data Agendamento</th>
+                            <th>Hora Agendamento</th>
+                            <th>Motorista</th>
+                            <th>Observação</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="agendamentosTableBody">
+                        <!-- Dados serão carregados via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Paginação -->
+            <div class="d-flex justify-content-between align-items-center mt-3">
+                <div>
+                    <button class="btn btn-outline-success btn-sm" id="prevPage">
+                        <i class="fas fa-chevron-left"></i> Página Anterior
+                    </button>
+                </div>
+                <div class="text-center">
+                    <span id="paginationInfo">Exibindo 1 a 10 de 8 registros</span>
+                </div>
+                <div>
+                    <button class="btn btn-outline-success btn-sm" id="nextPage">
+                        Próxima Página <i class="fas fa-chevron-right"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -38,6 +127,6 @@
 </main>
 
 {% block extra_js %}
-<!-- JavaScript gerenciado pelo utils.js -->
+<script src="{{ url_for('static', filename='js/agendamento_carregamento.js') }}"></script>
 {% endblock %}
 {% endblock %}

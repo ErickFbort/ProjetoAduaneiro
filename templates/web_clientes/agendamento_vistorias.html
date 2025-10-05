@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Agendamento de Vistorias - Web Cliente{% endblock %}
+{% block title %}Agendamento de Vistoria - Web Cliente{% endblock %}
 
 {% block body_class %}main-body{% endblock %}
 
@@ -10,26 +10,192 @@
 <main class="content main-content--shifted">
     <div class="content-section active">
         <div class="container-fluid">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <div>
-                    <h2>Agendamento de Vistorias</h2>
-                    <p class="lead mb-0">Agende e acompanhe vistorias aduaneiras</p>
+            <!-- Header da página -->
+            <div class="page-header">
+                <div class="header-content">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-search fa-2x text-white me-3"></i>
+                        <div class="header-text">
+                            <h2>Agendamento de Vistoria</h2>
+                            <p class="page-subtitle">Agende e acompanhe vistorias aduaneiras</p>
+                        </div>
+                    </div>
                 </div>
-                <a href="{{ url_for('web_clientes.web_clientes') }}" class="btn btn-outline-secondary">
-                    <i class="fas fa-arrow-left"></i> Voltar
-                </a>
             </div>
             
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="text-center py-5">
-                                <i class="fas fa-search fa-4x text-muted mb-3"></i>
-                                <h4 class="text-muted">Módulo em Desenvolvimento</h4>
-                                <p class="text-muted">Esta funcionalidade será implementada em breve.</p>
-                            </div>
+            <!-- Barra de Pesquisa e Filtros -->
+            <div class="search-section">
+                <div class="search-input-group">
+                    <form method="GET" class="search-form">
+                        <div class="input-group">
+                            <input type="text" 
+                                   name="search" 
+                                   id="searchInput"
+                                   class="form-control search-input" 
+                                   placeholder="Pesquisar por DI, AWB, HAWB, consignatário...">
+                            <button type="submit" class="btn btn-primary search-btn" id="searchBtn">
+                                <i class="fas fa-search"></i>
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary clear-btn" id="clearFilters">
+                                <i class="fas fa-times"></i>
+                            </button>
                         </div>
+                    </form>
+                    <button class="btn btn-outline-info filter-toggle" onclick="toggleAdvancedFilters()">
+                        <i class="fas fa-filter"></i> Filtros Avançados
+                    </button>
+                    <button class="btn btn-success" id="cadastrarVistoria">
+                        <i class="fas fa-plus"></i> Cadastrar Vistoria
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Filtros Avançados -->
+            <div id="advancedFilters" class="advanced-filters" style="display: none;">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="statusFilter" class="form-label">Status</label>
+                        <select class="form-select" id="statusFilter">
+                            <option value="">Todos os status</option>
+                            <option value="AGENDADO">Agendado</option>
+                            <option value="EXECUTADO">Executado</option>
+                            <option value="CANCELADO">Cancelado</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="dataInicioFilter" class="form-label">Data Início</label>
+                        <input type="date" class="form-control" id="dataInicioFilter">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="dataFimFilter" class="form-label">Data Fim</label>
+                        <input type="date" class="form-control" id="dataFimFilter">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="colaboradorFilter" class="form-label">Colaborador RFB</label>
+                        <input type="text" class="form-control" id="colaboradorFilter" placeholder="Nome do colaborador">
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <button class="btn btn-primary" onclick="applyAdvancedFilters()">
+                            <i class="fas fa-search"></i> Aplicar Filtros
+                        </button>
+                        <button class="btn btn-outline-secondary" onclick="clearAdvancedFilters()">
+                            <i class="fas fa-times"></i> Limpar Filtros
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tabela de Vistorias -->
+            <div id="vistoriasListContainer" class="vistorias-container">
+                <div class="table-container">
+                    <table class="table table-hover processos-table">
+                        <thead class="table-header">
+                            <tr>
+                                <th>Status</th>
+                                <th>DI</th>
+                                <th>AWB</th>
+                                <th>HAWB</th>
+                                <th>CNPJ</th>
+                                <th>Consignatário</th>
+                                <th>Colaborador RFB</th>
+                                <th>Data</th>
+                                <th>Hora</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="vistoriasTableBody">
+                            <!-- Dados serão carregados via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Paginação -->
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <div>
+                        <button class="btn btn-outline-success btn-sm" id="prevPage">
+                            <i class="fas fa-chevron-left"></i> Página Anterior
+                        </button>
+                    </div>
+                    <div class="text-center">
+                        <span id="paginationInfo">Exibindo 1 a 10 de 3028 registros</span>
+                    </div>
+                    <div>
+                        <button class="btn btn-outline-success btn-sm" id="nextPage">
+                            Próxima Página <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Formulário de Cadastro de Vistoria -->
+            <div id="vistoriaFormContainer" class="vistoria-form-container" style="display: none;">
+                <div class="card">
+                    <div class="card-header bg-light">
+                        <div class="d-flex align-items-center">
+                            <button class="btn btn-outline-secondary btn-sm me-3" id="voltarLista">
+                                <i class="fas fa-arrow-left"></i>
+                            </button>
+                            <h4 class="mb-0 text-dark">Agendamento de Vistoria</h4>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form id="vistoriaForm">
+                            <div class="mb-4">
+                                <h5 class="text-dark mb-3">Detalhes</h5>
+                                
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label for="awb" class="form-label">AWB</label>
+                                        <input type="text" class="form-control" id="awb" placeholder="AWB">
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="hawb" class="form-label">HAWB</label>
+                                        <input type="text" class="form-control" id="hawb" placeholder="HAWB">
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="di" class="form-label">DI <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="di" placeholder="DI" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label for="consignatario" class="form-label">Consignatário <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="consignatario" placeholder="Pesquise o Consignatário" required>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="colaboradorRfb" class="form-label">Colaborador RFB <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="colaboradorRfb" placeholder="Colaborador RFB" required>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="responsavelAgendamento" class="form-label">Responsável Agendamento <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="responsavelAgendamento" placeholder="Responsável Agendamento" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label for="data" class="form-label">Data <span class="text-danger">*</span></label>
+                                        <input type="date" class="form-control" id="data" required>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="hora" class="form-label">Hora <span class="text-danger">*</span></label>
+                                        <input type="time" class="form-control" id="hora" required>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex gap-2">
+                                <button type="button" class="btn btn-secondary" id="cancelarVistoria">
+                                    Cancelar
+                                </button>
+                                <button type="submit" class="btn btn-primary" id="salvarVistoria">
+                                    Salvar
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -38,6 +204,6 @@
 </main>
 
 {% block extra_js %}
-<!-- JavaScript gerenciado pelo utils.js -->
+<script src="{{ url_for('static', filename='js/agendamento_vistorias.js') }}"></script>
 {% endblock %}
 {% endblock %}
