@@ -42,3 +42,27 @@ def web_clientes_agendamento_carregamento():
 def web_clientes_agendamento_vistorias():
     """Página de Agendamento de vistorias - Web Cliente"""
     return render_template('web_clientes/agendamento_vistorias.html', user=current_user)
+
+@web_clientes_bp.route('/web-clientes/autorizacao-carregamento')
+@login_required
+def web_clientes_autorizacao_carregamento():
+    """Página de Autorização de Carregamento - Web Cliente"""
+    return render_template('web_clientes/autorizacao_carregamento.html', user=current_user)
+
+@web_clientes_bp.route('/web-clientes/autorizacao-carregamento/cadastro')
+@login_required
+def web_clientes_cadastro_autorizacao():
+    """Página de Cadastro de Autorização de Carregamento - Web Cliente"""
+    return render_template('web_clientes/cadastro_autorizacao.html', user=current_user)
+
+@web_clientes_bp.route('/web-clientes/perdimento')
+@login_required
+def web_clientes_perdimento():
+    """Página de Perdimento - Web Cliente"""
+    return render_template('web_clientes/perdimento.html', user=current_user)
+
+@web_clientes_bp.route('/web-clientes/perdimento/detalhes')
+@login_required
+def web_clientes_detalhes_perdimento():
+    """Página de Detalhes do Perdimento - Web Cliente"""
+    return render_template('web_clientes/detalhes_perdimento.html', user=current_user)

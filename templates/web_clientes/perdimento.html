@@ -1,0 +1,321 @@
+{% extends "base.html" %}
+
+{% block title %}Perdimento - Web Cliente{% endblock %}
+
+{% block body_class %}main-body{% endblock %}
+
+{% block content %}
+{% include 'partials/sidebar.html' %}
+
+<main class="content main-content--shifted">
+    <div class="content-section active">
+        <div class="container-fluid">
+            <!-- Header da página -->
+            <div class="page-header">
+                <div class="header-content">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-exclamation-triangle fa-2x text-white me-3"></i>
+                        <div class="header-text">
+                            <h2>Perdimento</h2>
+                            <p class="page-subtitle">Gerencie registros de perdimento de cargas</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Barra de Pesquisa e Ações -->
+            <div class="search-section">
+                <div class="search-input-group">
+                    <form method="GET" class="search-form">
+                        <div class="input-group">
+                            <input type="text" 
+                                   name="search" 
+                                   id="searchInput"
+                                   class="form-control search-input" 
+                                   placeholder="Pesquisar">
+                            <button type="submit" class="btn btn-primary search-btn" id="searchBtn">
+                                <i class="fas fa-search"></i>
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary clear-btn" id="clearFilters">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </form>
+                    <button class="btn btn-success" id="cadastrarPerdimento">
+                        <i class="fas fa-plus"></i> Perdimento
+                    </button>
+                </div>
+            </div>
+
+            <!-- Ações da Tabela -->
+            <div class="table-actions">
+                <div class="actions-left">
+                    <button type="button" class="btn btn-outline-secondary" onclick="refreshTable()" title="Atualizar">
+                        <i class="fas fa-sync-alt"></i> Atualizar
+                    </button>
+                </div>
+                <div class="actions-right">
+                    <div class="items-per-page-container">
+                        <span class="items-label">Itens por página:</span>
+                        <select class="form-select items-select" id="itemsPorPagina">
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabela de Perdimento -->
+            <div class="table-container">
+                <div class="table-responsive">
+                    <table class="table table-hover perdimento-table" id="perdimentoTable">
+                        <thead class="table-header">
+                            <tr>
+                                <th width="8%">Código</th>
+                                <th width="15%">DMCA/PROCESSO (RFB)</th>
+                                <th width="12%">AWB/DSIC</th>
+                                <th width="12%">HAWB</th>
+                                <th width="20%">Motivo</th>
+                                <th width="10%">Peso Total</th>
+                                <th width="10%">Volume Total</th>
+                                <th width="10%">Percentual Entrega</th>
+                                <th width="3%">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="perdimentoTableBody">
+                            <!-- Dados serão carregados via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Estado vazio -->
+                <div class="empty-state d-none" id="emptyState">
+                    <i class="fas fa-exclamation-triangle fa-4x text-muted mb-3"></i>
+                    <h5>Nenhum registro de perdimento encontrado</h5>
+                    <p>Não há registros que correspondam aos critérios de busca.</p>
+                    <button class="btn btn-primary" id="clearFiltersEmpty">
+                        <i class="fas fa-refresh"></i> Limpar Filtros
+                    </button>
+                </div>
+            </div>
+
+            <!-- Paginação -->
+            <nav aria-label="Navegação de páginas" class="mt-4">
+                <ul class="pagination justify-content-center" id="pagination">
+                    <!-- Paginação será gerada via JavaScript -->
+                </ul>
+            </nav>
+        </div>
+    </div>
+</main>
+
+<!-- Modal de Cadastro de Perdimento -->
+<div class="modal fade" id="cadastroPerdimentoModal" tabindex="-1" aria-labelledby="cadastroPerdimentoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cadastroPerdimentoModalLabel">
+                    <i class="fas fa-arrow-left me-2" onclick="fecharCadastroPerdimento()"></i>
+                    Cadastro de Perdimento
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="cadastroPerdimentoForm">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="dmcaProcesso" class="form-label">DMCA/PROCESSO (RFB)</label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="dmcaProcesso" 
+                                       placeholder="DMCA/PROCESSO (RFB)">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="awbDsic" class="form-label required">AWB/DSIC</label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="awbDsic" 
+                                       placeholder="AWB/DSIC"
+                                       required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="hawb" class="form-label">HAWB</label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="hawb" 
+                                       placeholder="HAWB">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="motivo" class="form-label required">Motivo</label>
+                                <select class="form-select" id="motivo" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="Abandono">Abandono</option>
+                                    <option value="Apreensão de Cargas pela RFB">Apreensão de Cargas pela RFB</option>
+                                    <option value="Avaria">Avaria</option>
+                                    <option value="Extravio">Extravio</option>
+                                    <option value="Outros">Outros</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="pesoTotal" class="form-label">Peso Total</label>
+                                <input type="number" 
+                                       class="form-control" 
+                                       id="pesoTotal" 
+                                       placeholder="0.000" 
+                                       step="0.001">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="volumeTotal" class="form-label">Volume Total</label>
+                                <input type="number" 
+                                       class="form-control" 
+                                       id="volumeTotal" 
+                                       placeholder="0.000" 
+                                       step="0.001">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="percentualEntrega" class="form-label">Percentual Entrega</label>
+                                <input type="number" 
+                                       class="form-control" 
+                                       id="percentualEntrega" 
+                                       placeholder="0" 
+                                       min="0" 
+                                       max="100" 
+                                       step="1">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="observacoes" class="form-label">Observações</label>
+                                <textarea class="form-control" 
+                                          id="observacoes" 
+                                          rows="3" 
+                                          placeholder="Observações sobre o perdimento"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="descartarAlteracoesCadastro">
+                    <i class="fas fa-times"></i> Descartar Alterações
+                </button>
+                <button type="button" class="btn btn-primary" id="salvarPerdimento">
+                    <i class="fas fa-save"></i> Salvar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Visualização/Edição de Perdimento -->
+<div class="modal fade" id="perdimentoModal" tabindex="-1" aria-labelledby="perdimentoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="perdimentoModalLabel">
+                    <i class="fas fa-arrow-left me-2"></i>
+                    Visualização do Perdimento - <span id="perdimentoCodigo"></span>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="perdimentoForm">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="dmcaProcessoView" class="form-label">DMCA/PROCESSO (RFB)</label>
+                                <input type="text" class="form-control" id="dmcaProcessoView" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="awbDsicView" class="form-label">AWB/DSIC</label>
+                                <input type="text" class="form-control" id="awbDsicView" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="hawbView" class="form-label">HAWB</label>
+                                <input type="text" class="form-control" id="hawbView" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="motivoView" class="form-label">Motivo</label>
+                                <input type="text" class="form-control" id="motivoView" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="pesoTotalView" class="form-label">Peso Total</label>
+                                <input type="text" class="form-control" id="pesoTotalView" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="volumeTotalView" class="form-label">Volume Total</label>
+                                <input type="text" class="form-control" id="volumeTotalView" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="percentualEntregaView" class="form-label">Percentual Entrega</label>
+                                <input type="text" class="form-control" id="percentualEntregaView" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="observacoesView" class="form-label">Observações</label>
+                                <textarea class="form-control" 
+                                          id="observacoesView" 
+                                          rows="3" 
+                                          readonly></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/perdimento.js') }}"></script>
+{% endblock %}
+{% endblock %}

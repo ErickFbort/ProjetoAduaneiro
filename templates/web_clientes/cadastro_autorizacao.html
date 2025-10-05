@@ -1,0 +1,623 @@
+{% extends "base.html" %}
+
+{% block title %}Cadastro de Autorização de Carregamento - Web Cliente{% endblock %}
+
+{% block body_class %}main-body{% endblock %}
+
+{% block content %}
+{% include 'partials/sidebar.html' %}
+
+<main class="content main-content--shifted">
+    <div class="content-section active">
+        <div class="container-fluid">
+            <!-- Header da página -->
+            <div class="page-header">
+                <div class="header-content">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-check-circle fa-2x text-white me-3"></i>
+                        <div class="header-text">
+                            <h2>Autorização de Carregamento</h2>
+                            <p class="page-subtitle">Cadastro de nova autorização de carregamento</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formulário de Cadastro -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex align-items-center">
+                        <button type="button" class="btn btn-outline-secondary me-3" onclick="history.back()">
+                            <i class="fas fa-arrow-left me-2"></i> Voltar
+                        </button>
+                        <h5 class="mb-0">Cadastro de Autorização de Carregamento</h5>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form id="cadastroAutorizacaoForm">
+                        <!-- Seção Detalhes -->
+                        <div class="form-section mb-4">
+                            <h4 class="section-title mb-3">Detalhes</h4>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label for="entidade" class="form-label required">Entidade</label>
+                                        <input type="text" 
+                                               class="form-control" 
+                                               id="entidade" 
+                                               placeholder="Digite o CNPJ da entidade"
+                                               required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label for="numeroDocumento" class="form-label required">Número do Documento</label>
+                                        <input type="text" 
+                                               class="form-control" 
+                                               id="numeroDocumento" 
+                                               placeholder="Número do documento"
+                                               required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label for="data" class="form-label required">Data</label>
+                                        <input type="date" 
+                                               class="form-control" 
+                                               id="data" 
+                                               required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label for="observacoes" class="form-label">Observações</label>
+                                        <textarea class="form-control" 
+                                                  id="observacoes" 
+                                                  rows="3" 
+                                                  placeholder="Observações adicionais"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Seção Dados do Importador -->
+                        <div class="form-section mb-4">
+                            <h4 class="section-title mb-3">Dados do Importador</h4>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group mb-3">
+                                        <label for="cnpjImportador" class="form-label required">CNPJ *</label>
+                                        <input type="text" 
+                                               class="form-control" 
+                                               id="cnpjImportador" 
+                                               placeholder="00.000.000/0000-00"
+                                               required>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group mb-3">
+                                        <label for="razaoSocialImportador" class="form-label required">Razão Social *</label>
+                                        <input type="text" 
+                                               class="form-control" 
+                                               id="razaoSocialImportador" 
+                                               placeholder="Razão social do importador"
+                                               required>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group mb-3">
+                                        <label for="documentoLiberatorio" class="form-label required">Documento Liberatório (DI, DSI, DTA) *</label>
+                                        <input type="text" 
+                                               class="form-control" 
+                                               id="documentoLiberatorio" 
+                                               placeholder="DI: 1234567890"
+                                               required>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Seção PCCE -->
+                            <div class="pcee-section mb-3">
+                                <div class="alert alert-info">
+                                    <strong>EXCLUSIVO PARA CARGAS ARMAZENADAS NOS TECAS DE GOIÂNIA E RECIFE</strong><br>
+                                    <small>Preenchimento obrigatório em caso de adesão ao PCCE - Pagamento Centralizado Comércio Exterior</small>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="exoneracaoICMS">
+                                            <label class="form-check-label" for="exoneracaoICMS">
+                                                Exoneração ICMS (dispensada apresentação de guia)
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="pagamentoICMS">
+                                            <label class="form-check-label" for="pagamentoICMS">
+                                                Pagamento ICMS (obrigatória apresentação de guia e comprovante)
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-2">
+                                    <small class="text-muted">
+                                        <strong>Nota¹:</strong> A exoneração/pagamento liberação só fica visível no posto durante a entrega da carga no sistema Mantra, caso o sistema não permita a entrega por falta de aprovação de exoneração PCCE, a carga será rearmazenada com cobrança de serviços.<br>
+                                        <strong>Nota²:</strong> Caso o importador tenha pago ICMS via PCCE, a apresentação da guia e comprovante de pagamento continua obrigatória conforme IN 680/2006, pois o sistema PCCE ainda não está 100% implementado para esta modalidade.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Seção Dados do Transportador -->
+                        <div class="form-section mb-4">
+                            <h4 class="section-title mb-3">Dados do Transportador</h4>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label for="cnpjCpfTransportador" class="form-label required">CNPJ/CPF *</label>
+                                        <input type="text" 
+                                               class="form-control" 
+                                               id="cnpjCpfTransportador" 
+                                               placeholder="00.000.000/0000-00 ou 000.000.000-00"
+                                               required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label for="razaoSocialTransportador" class="form-label required">Razão Social *</label>
+                                        <input type="text" 
+                                               class="form-control" 
+                                               id="razaoSocialTransportador" 
+                                               placeholder="Razão social do transportador"
+                                               required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Seção Motoristas Autorizados -->
+                        <div class="form-section mb-4">
+                            <h4 class="section-title mb-3">Motoristas Autorizados</h4>
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th width="30%">CNH</th>
+                                            <th width="60%">Nome</th>
+                                            <th width="10%">Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="motoristasTableBody">
+                                        <tr id="noMotoristasRow">
+                                            <td colspan="3" class="text-center text-danger">Nenhum motorista adicionado</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-4">
+                                    <input type="text" 
+                                           class="form-control" 
+                                           id="cnhMotorista" 
+                                           placeholder="Número da CNH">
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="text" 
+                                           class="form-control" 
+                                           id="nomeMotorista" 
+                                           placeholder="Nome do motorista">
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="button" class="btn btn-primary w-100" id="adicionarMotorista">
+                                        <i class="fas fa-plus"></i> Adicionar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Seção Dados do Representante Legal -->
+                        <div class="form-section mb-4">
+                            <h4 class="section-title mb-3">Dados do Representante Legal</h4>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group mb-3">
+                                        <label for="cpfRepresentante" class="form-label required">CPF *</label>
+                                        <input type="text" 
+                                               class="form-control" 
+                                               id="cpfRepresentante" 
+                                               placeholder="000.000.000-00"
+                                               required>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group mb-3">
+                                        <label for="nomeRepresentante" class="form-label required">Nome *</label>
+                                        <input type="text" 
+                                               class="form-control" 
+                                               id="nomeRepresentante" 
+                                               placeholder="Nome completo"
+                                               required>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group mb-3">
+                                        <label for="rgRepresentante" class="form-label required">RG *</label>
+                                        <input type="text" 
+                                               class="form-control" 
+                                               id="rgRepresentante" 
+                                               placeholder="Número do RG"
+                                               required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group mb-3">
+                                        <label for="orgaoExpedidor" class="form-label required">Órgão/UF Expedidor *</label>
+                                        <input type="text" 
+                                               class="form-control" 
+                                               id="orgaoExpedidor" 
+                                               placeholder="SSP/SP"
+                                               required>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group mb-3">
+                                        <label for="dataEmissao" class="form-label">Data de Emissão</label>
+                                        <input type="text" 
+                                               class="form-control" 
+                                               id="dataEmissao" 
+                                               placeholder="dd/mm/aaaa">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group mb-3">
+                                        <label for="telefoneRepresentante" class="form-label required">Telefone *</label>
+                                        <input type="text" 
+                                               class="form-control" 
+                                               id="telefoneRepresentante" 
+                                               placeholder="(99) 99999-9999"
+                                               required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group mb-3">
+                                        <label for="celularRepresentante" class="form-label">Celular</label>
+                                        <input type="text" 
+                                               class="form-control" 
+                                               id="celularRepresentante" 
+                                               placeholder="(99) 99999-9999">
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-group mb-3">
+                                        <label for="emailRepresentante" class="form-label required">E-mail *</label>
+                                        <input type="email" 
+                                               class="form-control" 
+                                               id="emailRepresentante" 
+                                               placeholder="email@exemplo.com"
+                                               required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Seção Seleção de Processos -->
+                        <div class="form-section mb-4">
+                            <h4 class="section-title mb-3">Selecione os Processos para Aplicar a Autorização</h4>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="entidadeProcesso" class="form-label">Selecione a Entidade</label>
+                                    <input type="text" 
+                                           class="form-control" 
+                                           id="entidadeProcesso" 
+                                           placeholder="Digite para buscar entidade"
+                                           value="52401444000132 - VANESSA ALINE REBELLO DE OLIVEIRA">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="filtroProcesso" class="form-label">Filtro Processo</label>
+                                    <input type="text" 
+                                           class="form-control" 
+                                           id="filtroProcesso" 
+                                           placeholder="Digite para filtrar processos">
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th width="5%">
+                                                <input type="checkbox" id="selectAllProcessos">
+                                            </th>
+                                            <th width="10%">Status</th>
+                                            <th width="15%">Protocolo</th>
+                                            <th width="10%">Data</th>
+                                            <th width="15%">Referência</th>
+                                            <th width="10%">AWB</th>
+                                            <th width="10%">HAWB</th>
+                                            <th width="10%">DI</th>
+                                            <th width="10%">DTA</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="processosTableBody">
+                                        <tr>
+                                            <td colspan="9" class="text-center text-danger">Nenhum registro encontrado</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Botões de Ação -->
+                        <div class="form-actions mt-4">
+                            <div class="d-flex justify-content-end">
+                                <div>
+                                    <button type="button" class="btn btn-outline-primary me-2" id="salvarRascunho">
+                                        <i class="fas fa-save"></i> Salvar Rascunho
+                                    </button>
+                                    <button type="submit" class="btn btn-primary" id="salvarAutorizacao">
+                                        <i class="fas fa-check"></i> Salvar Autorização
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+{% block extra_css %}
+<style>
+.section-title {
+    color: #2c3e50;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+}
+
+.form-section {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #e9ecef;
+}
+
+.pcee-section {
+    background: #e3f2fd;
+    padding: 15px;
+    border-radius: 6px;
+    border-left: 4px solid #2196f3;
+}
+
+.form-actions {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+
+.required::after {
+    content: " *";
+    color: #dc3545;
+}
+
+.table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
+#noMotoristasRow {
+    color: #dc3545;
+    font-style: italic;
+}
+
+.btn-outline-danger:hover {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.alert-info {
+    border-left: 4px solid #17a2b8;
+}
+
+
+@media (max-width: 768px) {
+    .form-section {
+        padding: 15px;
+    }
+    
+    .form-actions .d-flex {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .form-actions .d-flex > div {
+        width: 100%;
+    }
+    
+    .form-actions .d-flex > div button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Lista de motoristas
+    let motoristas = [];
+    
+    // Adicionar motorista
+    document.getElementById('adicionarMotorista').addEventListener('click', function() {
+        const cnh = document.getElementById('cnhMotorista').value.trim();
+        const nome = document.getElementById('nomeMotorista').value.trim();
+        
+        if (!cnh || !nome) {
+            alert('Por favor, preencha CNH e Nome do motorista');
+            return;
+        }
+        
+        // Adicionar à lista
+        motoristas.push({ cnh: cnh, nome: nome });
+        
+        // Atualizar tabela
+        atualizarTabelaMotoristas();
+        
+        // Limpar campos
+        document.getElementById('cnhMotorista').value = '';
+        document.getElementById('nomeMotorista').value = '';
+    });
+    
+    // Função para atualizar tabela de motoristas
+    function atualizarTabelaMotoristas() {
+        const tbody = document.getElementById('motoristasTableBody');
+        const noMotoristasRow = document.getElementById('noMotoristasRow');
+        
+        if (motoristas.length === 0) {
+            noMotoristasRow.style.display = '';
+            return;
+        }
+        
+        noMotoristasRow.style.display = 'none';
+        
+        tbody.innerHTML = '';
+        motoristas.forEach((motorista, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${motorista.cnh}</td>
+                <td>${motorista.nome}</td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="removerMotorista(${index})">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+    
+    // Função para remover motorista
+    window.removerMotorista = function(index) {
+        motoristas.splice(index, 1);
+        atualizarTabelaMotoristas();
+    };
+    
+    // Máscaras para campos
+    document.getElementById('cnpjImportador').addEventListener('input', function(e) {
+        e.target.value = e.target.value.replace(/\D/g, '').replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5');
+    });
+    
+    document.getElementById('cnpjCpfTransportador').addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length <= 11) {
+            e.target.value = value.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3-$4');
+        } else {
+            e.target.value = value.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5');
+        }
+    });
+    
+    document.getElementById('cpfRepresentante').addEventListener('input', function(e) {
+        e.target.value = e.target.value.replace(/\D/g, '').replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3-$4');
+    });
+    
+    document.getElementById('telefoneRepresentante').addEventListener('input', function(e) {
+        e.target.value = e.target.value.replace(/\D/g, '').replace(/^(\d{2})(\d{4,5})(\d{4})$/, '($1) $2-$3');
+    });
+    
+    document.getElementById('celularRepresentante').addEventListener('input', function(e) {
+        e.target.value = e.target.value.replace(/\D/g, '').replace(/^(\d{2})(\d{4,5})(\d{4})$/, '($1) $2-$3');
+    });
+    
+    document.getElementById('dataEmissao').addEventListener('input', function(e) {
+        e.target.value = e.target.value.replace(/\D/g, '').replace(/^(\d{2})(\d{2})(\d{4})$/, '$1/$2/$3');
+    });
+    
+    // Validação do formulário
+    document.getElementById('cadastroAutorizacaoForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Validar campos obrigatórios
+        const camposObrigatorios = [
+            'entidade', 'numeroDocumento', 'data', 'cnpjImportador', 'razaoSocialImportador',
+            'documentoLiberatorio', 'cnpjCpfTransportador', 'razaoSocialTransportador',
+            'cpfRepresentante', 'nomeRepresentante', 'rgRepresentante', 'orgaoExpedidor',
+            'telefoneRepresentante', 'emailRepresentante'
+        ];
+        
+        let camposVazios = [];
+        camposObrigatorios.forEach(campo => {
+            const elemento = document.getElementById(campo);
+            if (!elemento.value.trim()) {
+                camposVazios.push(elemento.previousElementSibling.textContent.replace(' *', ''));
+            }
+        });
+        
+        if (camposVazios.length > 0) {
+            alert('Por favor, preencha os seguintes campos obrigatórios:\n' + camposVazios.join('\n'));
+            return;
+        }
+        
+        // Validar se pelo menos um motorista foi adicionado
+        if (motoristas.length === 0) {
+            alert('Por favor, adicione pelo menos um motorista autorizado');
+            return;
+        }
+        
+        // Coletar dados do formulário
+        const formData = {
+            entidade: document.getElementById('entidade').value,
+            numeroDocumento: document.getElementById('numeroDocumento').value,
+            data: document.getElementById('data').value,
+            observacoes: document.getElementById('observacoes').value,
+            importador: {
+                cnpj: document.getElementById('cnpjImportador').value,
+                razaoSocial: document.getElementById('razaoSocialImportador').value,
+                documentoLiberatorio: document.getElementById('documentoLiberatorio').value,
+                exoneracaoICMS: document.getElementById('exoneracaoICMS').checked,
+                pagamentoICMS: document.getElementById('pagamentoICMS').checked
+            },
+            transportador: {
+                cnpjCpf: document.getElementById('cnpjCpfTransportador').value,
+                razaoSocial: document.getElementById('razaoSocialTransportador').value
+            },
+            motoristas: motoristas,
+            representante: {
+                cpf: document.getElementById('cpfRepresentante').value,
+                nome: document.getElementById('nomeRepresentante').value,
+                rg: document.getElementById('rgRepresentante').value,
+                orgaoExpedidor: document.getElementById('orgaoExpedidor').value,
+                dataEmissao: document.getElementById('dataEmissao').value,
+                telefone: document.getElementById('telefoneRepresentante').value,
+                celular: document.getElementById('celularRepresentante').value,
+                email: document.getElementById('emailRepresentante').value
+            }
+        };
+        
+        console.log('Dados coletados:', formData);
+        
+        // Simular salvamento
+        alert('Autorização salva com sucesso!');
+        
+        // Redirecionar para listagem
+        window.location.href = '/web-clientes/autorizacao-carregamento';
+    });
+    
+    // Salvar rascunho
+    document.getElementById('salvarRascunho').addEventListener('click', function() {
+        alert('Rascunho salvo com sucesso!');
+    });
+});
+</script>
+{% endblock %}
+{% endblock %}

@@ -5013,3 +5013,448 @@ td:last-child {
     margin-top: 1rem;
   }
 }
+
+/* ========================================
+   TELA DE PERDIMENTO - WEB CLIENTE
+   ======================================== */
+
+.perdimento-table {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    font-size: 0.85rem;
+}
+
+.perdimento-table thead {
+    background: #000000 !important;
+}
+
+.perdimento-table thead tr {
+    background: #000000 !important;
+}
+
+.perdimento-table thead th {
+    background: #000000 !important;
+    color: white !important;
+    border: none !important;
+    font-weight: 600;
+    padding: 0.75rem 0.5rem;
+    font-size: 0.8rem;
+    text-align: center;
+    vertical-align: middle;
+    border-bottom: 2px solid #000000 !important;
+}
+
+.perdimento-table .table-header {
+    background: #000000 !important;
+    color: white !important;
+}
+
+.perdimento-table .table-header th {
+    background: #000000 !important;
+    color: white !important;
+    border: none !important;
+    font-weight: 600;
+    padding: 0.75rem 0.5rem;
+    font-size: 0.8rem;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.perdimento-table .perdimento-row {
+    transition: all 0.3s ease;
+}
+
+.perdimento-table .perdimento-row:hover {
+    background-color: rgba(0, 123, 255, 0.05);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.perdimento-table .perdimento-row td {
+    padding: 0.75rem 0.5rem;
+    vertical-align: middle;
+    border-bottom: 1px solid #dee2e6;
+    font-size: 0.8rem;
+}
+
+.perdimento-table .small {
+    font-size: 0.75rem !important;
+}
+
+/* Botões de ação diretos na tabela de perdimento */
+.perdimento-table .btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    line-height: 1.2;
+    border-radius: 0.25rem;
+}
+
+.perdimento-table .btn-sm i {
+    font-size: 0.75rem;
+}
+
+/* Container dos botões de ação */
+.perdimento-table .d-flex.gap-1 {
+    gap: 0.5rem !important;
+    justify-content: center;
+    padding: 0.5rem;
+}
+
+/* Célula de ações com padding adicional */
+.perdimento-table td:last-child {
+    padding: 0.75rem 1rem !important;
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* Responsividade da tabela de perdimento */
+@media (max-width: 1200px) {
+    .perdimento-table {
+        font-size: 0.75rem;
+    }
+    
+    .perdimento-table th,
+    .perdimento-table td {
+        padding: 0.5rem 0.25rem;
+    }
+    
+    .perdimento-table .btn-sm {
+        padding: 0.2rem 0.4rem;
+        font-size: 0.7rem;
+    }
+    
+    .perdimento-table .btn-sm i {
+        font-size: 0.7rem;
+    }
+    
+    .perdimento-table td:last-child {
+        padding: 0.5rem 0.75rem !important;
+    }
+    
+    .perdimento-table .d-flex.gap-1 {
+        gap: 0.4rem !important;
+        padding: 0.25rem;
+    }
+}
+
+/* ========================================
+   TELA DE DETALHES DO PERDIMENTO - WEB CLIENTE
+   ======================================== */
+
+/* Estilos para a página de detalhes */
+.detalhes-perdimento .card {
+    border: none;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border-radius: 8px;
+}
+
+.detalhes-perdimento .card-header {
+    background: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+    font-weight: 600;
+    color: #495057;
+}
+
+/* Layout compacto para informações gerais */
+.info-item {
+    margin-bottom: 0.5rem;
+}
+
+.info-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.25rem;
+    line-height: 1.2;
+}
+
+.info-value {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
+    padding: 0.4rem 0.6rem;
+    font-size: 0.85rem;
+    color: #495057;
+    min-height: 32px;
+    display: flex;
+    align-items: center;
+    word-break: break-word;
+    line-height: 1.3;
+}
+
+.info-observacao {
+    min-height: auto;
+    padding: 0.5rem 0.6rem;
+    font-size: 0.8rem;
+    line-height: 1.4;
+}
+
+/* Botão compacto no header */
+.detalhes-perdimento .card-header .btn-sm {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+/* Sistema de abas */
+.detalhes-perdimento .nav-tabs {
+    border-bottom: 2px solid #dee2e6;
+    margin-bottom: 0;
+}
+
+.detalhes-perdimento .nav-tabs .nav-link {
+    border: none;
+    color: #6c757d;
+    font-weight: 500;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0;
+    transition: all 0.3s ease;
+}
+
+.detalhes-perdimento .nav-tabs .nav-link:hover {
+    border-color: transparent;
+    color: #495057;
+    background: #f8f9fa;
+}
+
+.detalhes-perdimento .nav-tabs .nav-link.active {
+    color: #495057;
+    background: white;
+    border-bottom: 3px solid #28a745;
+    font-weight: 600;
+}
+
+/* Tabela de volumes */
+.volumes-table {
+    font-size: 0.85rem;
+    margin-bottom: 0;
+}
+
+.volumes-table thead th {
+    background: #343a40 !important;
+    color: white !important;
+    border: none !important;
+    font-weight: 600;
+    padding: 0.75rem 0.5rem;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 0.8rem;
+}
+
+.volumes-table tbody td {
+    padding: 0.5rem;
+    vertical-align: middle;
+    border: 1px solid #dee2e6;
+    font-size: 0.8rem;
+}
+
+.volumes-table .add-volume-row td {
+    padding: 0.25rem;
+    background: #f8f9fa;
+}
+
+.volumes-table .add-volume-row input,
+.volumes-table .add-volume-row select {
+    font-size: 0.8rem;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid #ced4da;
+    border-radius: 3px;
+}
+
+.volumes-table .add-volume-row input:focus,
+.volumes-table .add-volume-row select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.volumes-table .btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+}
+
+/* Badge de percentual de entrega */
+.badge.bg-success {
+    font-size: 0.8rem;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+}
+
+/* Timeline para histórico */
+.timeline {
+    position: relative;
+    padding-left: 2rem;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 1rem;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #dee2e6;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -1.5rem;
+    top: 0.5rem;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 3px solid white;
+    box-shadow: 0 0 0 2px #dee2e6;
+}
+
+.timeline-content {
+    background: white;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.timeline-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 0.5rem;
+}
+
+.timeline-text {
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+/* Botão de editar informações */
+.btn-dark {
+    background: #343a40;
+    border-color: #343a40;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.btn-dark:hover {
+    background: #23272b;
+    border-color: #1e2125;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* Responsividade para detalhes */
+@media (max-width: 768px) {
+    /* Layout compacto responsivo */
+    .info-label {
+        font-size: 0.7rem;
+    }
+    
+    .info-value {
+        font-size: 0.8rem;
+        padding: 0.3rem 0.5rem;
+        min-height: 28px;
+    }
+    
+    .info-observacao {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.5rem;
+    }
+    
+    .detalhes-perdimento .card-header .btn-sm {
+        padding: 0.2rem 0.5rem;
+        font-size: 0.75rem;
+    }
+    
+    .detalhes-perdimento .nav-tabs .nav-link {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+    
+    .volumes-table {
+        font-size: 0.75rem;
+    }
+    
+    .volumes-table thead th,
+    .volumes-table tbody td {
+        padding: 0.25rem;
+    }
+    
+    .volumes-table .add-volume-row input,
+    .volumes-table .add-volume-row select {
+        font-size: 0.75rem;
+        padding: 0.2rem 0.4rem;
+    }
+    
+    .timeline {
+        padding-left: 1.5rem;
+    }
+    
+    .timeline::before {
+        left: 0.75rem;
+    }
+    
+    .timeline-marker {
+        left: -1.25rem;
+        width: 10px;
+        height: 10px;
+    }
+    
+    .timeline-content {
+        padding: 0.75rem;
+    }
+    
+    .timeline-title {
+        font-size: 0.9rem;
+    }
+    
+    .timeline-text {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 576px) {
+    /* Layout ultra compacto para telas pequenas */
+    .info-item {
+        margin-bottom: 0.25rem;
+    }
+    
+    .info-label {
+        font-size: 0.65rem;
+        margin-bottom: 0.15rem;
+    }
+    
+    .info-value {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.4rem;
+        min-height: 24px;
+    }
+    
+    .info-observacao {
+        font-size: 0.7rem;
+        padding: 0.3rem 0.4rem;
+    }
+    
+    .detalhes-perdimento .card-body {
+        padding: 0.75rem !important;
+    }
+    
+    .detalhes-perdimento .card-header {
+        padding: 0.5rem 0.75rem;
+    }
+    
+    .detalhes-perdimento .card-header h6 {
+        font-size: 0.9rem;
+    }
+}
