@@ -41,9 +41,14 @@
         <div class="quick-actions-main animate-on-scroll fade-in-up delay-1">
             <div class="quick-actions-header">
                 <h2><i class="fas fa-star"></i> Acesso Rápido</h2>
-                <button class="btn btn-outline-primary btn-sm" onclick="openFavoritesModal()" title="Personalizar favoritos">
-                    <i class="fas fa-cog"></i> Personalizar
-                </button>
+                <div>
+                    <button class="btn btn-outline-primary btn-sm me-2" onclick="openFavoritesModal()" title="Personalizar favoritos" id="personalizarBtn">
+                        <i class="fas fa-cog"></i> Personalizar
+                    </button>
+                    <button class="btn btn-outline-danger btn-sm" onclick="forceCloseModal()" title="Limpar modal se travado">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
             </div>
             <div class="quick-actions-grid-main" id="favorite-actions">
                 <!-- Ações favoritas serão carregadas dinamicamente -->
@@ -112,6 +117,9 @@
                         </button>
                         <button class="tab-btn active" onclick="switchNewsTab('linkedin')">
                             <i class="fab fa-linkedin"></i> LinkedIn
+                        </button>
+                        <button class="tab-btn" onclick="switchNewsTab('sistema')">
+                            <i class="fas fa-cog"></i> Atualizações do Sistema
                         </button>
                     </div>
                     <div class="news-list" id="news-content">
@@ -248,32 +256,92 @@
 <div class="modal fade" id="favoritesModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">
-                    <i class="fas fa-star"></i> Personalizar Acesso Rápido
-                </h5>
-                <button type="button" class="btn-close" onclick="cancelFavorites()"></button>
-            </div>
+                   <div class="modal-header">
+                       <h5 class="modal-title">
+                           <i class="fas fa-star"></i> Personalizar Acesso Rápido
+                       </h5>
+                       <div class="d-flex align-items-center gap-2">
+                           <button type="button" class="btn btn-success btn-sm" onclick="saveFavorites()" title="Salvar configuração">
+                               <i class="fas fa-save"></i> Salvar
+                           </button>
+                           <button type="button" class="btn btn-secondary btn-sm" onclick="cancelFavorites()" title="Cancelar alterações">
+                               <i class="fas fa-times"></i> Cancelar
+                           </button>
+                           <button type="button" class="btn-close" onclick="cancelFavorites()"></button>
+                       </div>
+                   </div>
             <div class="modal-body">
-                <p class="text-muted mb-4">Selecione os módulos que deseja ter no acesso rápido. Arraste para reordenar.</p>
+                <p class="text-muted mb-4">Gerencie seus favoritos e personalize o acesso rápido do sistema.</p>
                 
-                <div class="favorites-grid" id="favorites-grid">
-                    <!-- Módulos disponíveis serão carregados via JavaScript -->
-                </div>
+                <!-- Abas para Favoritos, Personalizar e Layout -->
+                <ul class="nav nav-tabs mb-4" id="favoritesTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="favorites-tab" data-bs-toggle="tab" data-bs-target="#favorites-pane" type="button" role="tab">
+                            <i class="fas fa-star"></i> Favoritos
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="personalize-tab" data-bs-toggle="tab" data-bs-target="#personalize-pane" type="button" role="tab">
+                            <i class="fas fa-cog"></i> Personalizar
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="layout-tab" data-bs-toggle="tab" data-bs-target="#layout-pane" type="button" role="tab">
+                            <i class="fas fa-th"></i> Layout
+                        </button>
+                    </li>
+                </ul>
                 
-                <div class="mt-4">
-                    <h6>Módulos Disponíveis:</h6>
-                    <div class="available-modules" id="available-modules">
-                        <!-- Módulos não selecionados aparecerão aqui -->
+                <div class="tab-content" id="favoritesTabContent">
+                           <!-- Aba Favoritos -->
+                           <div class="tab-pane fade show active" id="favorites-pane" role="tabpanel">
+                               <div class="favorites-management">
+                                   <div class="d-flex justify-content-between align-items-center mb-3">
+                                       <h6><i class="fas fa-sort"></i> Organize seus favoritos</h6>
+                                       <div>
+                                           <button class="btn btn-outline-primary btn-sm me-2" onclick="enableEditMode()">
+                                               <i class="fas fa-edit"></i> Editar Ordem
+                                           </button>
+                                           <button class="btn btn-outline-success btn-sm me-2" onclick="saveFavoritesOrder()" style="display: none;" id="saveOrderBtn">
+                                               <i class="fas fa-save"></i> Salvar Ordem
+                                           </button>
+                                           <button class="btn btn-outline-secondary btn-sm" onclick="cancelEditMode()" style="display: none;" id="cancelEditBtn">
+                                               <i class="fas fa-times"></i> Cancelar
+                                           </button>
+                                       </div>
+                                   </div>
+                                   <div class="favorites-drag-container" id="favorites-drag-container">
+                                       <!-- Módulos e submódulos selecionados serão carregados via JavaScript -->
+                                   </div>
+                               </div>
+                           </div>
+                    
+                    <!-- Aba Personalizar -->
+                    <div class="tab-pane fade" id="personalize-pane" role="tabpanel">
+                        <div class="personalize-layout" id="personalize-layout">
+                            <!-- Módulos disponíveis para seleção -->
+                        </div>
+                    </div>
+                    
+                    <!-- Aba Layout -->
+                    <div class="tab-pane fade" id="layout-pane" role="tabpanel">
+                        <div class="layout-placeholder text-center py-5">
+                            <i class="fas fa-th fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">Funcionalidade de Layout</h5>
+                            <p class="text-muted">Em breve você poderá personalizar o layout e organização dos seus favoritos.</p>
+                            <div class="progress mt-3" style="height: 6px;">
+                                <div class="progress-bar" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <small class="text-muted mt-2 d-block">Desenvolvimento em andamento...</small>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" onclick="cancelFavorites()">Cancelar</button>
-                <button type="button" class="btn btn-primary" onclick="saveFavorites()">
-                    <i class="fas fa-save"></i> Salvar Configuração
-                </button>
-            </div>
+                   <div class="modal-footer">
+                       <small class="text-muted">
+                           <i class="fas fa-info-circle"></i> Use os botões no cabeçalho para salvar ou cancelar suas alterações
+                       </small>
+                   </div>
         </div>
     </div>
 </div>
@@ -406,10 +474,55 @@ let newsData = {
             source: 'Comunicados Pac Log'
         }
     ],
-    linkedin: []
+    linkedin: [],
+    sistema: [
+        {
+            id: 1,
+            title: 'Versão 2.1.0 - Nova funcionalidade de Autorização de Carregamento',
+            date: '2024-01-20',
+            category: 'Funcionalidade',
+            content: 'Implementada nova funcionalidade completa de autorização de carregamento com formulário dinâmico e validações avançadas.',
+            source: 'Sistema Aduaneiro',
+            version: '2.1.0',
+            type: 'feature'
+        },
+        {
+            id: 2,
+            title: 'Correção de bugs na interface de processos',
+            date: '2024-01-18',
+            category: 'Correção',
+            content: 'Corrigidos problemas de responsividade e validação de formulários na seção de processos.',
+            source: 'Sistema Aduaneiro',
+            version: '2.0.8',
+            type: 'bugfix'
+        },
+        {
+            id: 3,
+            title: 'Melhorias de performance no dashboard',
+            date: '2024-01-16',
+            category: 'Melhoria',
+            content: 'Otimizações realizadas para melhorar o tempo de carregamento do dashboard principal.',
+            source: 'Sistema Aduaneiro',
+            version: '2.0.7',
+            type: 'improvement'
+        },
+        {
+            id: 4,
+            title: 'Nova funcionalidade de personalização de cards',
+            date: '2024-01-14',
+            category: 'Funcionalidade',
+            content: 'Usuários agora podem personalizar a ordem dos cards na tela inicial arrastando e soltando.',
+            source: 'Sistema Aduaneiro',
+            version: '2.0.6',
+            type: 'feature'
+        }
+    ]
 };
 
 let currentNewsTab = 'linkedin';
+let newsTimer = null;
+let isHovering = false;
+let autoRotateInterval = 8000; // 8 segundos entre trocas
 
 // Carregar estatísticas
 async function loadStats() {
@@ -512,9 +625,35 @@ function loadNews(tab = 'linkedin') {
                 </div>
             </div>
         `).join('');
+    } else if (tab === 'sistema') {
+        newsContent.innerHTML = news.map(item => `
+            <div class="system-update-item" onmouseenter="pauseNewsRotation()" onmouseleave="resumeNewsRotation()">
+                <div class="update-header">
+                    <div class="update-icon">
+                        <i class="fas fa-${getUpdateIcon(item.type)}"></i>
+                    </div>
+                    <div class="update-info">
+                        <h4 class="update-title">${item.title}</h4>
+                        <div class="update-meta">
+                            <span class="update-version">v${item.version}</span>
+                            <span class="update-date">${formatDate(item.date)}</span>
+                        </div>
+                    </div>
+                    <div class="update-badge">
+                        <span class="badge badge-${getUpdateBadgeClass(item.type)}">${item.category}</span>
+                    </div>
+                </div>
+                <div class="update-content">
+                    <p>${item.content}</p>
+                </div>
+                <div class="update-footer">
+                    <span class="update-source">${item.source}</span>
+                </div>
+            </div>
+        `).join('');
     } else {
         newsContent.innerHTML = news.map(item => `
-            <div class="news-item">
+            <div class="news-item" onmouseenter="pauseNewsRotation()" onmouseleave="resumeNewsRotation()">
                 <div class="news-header">
                     <h4>${item.title}</h4>
                     <span class="news-date">${formatDate(item.date)}</span>
@@ -531,6 +670,29 @@ function loadNews(tab = 'linkedin') {
     }
 }
 
+// Funções auxiliares para atualizações do sistema
+function getUpdateIcon(type) {
+    const icons = {
+        'feature': 'star',
+        'bugfix': 'bug',
+        'improvement': 'arrow-up',
+        'security': 'shield-alt',
+        'maintenance': 'tools'
+    };
+    return icons[type] || 'info-circle';
+}
+
+function getUpdateBadgeClass(type) {
+    const classes = {
+        'feature': 'success',
+        'bugfix': 'warning',
+        'improvement': 'info',
+        'security': 'danger',
+        'maintenance': 'secondary'
+    };
+    return classes[type] || 'primary';
+}
+
 // Alternar aba de notícias
 function switchNewsTab(tab) {
     currentNewsTab = tab;
@@ -541,6 +703,50 @@ function switchNewsTab(tab) {
     
     // Carregar conteúdo
     loadNews(tab);
+    
+    // Reiniciar timer se estiver ativo
+    if (newsTimer) {
+        clearInterval(newsTimer);
+        startNewsRotation();
+    }
+}
+
+// Sistema de rotação automática
+function startNewsRotation() {
+    if (newsTimer) {
+        clearInterval(newsTimer);
+    }
+    
+    const tabs = ['paclog', 'linkedin', 'sistema'];
+    let currentIndex = tabs.indexOf(currentNewsTab);
+    
+    newsTimer = setInterval(() => {
+        if (!isHovering) {
+            currentIndex = (currentIndex + 1) % tabs.length;
+            const nextTab = tabs[currentIndex];
+            
+            // Atualizar botões
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            const activeBtn = document.querySelector(`[onclick="switchNewsTab('${nextTab}')"]`);
+            if (activeBtn) {
+                activeBtn.classList.add('active');
+            }
+            
+            // Carregar conteúdo
+            currentNewsTab = nextTab;
+            loadNews(nextTab);
+        }
+    }, autoRotateInterval);
+}
+
+// Pausar rotação no hover
+function pauseNewsRotation() {
+    isHovering = true;
+}
+
+// Retomar rotação ao sair do hover
+function resumeNewsRotation() {
+    isHovering = false;
 }
 
 // Atualizar notícias
@@ -717,53 +923,216 @@ function initParallax() {
 
 // Efeito de typing removido conforme solicitado
 
-// Sistema de Favoritos Personalizáveis
+// Teste de clique no botão personalizar
+document.addEventListener('DOMContentLoaded', function() {
+    const personalizarBtn = document.getElementById('personalizarBtn');
+    if (personalizarBtn) {
+        console.log('Botão personalizar encontrado:', personalizarBtn);
+        personalizarBtn.addEventListener('click', function(e) {
+            console.log('Botão personalizar clicado!');
+            e.preventDefault();
+            openFavoritesModal();
+        });
+    } else {
+        console.error('Botão personalizar não encontrado!');
+    }
+    
+    // Atalho de teclado para limpar modal (Ctrl+Shift+M)
+    document.addEventListener('keydown', function(e) {
+        if (e.ctrlKey && e.shiftKey && e.key === 'M') {
+            e.preventDefault();
+            console.log('Atalho de teclado detectado: Ctrl+Shift+M');
+            forceCloseModal();
+        }
+    });
+});
+
+// Sistema de Favoritos Personalizáveis - Módulos e Submódulos
 let favoriteModules = {
-    'usuarios': {
-        name: 'Usuários',
-        icon: 'fas fa-user-plus',
-        url: "{{ url_for('cadastros.cadastros_usuarios') }}",
-        description: 'Gerenciar usuários do sistema'
+    // Módulo Cadastro
+    'cadastro': {
+        name: 'Cadastro',
+        icon: 'fas fa-edit',
+        url: "{{ url_for('cadastros.cadastros') }}",
+        description: 'Módulo completo de cadastros',
+        type: 'main_module',
+        submodules: {
+            'usuarios': {
+                name: 'Usuários',
+                icon: 'fas fa-user-plus',
+                url: "{{ url_for('cadastros.cadastros_usuarios') }}",
+                description: 'Gerenciar usuários do sistema'
+            },
+            'veiculos': {
+                name: 'Veículos',
+                icon: 'fas fa-truck',
+                url: "{{ url_for('cadastros.cadastros_veiculos') }}",
+                description: 'Gerenciar frota de veículos'
+            },
+            'entidades': {
+                name: 'Entidades',
+                icon: 'fas fa-building',
+                url: "{{ url_for('cadastros.cadastros_entidades') }}",
+                description: 'Gerenciar entidades/clientes'
+            },
+            'contratos': {
+                name: 'Contratos',
+                icon: 'fas fa-file-contract',
+                url: '#',
+                description: 'Gerenciar contratos'
+            },
+            'desconto': {
+                name: 'Desconto',
+                icon: 'fas fa-percentage',
+                url: '#',
+                description: 'Gerenciar descontos'
+            }
+        }
     },
-    'veiculos': {
-        name: 'Veículos',
-        icon: 'fas fa-truck',
-        url: "{{ url_for('cadastros.cadastros_veiculos') }}",
-        description: 'Gerenciar frota de veículos'
+    
+    // Módulo Faturamento
+    'faturamento': {
+        name: 'Faturamento',
+        icon: 'fas fa-dollar-sign',
+        url: '#',
+        description: 'Módulo completo de faturamento',
+        type: 'main_module',
+        submodules: {
+            'processo': {
+                name: 'Processo',
+                icon: 'fas fa-box',
+                url: '#',
+                description: 'Processos de faturamento'
+            },
+            'guias': {
+                name: 'Guias',
+                icon: 'fas fa-trash',
+                url: '#',
+                description: 'Gerenciar guias'
+            },
+            'os': {
+                name: 'OS',
+                icon: 'fas fa-file-alt',
+                url: '#',
+                description: 'Ordens de serviço'
+            },
+            'recinto_ad': {
+                name: 'Recinto Ad',
+                icon: 'fas fa-warehouse',
+                url: '#',
+                description: 'Recinto aduaneiro'
+            },
+            'dape_sem': {
+                name: 'DAPE sem',
+                icon: 'fas fa-file-alt',
+                url: '#',
+                description: 'DAPE sem carga'
+            }
+        }
     },
-    'entidades': {
-        name: 'Entidades',
-        icon: 'fas fa-building',
-        url: "{{ url_for('cadastros.cadastros_entidades') }}",
-        description: 'Gerenciar entidades/clientes'
+    
+    // Módulo Web Cliente
+    'web_cliente': {
+        name: 'Web Cliente',
+        icon: 'fas fa-user-tie',
+        url: "{{ url_for('web_clientes.web_clientes') }}",
+        description: 'Módulo completo para clientes',
+        type: 'main_module',
+        submodules: {
+            'processo': {
+                name: 'Processo',
+                icon: 'fas fa-box',
+                url: "{{ url_for('web_clientes.web_clientes_processos') }}",
+                description: 'Processos aduaneiros'
+            },
+            'email_gui': {
+                name: 'Email Gui',
+                icon: 'fas fa-envelope',
+                url: "{{ url_for('web_clientes.web_clientes_dape_sem_carga') }}",
+                description: 'Email e guias'
+            }
+        }
     },
+    
+    // Módulo Relatórios
     'relatorios': {
         name: 'Relatórios',
         icon: 'fas fa-chart-bar',
         url: "{{ url_for('reports.relatorios_main') }}",
-        description: 'Gerar relatórios do sistema'
-    },
-    'processos': {
-        name: 'Processos',
-        icon: 'fas fa-file-alt',
-        url: '#',
-        description: 'Gerenciar processos aduaneiros'
-    },
-    'configuracoes': {
-        name: 'Configurações',
-        icon: 'fas fa-cog',
-        url: '#',
-        description: 'Configurações do sistema'
+        description: 'Módulo completo de relatórios',
+        type: 'main_module',
+        submodules: {
+            'configuracao': {
+                name: 'Configuração',
+                icon: 'fas fa-cog',
+                url: "{{ url_for('reports.relatorios_configuracao') }}",
+                description: 'Configurar relatórios'
+            },
+            'comercial': {
+                name: 'Comercial',
+                icon: 'fas fa-file-alt',
+                url: "{{ url_for('reports.relatorios_comercial') }}",
+                description: 'Relatórios comerciais'
+            },
+            'faturamento': {
+                name: 'Faturamento',
+                icon: 'fas fa-dollar-sign',
+                url: "{{ url_for('reports.relatorios_faturamento') }}",
+                description: 'Relatórios de faturamento'
+            },
+            'financeiro': {
+                name: 'Financeiro',
+                icon: 'fas fa-chart-line',
+                url: "{{ url_for('reports.relatorios_financeiro') }}",
+                description: 'Relatórios financeiros'
+            },
+            'gerencial': {
+                name: 'Gerencial',
+                icon: 'fas fa-users-cog',
+                url: "{{ url_for('reports.relatorios_gerencial') }}",
+                description: 'Relatórios gerenciais'
+            },
+            'operacional': {
+                name: 'Operacional',
+                icon: 'fas fa-truck',
+                url: "{{ url_for('reports.relatorios_operacional') }}",
+                description: 'Relatórios operacionais'
+            }
+        }
     }
 };
 
-let currentFavorites = ['usuarios', 'veiculos', 'entidades', 'relatorios'];
+let currentFavorites = ['cadastro', 'relatorios'];
 
 // Carregar favoritos salvos
 function loadFavorites() {
     const saved = localStorage.getItem('dashboard_favorites');
     if (saved) {
-        currentFavorites = JSON.parse(saved);
+        const savedFavorites = JSON.parse(saved);
+        // Validar se os favoritos salvos ainda existem na estrutura atual
+        const validFavorites = savedFavorites.filter(favId => {
+            // Verificar se é um módulo principal
+            if (favoriteModules[favId]) {
+                return true;
+            }
+            // Verificar se é um submódulo
+            for (const moduleId in favoriteModules) {
+                const module = favoriteModules[moduleId];
+                if (module.submodules && module.submodules[favId]) {
+                    return true;
+                }
+            }
+            return false;
+        });
+        
+        // Se houve mudanças na estrutura, limpar favoritos inválidos
+        if (validFavorites.length !== savedFavorites.length) {
+            console.log('Favoritos antigos detectados, limpando...');
+            currentFavorites = ['cadastro', 'relatorios']; // Valores padrão
+            localStorage.setItem('dashboard_favorites', JSON.stringify(currentFavorites));
+        } else {
+            currentFavorites = validFavorites;
+        }
     }
     renderFavorites();
 }
@@ -796,19 +1165,42 @@ function renderFavorites() {
     const container = document.getElementById('favorite-actions');
     container.innerHTML = '';
     
-    currentFavorites.forEach((moduleId, index) => {
-        const module = favoriteModules[moduleId];
-        if (module) {
+    let cardIndex = 0;
+    
+    currentFavorites.forEach((favId) => {
+        // Verificar se é um submódulo
+        let module = null;
+        let isSubmodule = false;
+        
+        // Primeiro, verificar se é um módulo principal
+        if (favoriteModules[favId]) {
+            module = favoriteModules[favId];
+        } else {
+            // Se não for módulo principal, procurar nos submódulos
+            Object.keys(favoriteModules).forEach(moduleId => {
+                const mainModule = favoriteModules[moduleId];
+                if (mainModule.submodules && mainModule.submodules[favId]) {
+                    module = mainModule.submodules[favId];
+                    isSubmodule = true;
+                }
+            });
+        }
+        
+        if (module && module.icon) {
             const card = document.createElement('div');
-            card.className = `quick-action-card animate-on-scroll scale-in delay-${index + 2}`;
-            card.setAttribute('data-module', moduleId);
+            card.className = `quick-action-card animate-on-scroll scale-in delay-${cardIndex + 2}`;
+            card.setAttribute('data-module', favId);
             card.onclick = () => {
                 window.location.href = module.url;
             };
             
+            // Padronizar tamanho dos ícones - todos iguais na área de acesso rápido
+            const iconSize = 'fa-2x';
+            const iconClass = 'submodule-icon';
+            
             card.innerHTML = `
-                <div class="action-icon">
-                    <i class="${module.icon}"></i>
+                <div class="action-icon ${iconClass}">
+                    <i class="${module.icon} ${iconSize}"></i>
                 </div>
                 <h3>${module.name}</h3>
                 <p>${module.description}</p>
@@ -818,6 +1210,9 @@ function renderFavorites() {
             `;
             
             container.appendChild(card);
+            cardIndex++;
+        } else {
+            console.warn(`Módulo não encontrado ou inválido: ${favId}`);
         }
     });
 }
@@ -825,78 +1220,461 @@ function renderFavorites() {
 // Variável global para armazenar a instância do modal
 let favoritesModalInstance = null;
 
+// Função de emergência para limpar completamente o modal
+function forceCloseModal() {
+    console.log('Forçando fechamento do modal...');
+    
+    try {
+        // Destruir instância se existir
+        if (favoritesModalInstance) {
+            try {
+                favoritesModalInstance.dispose();
+            } catch (e) {
+                console.log('Erro ao destruir instância:', e);
+            }
+            favoritesModalInstance = null;
+        }
+        
+        // Limpar modal element
+        const modalElement = document.getElementById('favoritesModal');
+        if (modalElement) {
+            modalElement.removeAttribute('aria-hidden');
+            modalElement.style.display = 'none';
+            modalElement.classList.remove('show');
+            modalElement.setAttribute('aria-hidden', 'true');
+        }
+        
+        // Remover todos os backdrops de forma segura
+        const backdrops = document.querySelectorAll('.modal-backdrop');
+        backdrops.forEach(backdrop => {
+            if (backdrop && backdrop.parentNode) {
+                backdrop.parentNode.removeChild(backdrop);
+            }
+        });
+        
+        // Limpar body completamente
+        document.body.classList.remove('modal-open');
+        document.body.style.overflow = '';
+        document.body.style.paddingRight = '';
+        
+        // Remover qualquer foco de elementos do modal
+        const activeElement = document.activeElement;
+        if (activeElement && activeElement.closest('#favoritesModal')) {
+            activeElement.blur();
+        }
+        
+        // Forçar reflow para garantir que as mudanças sejam aplicadas
+        document.body.offsetHeight;
+        
+        console.log('Modal forçadamente fechado!');
+        
+        // Mostrar notificação de sucesso
+        showNotification('Modal limpo com sucesso!', 'success');
+        
+    } catch (e) {
+        console.error('Erro ao forçar fechamento do modal:', e);
+        showNotification('Erro ao limpar modal. Recarregue a página.', 'error');
+    }
+}
+
 // Abrir modal de personalização
 function openFavoritesModal() {
+    console.log('Tentando abrir modal de favoritos...');
+    console.log('Bootstrap disponível:', typeof bootstrap !== 'undefined');
+    
     const modalElement = document.getElementById('favoritesModal');
-    favoritesModalInstance = new bootstrap.Modal(modalElement, {
-        backdrop: true,
-        keyboard: true
-    });
+    console.log('Elemento do modal encontrado:', modalElement);
     
-    // Adicionar evento para fechar quando clicar fora
-    modalElement.addEventListener('hidden.bs.modal', function() {
-        favoritesModalInstance = null;
-    });
+    if (!modalElement) {
+        console.error('Modal element não encontrado!');
+        return;
+    }
     
-    renderFavoritesModal();
-    favoritesModalInstance.show();
+    if (typeof bootstrap === 'undefined') {
+        console.error('Bootstrap não está carregado!');
+        return;
+    }
+    
+    try {
+        // Se já existe uma instância, destruir primeiro
+        if (favoritesModalInstance) {
+            favoritesModalInstance.dispose();
+            favoritesModalInstance = null;
+        }
+        
+        // Limpar qualquer estado anterior do modal de forma mais segura
+        try {
+            modalElement.removeAttribute('aria-hidden');
+            modalElement.style.display = 'none';
+            modalElement.classList.remove('show');
+            
+            // Remover backdrop se existir
+            const existingBackdrops = document.querySelectorAll('.modal-backdrop');
+            existingBackdrops.forEach(backdrop => {
+                if (backdrop && backdrop.parentNode) {
+                    backdrop.parentNode.removeChild(backdrop);
+                }
+            });
+            
+            // Remover classe modal-open do body
+            document.body.classList.remove('modal-open');
+            document.body.style.overflow = '';
+            document.body.style.paddingRight = '';
+        } catch (e) {
+            console.log('Erro ao limpar estado anterior:', e);
+        }
+        
+        // Aguardar um pouco para garantir que a limpeza foi processada
+        setTimeout(() => {
+            try {
+                favoritesModalInstance = new bootstrap.Modal(modalElement, {
+                    backdrop: true,
+                    keyboard: true,
+                    focus: false  // Desabilitar foco automático para evitar conflitos
+                });
+                
+                console.log('Instância do modal criada:', favoritesModalInstance);
+                
+                // Adicionar eventos de limpeza
+                modalElement.addEventListener('hidden.bs.modal', function() {
+                    console.log('Modal fechado, limpando...');
+                    favoritesModalInstance = null;
+                    modalElement.removeAttribute('aria-hidden');
+                    modalElement.style.display = 'none';
+                    modalElement.classList.remove('show');
+                    
+                    // Limpar backdrop
+                    const backdrop = document.querySelector('.modal-backdrop');
+                    if (backdrop) {
+                        backdrop.remove();
+                    }
+                    
+                    // Limpar body
+                    document.body.classList.remove('modal-open');
+                    document.body.style.overflow = '';
+                    document.body.style.paddingRight = '';
+                });
+                
+                renderFavoritesModal();
+                console.log('Renderizando modal...');
+                
+                favoritesModalInstance.show();
+                console.log('Modal mostrado!');
+                
+            } catch (e) {
+                console.error('Erro ao criar instância do modal:', e);
+                return;
+            }
+        }, 100);
+    } catch (error) {
+        console.error('Erro ao abrir modal:', error);
+    }
 }
 
 // Renderizar modal de favoritos
 function renderFavoritesModal() {
-    const favoritesGrid = document.getElementById('favorites-grid');
-    const availableModules = document.getElementById('available-modules');
+    console.log('Iniciando renderização do modal...');
+    try {
+        renderFavoritesLayout();
+        console.log('Layout de favoritos renderizado');
+        renderPersonalizeLayout();
+        console.log('Layout de personalização renderizado');
+    } catch (error) {
+        console.error('Erro ao renderizar modal:', error);
+    }
+}
+
+// Renderizar layout de favoritos (aba Favoritos)
+function renderFavoritesLayout() {
+    console.log('Renderizando layout de favoritos...');
+    console.log('favoriteModules:', favoriteModules);
+    console.log('currentFavorites:', currentFavorites);
     
-    // Renderizar favoritos atuais
-    favoritesGrid.innerHTML = '';
-    currentFavorites.forEach((moduleId, index) => {
-        const module = favoriteModules[moduleId];
-        if (module) {
-            const item = document.createElement('div');
-            item.className = 'favorite-item';
-            item.setAttribute('data-module', moduleId);
-            item.draggable = true;
+    const favoritesContainer = document.getElementById('favorites-drag-container');
+    if (!favoritesContainer) {
+        console.error('Elemento favorites-drag-container não encontrado!');
+        return;
+    }
+    
+    favoritesContainer.innerHTML = '';
+    
+    // Criar cards arrastáveis para cada favorito
+    currentFavorites.forEach((favId, index) => {
+        let module = null;
+        let isSubmodule = false;
+        let parentModule = null;
+        
+        // Verificar se é um módulo principal
+        if (favoriteModules[favId]) {
+            module = favoriteModules[favId];
+        } else {
+            // Se não for módulo principal, procurar nos submódulos
+            Object.keys(favoriteModules).forEach(moduleId => {
+                const mainModule = favoriteModules[moduleId];
+                if (mainModule.submodules && mainModule.submodules[favId]) {
+                    module = mainModule.submodules[favId];
+                    isSubmodule = true;
+                    parentModule = moduleId;
+                }
+            });
+        }
+        
+        if (module && module.icon) {
+            const card = document.createElement('div');
+            card.className = 'favorite-item';
+            card.setAttribute('data-favorite-id', favId);
+            card.setAttribute('data-index', index);
             
-            item.innerHTML = `
-                <div class="module-icon">
-                    <i class="${module.icon}"></i>
+            const dragHandle = isSubmodule ? 'submodule-drag-handle' : 'main-drag-handle';
+            
+            card.innerHTML = `
+                <div class="favorite-card-content">
+                    <div class="drag-handle ${dragHandle}">
+                        <i class="fas fa-grip-vertical"></i>
+                    </div>
+                    <div class="favorite-card-icon">
+                        <i class="${module.icon} fa-lg"></i>
+                    </div>
+                    <div class="favorite-card-info">
+                        <h6>${module.name}</h6>
+                    </div>
+                    <div class="favorite-card-actions">
+                        <button class="btn btn-outline-danger btn-sm" onclick="removeFavorite('${favId}')" title="Remover">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="favorite-card-badge">
+                        <i class="fas fa-star"></i>
+                    </div>
                 </div>
-                <div class="module-name">${module.name}</div>
-                <button class="remove-btn" onclick="removeFavorite('${moduleId}')">
-                    <i class="fas fa-times"></i>
-                </button>
             `;
             
-            // Adicionar eventos de drag
-            item.addEventListener('dragstart', handleDragStart);
-            item.addEventListener('dragover', handleDragOver);
-            item.addEventListener('drop', handleDrop);
-            item.addEventListener('dragend', handleDragEnd);
-            
-            favoritesGrid.appendChild(item);
+            favoritesContainer.appendChild(card);
+        } else {
+            console.warn(`Módulo não encontrado ou inválido: ${favId}`);
         }
     });
     
-    // Renderizar módulos disponíveis
-    availableModules.innerHTML = '';
+    // Inicializar SortableJS se estiver disponível
+    if (typeof Sortable !== 'undefined') {
+        console.log('Inicializando SortableJS...');
+        const sortable = new Sortable(favoritesContainer, {
+            handle: '.drag-handle', // Usar handle específico como no web_clientes
+            animation: 200,
+            ghostClass: 'sortable-ghost',
+            chosenClass: 'sortable-chosen',
+            dragClass: 'sortable-drag',
+            onStart: function() {
+                console.log('Drag iniciado');
+                favoritesContainer.classList.add('dragging');
+            },
+            onEnd: function() {
+                console.log('Drag finalizado');
+                favoritesContainer.classList.remove('dragging');
+                updateFavoritesOrder();
+            }
+        });
+        console.log('SortableJS inicializado:', sortable);
+    } else {
+        console.warn('SortableJS não está disponível!');
+    }
+    
+    // Se não há favoritos, mostrar mensagem
+    if (currentFavorites.length === 0) {
+        favoritesContainer.innerHTML = `
+            <div class="d-flex flex-column align-items-center justify-content-center text-center py-5" style="min-height: 200px; grid-column: 1 / -1;">
+                <i class="fas fa-star fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">Nenhum favorito selecionado</h5>
+                <p class="text-muted">Vá para a aba "Personalizar" para adicionar módulos e submódulos aos seus favoritos.</p>
+            </div>
+        `;
+    }
+}
+
+// Renderizar layout de personalização (aba Personalizar)
+function renderPersonalizeLayout() {
+    console.log('Renderizando layout de personalização...');
+    
+    const personalizeLayout = document.getElementById('personalize-layout');
+    if (!personalizeLayout) {
+        console.error('Elemento personalize-layout não encontrado!');
+        return;
+    }
+    
+    personalizeLayout.innerHTML = '';
+    
     Object.keys(favoriteModules).forEach(moduleId => {
-        if (!currentFavorites.includes(moduleId)) {
-            const module = favoriteModules[moduleId];
-            const item = document.createElement('div');
-            item.className = 'available-module';
-            item.setAttribute('data-module', moduleId);
-            item.onclick = () => addFavorite(moduleId);
-            
-            item.innerHTML = `
-                <div class="module-icon">
-                    <i class="${module.icon}"></i>
+        const module = favoriteModules[moduleId];
+        const isMainModuleSelected = currentFavorites.includes(moduleId);
+        
+        const moduleContainer = document.createElement('div');
+        moduleContainer.className = 'available-module-group';
+        
+        let moduleHtml = `
+            <div class="available-main-module ${isMainModuleSelected ? 'selected' : ''}">
+                <div class="main-module-content">
+                    <div class="main-module-icon">
+                        <i class="${module.icon}"></i>
+                    </div>
+                    <div class="main-module-info">
+                        <h5>${module.name}</h5>
+                        <p>Módulo Principal</p>
+                    </div>
+                    <button class="add-main-btn" onclick="addFavorite('${moduleId}')" ${isMainModuleSelected ? 'disabled' : ''}>
+                        <i class="fas fa-plus"></i> Adicionar
+                    </button>
                 </div>
-                <div class="module-name">${module.name}</div>
-            `;
-            
-            availableModules.appendChild(item);
+            </div>
+        `;
+        
+        // Adicionar submódulos
+        if (module.submodules) {
+            moduleHtml += '<div class="available-submodules">';
+            Object.keys(module.submodules).forEach(subId => {
+                const sub = module.submodules[subId];
+                const isSubmoduleSelected = currentFavorites.includes(subId);
+                
+                moduleHtml += `
+                    <div class="available-submodule ${isSubmoduleSelected ? 'selected' : ''}">
+                        <div class="submodule-content">
+                            <div class="submodule-icon">
+                                <i class="${sub.icon}"></i>
+                            </div>
+                            <div class="submodule-info">
+                                <h6>${sub.name}</h6>
+                                <small class="text-muted">de ${module.name}</small>
+                            </div>
+                            <button class="add-sub-btn" onclick="addFavorite('${subId}')" ${isSubmoduleSelected ? 'disabled' : ''}>
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            moduleHtml += '</div>';
         }
+        
+        moduleContainer.innerHTML = moduleHtml;
+        personalizeLayout.appendChild(moduleContainer);
     });
+}
+
+// Função para mostrar notificações
+function showNotification(message, type = 'info') {
+    // Criar elemento de notificação
+    const notification = document.createElement('div');
+    notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+    notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+    
+    notification.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'} me-2"></i>
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    // Adicionar ao body
+    document.body.appendChild(notification);
+    
+    // Remover automaticamente após 5 segundos
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.remove();
+        }
+    }, 5000);
+}
+
+// Funções de gerenciamento de drag & drop
+function enableEditMode() {
+    const dragHandles = document.querySelectorAll('.drag-handle');
+    const saveBtn = document.getElementById('saveOrderBtn');
+    const cancelBtn = document.getElementById('cancelEditBtn');
+    const editBtn = document.querySelector('button[onclick="enableEditMode()"]');
+    const container = document.getElementById('favorites-drag-container');
+    
+    // Mostrar alças de arrastar
+    dragHandles.forEach(handle => {
+        handle.style.display = 'flex';
+    });
+    
+    // Mostrar botões de controle
+    if (saveBtn) saveBtn.style.display = 'inline-block';
+    if (cancelBtn) cancelBtn.style.display = 'inline-block';
+    if (editBtn) editBtn.style.display = 'none';
+    
+    // Adicionar classe de modo de edição
+    if (container) {
+        container.classList.add('edit-mode');
+    }
+    
+    // Mostrar instruções
+    showNotification('Modo de edição ativado! Arraste os cards para reorganizar.', 'info');
+}
+
+function cancelEditMode() {
+    const dragHandles = document.querySelectorAll('.drag-handle');
+    const saveBtn = document.getElementById('saveOrderBtn');
+    const cancelBtn = document.getElementById('cancelEditBtn');
+    const editBtn = document.querySelector('button[onclick="enableEditMode()"]');
+    const container = document.getElementById('favorites-drag-container');
+    
+    // Esconder alças de arrastar
+    dragHandles.forEach(handle => {
+        handle.style.display = 'none';
+    });
+    
+    // Esconder botões de controle
+    if (saveBtn) saveBtn.style.display = 'none';
+    if (cancelBtn) cancelBtn.style.display = 'none';
+    if (editBtn) editBtn.style.display = 'inline-block';
+    
+    // Remover classe de modo de edição
+    if (container) {
+        container.classList.remove('edit-mode');
+    }
+    
+    // Recarregar a ordem original
+    renderFavoritesLayout();
+    
+    // Mostrar notificação
+    showNotification('Modo de edição cancelado. Alterações descartadas.', 'warning');
+}
+
+function saveFavoritesOrder() {
+    const items = document.querySelectorAll('.favorite-item');
+    const newOrder = Array.from(items).map(item => item.getAttribute('data-favorite-id'));
+    
+    console.log('Salvando nova ordem:', newOrder);
+    
+    currentFavorites = newOrder;
+    localStorage.setItem('dashboard_favorites', JSON.stringify(currentFavorites));
+    
+    console.log('Ordem salva no localStorage:', localStorage.getItem('dashboard_favorites'));
+    
+    // Atualizar a área de acesso rápido
+    renderFavorites();
+    
+    // Sair do modo de edição
+    cancelEditMode();
+    
+    // Mostrar notificação
+    showNotification('Ordem dos favoritos salva com sucesso!', 'success');
+}
+
+function updateFavoritesOrder() {
+    const items = document.querySelectorAll('.favorite-item');
+    const newOrder = Array.from(items).map(item => item.getAttribute('data-favorite-id'));
+    
+    console.log('Nova ordem dos favoritos:', newOrder);
+    
+    // Atualizar currentFavorites sem salvar ainda
+    currentFavorites = newOrder;
+    
+    // Atualizar índices dos elementos
+    items.forEach((item, index) => {
+        item.setAttribute('data-index', index);
+    });
+    
+    console.log('currentFavorites atualizado:', currentFavorites);
 }
 
 // Cancelar e fechar modal
@@ -920,7 +1698,8 @@ function cancelFavorites() {
 function addFavorite(moduleId) {
     if (!currentFavorites.includes(moduleId)) {
         currentFavorites.push(moduleId);
-        renderFavoritesModal();
+        renderFavoritesLayout();
+        renderPersonalizeLayout();
     }
 }
 
@@ -929,7 +1708,8 @@ function removeFavorite(moduleId) {
     const index = currentFavorites.indexOf(moduleId);
     if (index > -1) {
         currentFavorites.splice(index, 1);
-        renderFavoritesModal();
+        renderFavoritesLayout();
+        renderPersonalizeLayout();
     }
 }
 
@@ -1191,6 +1971,9 @@ document.addEventListener('DOMContentLoaded', async function() {
     
     // Inicializar notificações
     initNotifications();
+    
+    // Iniciar rotação automática das notícias
+    startNewsRotation();
 });
 
 // ========================================

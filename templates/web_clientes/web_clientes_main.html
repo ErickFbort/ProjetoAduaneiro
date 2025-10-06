@@ -23,10 +23,35 @@
                 </div>
             </div>
             
-            <div class="row">
-                <div class="col-md-6 mb-4">
-                    <div class="card h-100">
+            <!-- Controles de Personalização -->
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Módulos Disponíveis</h5>
+                        <div>
+                            <button type="button" class="btn btn-outline-primary btn-sm me-2" id="toggleEditMode">
+                                <i class="fas fa-edit"></i> Personalizar Ordem
+                            </button>
+                            <button type="button" class="btn btn-outline-success btn-sm" id="saveLayout" style="display: none;">
+                                <i class="fas fa-save"></i> Salvar Layout
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm" id="resetLayout" style="display: none;">
+                                <i class="fas fa-undo"></i> Resetar
+                            </button>
+                        </div>
+                    </div>
+                    <small class="text-muted">Arraste os cards para reorganizar a ordem dos módulos</small>
+                </div>
+            </div>
+
+            <!-- Container dos Cards Personalizáveis -->
+            <div class="row" id="cardsContainer">
+                <div class="col-md-6 mb-4" data-module="processos">
+                    <div class="card h-100 draggable-card">
                         <div class="card-body text-center">
+                            <div class="drag-handle" style="display: none;">
+                                <i class="fas fa-grip-vertical text-muted"></i>
+                            </div>
                             <i class="fas fa-clipboard-list fa-3x text-primary mb-3"></i>
                             <h5 class="card-title">Processos</h5>
                             <p class="card-text">Acompanhe e gerencie processos aduaneiros dos clientes.</p>
@@ -37,9 +62,12 @@
                     </div>
                 </div>
                 
-                <div class="col-md-6 mb-4">
-                    <div class="card h-100">
+                <div class="col-md-6 mb-4" data-module="dape-sem-carga">
+                    <div class="card h-100 draggable-card">
                         <div class="card-body text-center">
+                            <div class="drag-handle" style="display: none;">
+                                <i class="fas fa-grip-vertical text-muted"></i>
+                            </div>
                             <i class="fas fa-file-alt fa-3x text-success mb-3"></i>
                             <h5 class="card-title">DAPE sem Carga</h5>
                             <p class="card-text">Gerencie documentos de DAPE sem carga associada.</p>
@@ -50,9 +78,12 @@
                     </div>
                 </div>
                 
-                <div class="col-md-6 mb-4">
-                    <div class="card h-100">
+                <div class="col-md-6 mb-4" data-module="agendamento-carregamento">
+                    <div class="card h-100 draggable-card">
                         <div class="card-body text-center">
+                            <div class="drag-handle" style="display: none;">
+                                <i class="fas fa-grip-vertical text-muted"></i>
+                            </div>
                             <i class="fas fa-truck-loading fa-3x text-info mb-3"></i>
                             <h5 class="card-title">Agendamento de Carregamento</h5>
                             <p class="card-text">Agende e gerencie carregamentos de mercadorias.</p>
@@ -63,9 +94,12 @@
                     </div>
                 </div>
                 
-                <div class="col-md-6 mb-4">
-                    <div class="card h-100">
+                <div class="col-md-6 mb-4" data-module="agendamento-vistorias">
+                    <div class="card h-100 draggable-card">
                         <div class="card-body text-center">
+                            <div class="drag-handle" style="display: none;">
+                                <i class="fas fa-grip-vertical text-muted"></i>
+                            </div>
                             <i class="fas fa-search fa-3x text-warning mb-3"></i>
                             <h5 class="card-title">Agendamento de Vistorias</h5>
                             <p class="card-text">Agende e acompanhe vistorias aduaneiras.</p>
@@ -76,9 +110,12 @@
                     </div>
                 </div>
                 
-                <div class="col-md-6 mb-4">
-                    <div class="card h-100">
+                <div class="col-md-6 mb-4" data-module="autorizacao-carregamento">
+                    <div class="card h-100 draggable-card">
                         <div class="card-body text-center">
+                            <div class="drag-handle" style="display: none;">
+                                <i class="fas fa-grip-vertical text-muted"></i>
+                            </div>
                             <i class="fas fa-check-circle fa-3x text-dark mb-3"></i>
                             <h5 class="card-title">Autorização de Carregamento</h5>
                             <p class="card-text">Gerencie autorizações de carregamento de mercadorias.</p>
@@ -89,9 +126,12 @@
                     </div>
                 </div>
                 
-                <div class="col-md-6 mb-4">
-                    <div class="card h-100">
+                <div class="col-md-6 mb-4" data-module="perdimento">
+                    <div class="card h-100 draggable-card">
                         <div class="card-body text-center">
+                            <div class="drag-handle" style="display: none;">
+                                <i class="fas fa-grip-vertical text-muted"></i>
+                            </div>
                             <i class="fas fa-exclamation-triangle fa-3x text-danger mb-3"></i>
                             <h5 class="card-title">Perdimento</h5>
                             <p class="card-text">Gerencie registros de perdimento de cargas.</p>
@@ -106,7 +146,253 @@
     </div>
 </main>
 
+{% block extra_css %}
+<style>
+/* Estilos para personalização de cards */
+.draggable-card {
+    transition: all 0.3s ease;
+    cursor: move;
+}
+
+.draggable-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.drag-handle {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 1.2rem;
+    cursor: grab;
+}
+
+.drag-handle:active {
+    cursor: grabbing;
+}
+
+/* Estilos para modo de edição */
+.edit-mode .draggable-card {
+    border: 2px dashed #007bff;
+    background-color: #f8f9fa;
+}
+
+.edit-mode .drag-handle {
+    display: block !important;
+}
+
+.edit-mode .card-body a {
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+/* Estilos para arrastar */
+.sortable-ghost {
+    opacity: 0.4;
+    background: #e3f2fd;
+    border: 2px dashed #2196f3;
+}
+
+.sortable-chosen {
+    transform: rotate(2deg);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+.sortable-drag {
+    transform: rotate(5deg);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.3);
+}
+
+/* Animações */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.dragging {
+    animation: pulse 1s infinite;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .drag-handle {
+        font-size: 1rem;
+        top: 8px;
+        right: 8px;
+    }
+    
+    .edit-mode .draggable-card {
+        border-width: 1px;
+    }
+}
+</style>
+{% endblock %}
+
 {% block extra_js %}
-<!-- JavaScript gerenciado pelo utils.js -->
+<!-- SortableJS CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let sortable;
+    let isEditMode = false;
+    let originalOrder = [];
+    
+    // Elementos
+    const toggleEditBtn = document.getElementById('toggleEditMode');
+    const saveLayoutBtn = document.getElementById('saveLayout');
+    const resetLayoutBtn = document.getElementById('resetLayout');
+    const cardsContainer = document.getElementById('cardsContainer');
+    const cards = document.querySelectorAll('.draggable-card');
+    
+    // Salvar ordem original
+    function saveOriginalOrder() {
+        originalOrder = Array.from(cardsContainer.children).map(card => card.dataset.module);
+    }
+    
+    // Carregar layout salvo
+    function loadSavedLayout() {
+        const savedLayout = localStorage.getItem('webClientCardsLayout');
+        if (savedLayout) {
+            const order = JSON.parse(savedLayout);
+            const container = cardsContainer;
+            
+            // Reordenar os cards conforme o layout salvo
+            order.forEach(moduleName => {
+                const card = container.querySelector(`[data-module="${moduleName}"]`);
+                if (card) {
+                    container.appendChild(card);
+                }
+            });
+        }
+    }
+    
+    // Salvar layout atual
+    function saveCurrentLayout() {
+        const currentOrder = Array.from(cardsContainer.children).map(card => card.dataset.module);
+        localStorage.setItem('webClientCardsLayout', JSON.stringify(currentOrder));
+        
+        // Mostrar feedback
+        showNotification('Layout salvo com sucesso!', 'success');
+    }
+    
+    // Resetar para ordem original
+    function resetToOriginal() {
+        const container = cardsContainer;
+        originalOrder.forEach(moduleName => {
+            const card = container.querySelector(`[data-module="${moduleName}"]`);
+            if (card) {
+                container.appendChild(card);
+            }
+        });
+        
+        // Remover layout salvo
+        localStorage.removeItem('webClientCardsLayout');
+        showNotification('Layout resetado para padrão!', 'info');
+    }
+    
+    // Ativar modo de edição
+    function enableEditMode() {
+        isEditMode = true;
+        cardsContainer.classList.add('edit-mode');
+        
+        // Mostrar/ocultar botões
+        toggleEditBtn.style.display = 'none';
+        saveLayoutBtn.style.display = 'inline-block';
+        resetLayoutBtn.style.display = 'inline-block';
+        
+        // Mostrar handles de arrastar
+        document.querySelectorAll('.drag-handle').forEach(handle => {
+            handle.style.display = 'block';
+        });
+        
+        // Inicializar SortableJS
+        if (!sortable) {
+            sortable = new Sortable(cardsContainer, {
+                animation: 200,
+                ghostClass: 'sortable-ghost',
+                chosenClass: 'sortable-chosen',
+                dragClass: 'sortable-drag',
+                handle: '.drag-handle',
+                onStart: function() {
+                    cardsContainer.classList.add('dragging');
+                },
+                onEnd: function() {
+                    cardsContainer.classList.remove('dragging');
+                }
+            });
+        }
+    }
+    
+    // Desativar modo de edição
+    function disableEditMode() {
+        isEditMode = false;
+        cardsContainer.classList.remove('edit-mode');
+        
+        // Mostrar/ocultar botões
+        toggleEditBtn.style.display = 'inline-block';
+        saveLayoutBtn.style.display = 'none';
+        resetLayoutBtn.style.display = 'none';
+        
+        // Ocultar handles de arrastar
+        document.querySelectorAll('.drag-handle').forEach(handle => {
+            handle.style.display = 'none';
+        });
+        
+        // Destruir SortableJS
+        if (sortable) {
+            sortable.destroy();
+            sortable = null;
+        }
+    }
+    
+    // Mostrar notificação
+    function showNotification(message, type = 'info') {
+        // Criar elemento de notificação
+        const notification = document.createElement('div');
+        notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+        notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+        notification.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Remover após 3 segundos
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.remove();
+            }
+        }, 3000);
+    }
+    
+    // Event listeners
+    toggleEditBtn.addEventListener('click', enableEditMode);
+    saveLayoutBtn.addEventListener('click', function() {
+        saveCurrentLayout();
+        disableEditMode();
+    });
+    resetLayoutBtn.addEventListener('click', function() {
+        if (confirm('Tem certeza que deseja resetar o layout para o padrão?')) {
+            resetToOriginal();
+            disableEditMode();
+        }
+    });
+    
+    // Inicialização
+    saveOriginalOrder();
+    loadSavedLayout();
+    
+    // Prevenir cliques nos links durante o modo de edição
+    cardsContainer.addEventListener('click', function(e) {
+        if (isEditMode && e.target.closest('a')) {
+            e.preventDefault();
+            showNotification('Salve ou cancele as alterações antes de navegar', 'warning');
+        }
+    });
+});
+</script>
 {% endblock %}
 {% endblock %}

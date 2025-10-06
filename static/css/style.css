@@ -1633,9 +1633,10 @@ td:last-child {
 .welcome-header {
     background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
     color: white;
-    padding: 2rem;
+    padding: 1rem 2rem;
     border-radius: 12px;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
+    margin-top: -1.2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -2626,6 +2627,15 @@ td:last-child {
     font-size: 1.8rem;
     margin-bottom: 0.5rem;
     color: #007bff;
+}
+
+.quick-action-card .action-icon i {
+    font-size: 2rem !important;
+}
+
+/* Manter ícones pequenos nos modais */
+.modal .submodule-icon i {
+    font-size: 1.2rem !important;
 }
 
 .quick-action-card h3 {
@@ -5456,5 +5466,798 @@ td:last-child {
     
     .detalhes-perdimento .card-header h6 {
         font-size: 0.9rem;
+    }
+}
+
+/* ======================
+   Estilos para Atualizações do Sistema
+====================== */
+
+.system-update-item {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-left: 4px solid #007bff;
+    transition: all 0.3s ease;
+}
+
+.system-update-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+.update-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.update-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: white;
+    flex-shrink: 0;
+}
+
+.update-icon .fa-star { background: #28a745; }
+.update-icon .fa-bug { background: #ffc107; }
+.update-icon .fa-arrow-up { background: #17a2b8; }
+.update-icon .fa-shield-alt { background: #dc3545; }
+.update-icon .fa-tools { background: #6c757d; }
+
+.update-info {
+    flex: 1;
+}
+
+.update-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+}
+
+.update-meta {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.update-version {
+    background: #e9ecef;
+    color: #495057;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.update-date {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.update-badge {
+    flex-shrink: 0;
+}
+
+.badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.badge-success { background: #d4edda; color: #155724; }
+.badge-warning { background: #fff3cd; color: #856404; }
+.badge-info { background: #d1ecf1; color: #0c5460; }
+.badge-danger { background: #f8d7da; color: #721c24; }
+.badge-secondary { background: #e2e3e5; color: #383d41; }
+
+.update-content {
+    margin-bottom: 1rem;
+}
+
+.update-content p {
+    color: #495057;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.update-footer {
+    border-top: 1px solid #e9ecef;
+    padding-top: 0.75rem;
+}
+
+.update-source {
+    color: #6c757d;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+/* Responsividade para Atualizações do Sistema */
+@media (max-width: 768px) {
+    .update-header {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    
+    .update-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .system-update-item {
+        padding: 1rem;
+    }
+}
+
+/* ======================
+   Estilos para Sistema de Favoritos Modular - 3 Abas
+====================== */
+
+/* Botões do cabeçalho do modal */
+.modal-header .btn-sm {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    min-width: 60px;
+}
+
+.modal-header .d-flex {
+    gap: 0.5rem;
+}
+
+.modal-header .btn-close {
+    margin-left: 0.5rem;
+}
+
+/* Estilos para interface de drag & drop na aba Favoritos */
+.favorites-management {
+    padding: 1rem 0;
+}
+
+.favorites-drag-container {
+    min-height: 200px;
+    padding: 1rem;
+    border: 2px dashed #e9ecef;
+    border-radius: 8px;
+    background: #f8f9fa;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 0.5rem;
+    align-items: start;
+    transition: all 0.3s ease;
+}
+
+/* Estados de drag & drop */
+.favorites-drag-container.dragging {
+    background: linear-gradient(135deg, #f8f9ff 0%, #e3f2fd 100%);
+    border-color: #007bff;
+}
+
+.sortable-ghost {
+    opacity: 0.4;
+    background: #007bff !important;
+    color: white !important;
+}
+
+.sortable-chosen {
+    transform: rotate(5deg);
+    box-shadow: 0 8px 25px rgba(0,123,255,0.3);
+}
+
+.sortable-drag {
+    transform: rotate(5deg);
+    box-shadow: 0 8px 25px rgba(0,123,255,0.3);
+}
+
+.favorites-drag-container:empty::before {
+    content: "Arraste seus favoritos aqui para organizá-los";
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    color: #6c757d;
+    font-style: italic;
+    grid-column: 1 / -1;
+}
+
+/* Modo de edição */
+.favorites-drag-container.edit-mode {
+    border-color: #007bff;
+    background: linear-gradient(135deg, #f8f9ff 0%, #e3f2fd 100%);
+}
+
+.favorites-drag-container.edit-mode .favorite-item {
+    cursor: grab;
+    user-select: none;
+}
+
+.favorites-drag-container.edit-mode .favorite-item:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 12px 30px rgba(0,123,255,0.2);
+}
+
+.favorites-drag-container.edit-mode .favorite-item:active {
+    cursor: grabbing;
+}
+
+.favorite-item {
+    background: white;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    min-height: 80px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.favorite-item:hover {
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    transform: translateY(-3px) scale(1.02);
+}
+
+.favorite-card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 0.75rem 0.5rem;
+    height: 100%;
+    position: relative;
+}
+
+.drag-handle {
+    display: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    align-items: center;
+    justify-content: center;
+    cursor: grab;
+    color: #6c757d;
+    transition: all 0.2s ease;
+}
+
+.drag-handle:hover {
+    background: #e9ecef;
+    color: #495057;
+}
+
+.drag-handle:active {
+    cursor: grabbing;
+}
+
+.favorite-card-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #6c757d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.favorite-card-icon i {
+    color: white;
+}
+
+.favorite-card-info {
+    flex: 1;
+    min-width: 0;
+    margin-bottom: 0.25rem;
+}
+
+.favorite-card-info h6 {
+    margin: 0;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #333;
+    line-height: 1.2;
+}
+
+.favorite-card-actions {
+    position: absolute;
+    top: 0.25rem;
+    right: 0.25rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.favorite-item:hover .favorite-card-actions {
+    opacity: 1;
+}
+
+.favorite-card-badge {
+    position: absolute;
+    top: 0.25rem;
+    left: 0.25rem;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #007bff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.favorite-card-badge i {
+    font-size: 0.6rem;
+    color: white;
+}
+
+/* Estados de drag & drop */
+.favorite-item-ghost {
+    opacity: 0.4;
+    background: #f8f9fa;
+    border: 2px dashed #007bff;
+}
+
+.favorite-item-chosen {
+    transform: rotate(2deg);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+.favorite-item-drag {
+    transform: rotate(5deg);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.3);
+}
+
+/* Diferenciação visual entre módulos e submódulos */
+.main-drag-handle {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    color: white;
+}
+
+.submodule-drag-handle {
+    background: #6c757d;
+    color: white;
+}
+
+/* Todos os ícones no modal de favoritos têm o mesmo tamanho e cor */
+
+/* Layout de favoritos */
+.favorites-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.module-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Card do módulo principal */
+.main-module-card {
+    background: white;
+    border: 2px solid #007bff;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 8px rgba(0,123,255,0.2);
+    position: relative;
+}
+
+.main-module-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.main-module-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,123,255,0.3);
+}
+
+.main-module-icon i {
+    font-size: 2.5rem;
+    color: white;
+}
+
+.main-module-info {
+    flex: 1;
+}
+
+.main-module-info h5 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+
+.main-module-info p {
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.remove-main-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #dc3545;
+    color: white;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.remove-main-btn:hover {
+    background: #c82333;
+    transform: scale(1.1);
+}
+
+/* Container de submódulos */
+.submodules-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-left: 2rem;
+    padding-left: 1rem;
+    border-left: 3px solid #e9ecef;
+}
+
+/* Cards de submódulos */
+.submodule-card {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 1rem;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.submodule-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.submodule-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.submodule-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.submodule-icon i {
+    font-size: 1.2rem;
+    color: #6c757d;
+}
+
+.submodule-info h6 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #495057;
+    margin: 0;
+}
+
+.remove-sub-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #dc3545;
+    color: white;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.7rem;
+    transition: all 0.3s ease;
+}
+
+.remove-sub-btn:hover {
+    background: #c82333;
+    transform: scale(1.1);
+}
+
+/* Layout de personalização */
+.personalize-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.available-module-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Módulo principal disponível */
+.available-main-module {
+    background: white;
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.available-main-module:hover {
+    border-color: #007bff;
+    box-shadow: 0 4px 8px rgba(0,123,255,0.1);
+}
+
+.available-main-module.selected {
+    border-color: #28a745;
+    background: #f8fff9;
+}
+
+.available-main-module .main-module-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.available-main-module .main-module-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6c757d, #495057);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.available-main-module .main-module-icon i {
+    font-size: 2.5rem;
+    color: white;
+}
+
+.available-main-module .main-module-info {
+    flex: 1;
+}
+
+.available-main-module .main-module-info h5 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+
+.available-main-module .main-module-info p {
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.add-main-btn {
+    padding: 0.75rem 1.5rem;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.add-main-btn:hover:not(:disabled) {
+    background: #218838;
+    transform: translateY(-2px);
+}
+
+.add-main-btn:disabled {
+    background: #6c757d;
+    cursor: not-allowed;
+}
+
+/* Submódulos disponíveis */
+.available-submodules {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.75rem;
+    margin-left: 2rem;
+    padding-left: 1rem;
+    border-left: 3px solid #e9ecef;
+}
+
+.available-submodule {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 0.75rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+}
+
+.available-submodule:hover {
+    border-color: #007bff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.available-submodule.selected {
+    border-color: #28a745;
+    background: #f8fff9;
+}
+
+.available-submodule .submodule-content {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.available-submodule .submodule-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.available-submodule .submodule-icon i {
+    font-size: 1rem;
+    color: #6c757d;
+}
+
+.available-submodule .submodule-info h6 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #495057;
+    margin: 0;
+    flex: 1;
+}
+
+.add-sub-btn {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #28a745;
+    color: white;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.7rem;
+    transition: all 0.3s ease;
+}
+
+.add-sub-btn:hover:not(:disabled) {
+    background: #218838;
+    transform: scale(1.1);
+}
+
+.add-sub-btn:disabled {
+    background: #6c757d;
+    cursor: not-allowed;
+}
+
+/* Submódulos órfãos (individuais) */
+.orphan-submodules-title {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #ffc107;
+}
+
+.orphan-submodules-title h6 {
+    margin: 0;
+    color: #856404;
+    font-weight: 600;
+}
+
+.orphan-submodules-title i {
+    margin-right: 0.5rem;
+    color: #ffc107;
+}
+
+.orphan-submodules-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-left: 1rem;
+}
+
+.orphan-submodule {
+    background: #fff3cd !important;
+    border: 1px solid #ffeaa7 !important;
+    border-left: 4px solid #ffc107 !important;
+}
+
+.orphan-submodule:hover {
+    background: #fff8e1 !important;
+    border-color: #ffb300 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(255,193,7,0.2);
+}
+
+.orphan-submodule .submodule-info small {
+    color: #6c757d;
+    font-size: 0.75rem;
+    font-style: italic;
+}
+
+/* Estilos para ícones na tela principal (área de acesso rápido) - todos iguais */
+.quick-actions-grid-main .action-icon {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.quick-actions-grid-main .action-icon i {
+    color: #6c757d !important;
+    font-size: 2rem !important;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .main-module-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .submodules-container {
+        margin-left: 0;
+        padding-left: 0;
+        border-left: none;
+        border-top: 3px solid #e9ecef;
+        padding-top: 1rem;
+    }
+    
+    .available-submodules {
+        margin-left: 0;
+        padding-left: 0;
+        border-left: none;
+        border-top: 3px solid #e9ecef;
+        padding-top: 1rem;
+    }
+    
+    .orphan-submodules-container {
+        margin-left: 0;
+    }
+    
+    .submodule-content {
+        flex-direction: column;
+        text-align: center;
     }
 }
