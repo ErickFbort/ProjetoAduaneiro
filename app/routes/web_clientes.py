@@ -55,6 +55,94 @@ def web_clientes_cadastro_autorizacao():
     """Página de Cadastro de Autorização de Carregamento - Web Cliente"""
     return render_template('web_clientes/cadastro_autorizacao.html', user=current_user)
 
+@web_clientes_bp.route('/web-clientes/autorizacao-carregamento/editar/<int:autorizacao_id>')
+@login_required
+def web_clientes_editar_autorizacao(autorizacao_id):
+    """Página de Edição de Autorização de Carregamento - Web Cliente"""
+    # Aqui você buscaria os dados da autorização no banco de dados
+    # Por enquanto, vamos simular dados de exemplo
+    autorizacao_data = {
+        'id': autorizacao_id,
+        'entidade': '52401444000132 - VANESSA ALINE REBELLO DE OLIVEIRA',
+        'numeroDocumento': 'AUT-2024-001',
+        'data': '2024-01-15',
+        'observacoes': 'Autorização para carregamento de mercadorias importadas',
+        'importador': {
+            'cnpj': '12.345.678/0001-90',
+            'razaoSocial': 'EMPRESA IMPORTADORA LTDA',
+            'documentoLiberatorio': 'DI: 1234567890',
+            'exoneracaoICMS': True,
+            'pagamentoICMS': False
+        },
+        'transportador': {
+            'cnpjCpf': '98.765.432/0001-10',
+            'razaoSocial': 'TRANSPORTADORA EXEMPLO LTDA'
+        },
+        'motoristas': [
+            {'cnh': '12345678901', 'nome': 'João Silva'},
+            {'cnh': '98765432109', 'nome': 'Maria Santos'}
+        ],
+        'representante': {
+            'cpf': '123.456.789-00',
+            'nome': 'Carlos Representante',
+            'rg': '12.345.678-9',
+            'orgaoExpedidor': 'SSP/SP',
+            'dataEmissao': '15/01/2020',
+            'telefone': '(11) 99999-9999',
+            'celular': '(11) 88888-8888',
+            'email': 'carlos@empresa.com'
+        }
+    }
+    
+    return render_template('web_clientes/cadastro_autorizacao.html', 
+                         user=current_user, 
+                         autorizacao_data=autorizacao_data,
+                         modo_edicao=True)
+
+@web_clientes_bp.route('/web-clientes/autorizacao-carregamento/visualizar/<int:autorizacao_id>')
+@login_required
+def web_clientes_visualizar_autorizacao(autorizacao_id):
+    """Página de Visualização de Autorização de Carregamento - Web Cliente"""
+    # Aqui você buscaria os dados da autorização no banco de dados
+    # Por enquanto, vamos simular dados de exemplo
+    autorizacao_data = {
+        'id': autorizacao_id,
+        'entidade': '52401444000132 - VANESSA ALINE REBELLO DE OLIVEIRA',
+        'numeroDocumento': 'AUT-2024-001',
+        'data': '2024-01-15',
+        'observacoes': 'Autorização para carregamento de mercadorias importadas',
+        'importador': {
+            'cnpj': '12.345.678/0001-90',
+            'razaoSocial': 'EMPRESA IMPORTADORA LTDA',
+            'documentoLiberatorio': 'DI: 1234567890',
+            'exoneracaoICMS': True,
+            'pagamentoICMS': False
+        },
+        'transportador': {
+            'cnpjCpf': '98.765.432/0001-10',
+            'razaoSocial': 'TRANSPORTADORA EXEMPLO LTDA'
+        },
+        'motoristas': [
+            {'cnh': '12345678901', 'nome': 'João Silva'},
+            {'cnh': '98765432109', 'nome': 'Maria Santos'}
+        ],
+        'representante': {
+            'cpf': '123.456.789-00',
+            'nome': 'Carlos Representante',
+            'rg': '12.345.678-9',
+            'orgaoExpedidor': 'SSP/SP',
+            'dataEmissao': '15/01/2020',
+            'telefone': '(11) 99999-9999',
+            'celular': '(11) 88888-8888',
+            'email': 'carlos@empresa.com'
+        }
+    }
+    
+    return render_template('web_clientes/cadastro_autorizacao.html', 
+                         user=current_user, 
+                         autorizacao_data=autorizacao_data,
+                         modo_visualizacao=True)
+
 @web_clientes_bp.route('/web-clientes/perdimento')
 @login_required
 def web_clientes_perdimento():

@@ -1587,7 +1587,181 @@ td:last-child {
     .page-header .title-section {
         text-align: left;
     }
+}
+
+/* ======================
+   Layout Selection Modal
+====================== */
+.layout-selection {
+    padding: 1rem 0;
+}
+
+.layout-option {
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    padding: 1rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    background: #fff;
+}
+
+.layout-option:hover {
+    border-color: #007bff;
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.1);
+}
+
+.layout-option.selected {
+    border-color: #007bff;
+    background: #f8f9ff;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15);
+}
+
+.layout-preview {
+    margin-bottom: 1rem;
+}
+
+.preview-header h6 {
+    color: #495057;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.preview-content {
+    background: #f8f9fa;
+    border-radius: 6px;
+    padding: 1rem;
+    margin-top: 0.5rem;
+}
+
+/* Layout 1: Quadrados Separados */
+.preview-sections-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.preview-section {
+    margin-bottom: 0;
+}
+
+.preview-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    background: #e9ecef;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.aereo-section .preview-label {
+    background: #d1ecf1;
+    color: #0c5460;
+}
+
+.maritimo-section .preview-label {
+    background: #d4edda;
+    color: #155724;
+}
+
+.preview-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+}
+
+.preview-card {
+    background: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 0.75rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    color: #495057;
+}
+
+.preview-card i {
+    font-size: 1.25rem;
+    color: #6c757d;
+}
+
+/* Layout 2: Alternável por Abas */
+.preview-current-layout {
+    position: relative;
+}
+
+.preview-nav {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.preview-nav-btn {
+    padding: 0.5rem 1rem;
+    border: 1px solid #dee2e6;
+    background: #fff;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    color: #495057;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.preview-nav-btn.active {
+    background: #007bff;
+    color: #fff;
+    border-color: #007bff;
+}
+
+.preview-favorites-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.layout-actions {
+    text-align: center;
+    padding-top: 1rem;
+    border-top: 1px solid #e9ecef;
+}
+
+/* Responsividade para layout selection */
+@media (max-width: 768px) {
+    .preview-sections-container {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
     
+    .preview-section {
+        margin-bottom: 1rem;
+    }
+    
+    .preview-section:last-child {
+        margin-bottom: 0;
+    }
+    
+    .preview-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .preview-favorites-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .preview-current-layout {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+@media (max-width: 576px) {
     .page-header .header-text h2,
     .page-header .title-section h2 {
         font-size: 1.5rem;

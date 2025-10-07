@@ -270,7 +270,7 @@
             <div class="modal-body">
                 <p class="text-muted mb-4">Gerencie seus favoritos e personalize o acesso rápido do sistema.</p>
                 
-                <!-- Abas para Favoritos, Personalizar e Layout -->
+                <!-- Abas para Favoritos, Pers Aéreo, Pers Marítimo e Layout -->
                 <ul class="nav nav-tabs mb-4" id="favoritesTabs" role="tablist">
                     <li class="nav-item" role="presentation">
                         <button class="nav-link active" id="favorites-tab" data-bs-toggle="tab" data-bs-target="#favorites-pane" type="button" role="tab">
@@ -278,8 +278,13 @@
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="personalize-tab" data-bs-toggle="tab" data-bs-target="#personalize-pane" type="button" role="tab">
-                            <i class="fas fa-cog"></i> Personalizar
+                        <button class="nav-link" id="personalize-aereo-tab" data-bs-toggle="tab" data-bs-target="#personalize-aereo-pane" type="button" role="tab">
+                            <i class="fas fa-plane"></i> Pers Aéreo
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="personalize-maritimo-tab" data-bs-toggle="tab" data-bs-target="#personalize-maritimo-pane" type="button" role="tab">
+                            <i class="fas fa-ship"></i> Pers Marítimo
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
@@ -303,23 +308,147 @@
                                </div>
                            </div>
                     
-                    <!-- Aba Personalizar -->
-                    <div class="tab-pane fade" id="personalize-pane" role="tabpanel">
-                        <div class="personalize-layout" id="personalize-layout">
-                            <!-- Módulos disponíveis para seleção -->
+                    <!-- Aba Pers Aéreo -->
+                    <div class="tab-pane fade" id="personalize-aereo-pane" role="tabpanel">
+                        <div class="personalize-layout" id="personalize-aereo-layout">
+                            <!-- Módulos aéreos disponíveis para seleção -->
+                        </div>
+                    </div>
+                    
+                    <!-- Aba Pers Marítimo -->
+                    <div class="tab-pane fade" id="personalize-maritimo-pane" role="tabpanel">
+                        <div class="personalize-layout" id="personalize-maritimo-layout">
+                            <!-- Módulos marítimos disponíveis para seleção -->
                         </div>
                     </div>
                     
                     <!-- Aba Layout -->
                     <div class="tab-pane fade" id="layout-pane" role="tabpanel">
-                        <div class="layout-placeholder text-center py-5">
-                            <i class="fas fa-th fa-3x text-muted mb-3"></i>
-                            <h5 class="text-muted">Funcionalidade de Layout</h5>
-                            <p class="text-muted">Em breve você poderá personalizar o layout e organização dos seus favoritos.</p>
-                            <div class="progress mt-3" style="height: 6px;">
-                                <div class="progress-bar" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="layout-selection">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h6><i class="fas fa-th"></i> Escolha o Layout dos Favoritos</h6>
+                                <small class="text-muted">Selecione o layout que melhor se adapta ao seu uso</small>
                             </div>
-                            <small class="text-muted mt-2 d-block">Desenvolvimento em andamento...</small>
+                            
+                            <div class="row">
+                                <!-- Layout 1: Quadrados Separados -->
+                                <div class="col-12 mb-4">
+                                    <div class="layout-option" data-layout="quadrados">
+                                        <div class="layout-preview">
+                                            <div class="preview-header">
+                                                <h6>Layout 1: Quadrados Separados</h6>
+                                                <p class="text-muted small">Aéreo e Marítimo em áreas distintas</p>
+                                            </div>
+                                            <div class="preview-content">
+                                                <div class="preview-sections-container">
+                                                    <div class="preview-section aereo-section">
+                                                        <div class="preview-label">Aéreo</div>
+                                                        <div class="preview-grid">
+                                                            <div class="preview-card">
+                                                                <i class="fas fa-file-invoice"></i>
+                                                                <span>Faturamento</span>
+                                                            </div>
+                                                            <div class="preview-card">
+                                                                <i class="fas fa-cube"></i>
+                                                                <span>Processo</span>
+                                                            </div>
+                                                            <div class="preview-card">
+                                                                <i class="fas fa-box"></i>
+                                                                <span>Guias</span>
+                                                            </div>
+                                                            <div class="preview-card">
+                                                                <i class="fas fa-warehouse"></i>
+                                                                <span>Recinto</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="preview-section maritimo-section">
+                                                        <div class="preview-label">Marítimo</div>
+                                                        <div class="preview-grid">
+                                                            <div class="preview-card">
+                                                                <i class="fas fa-ship"></i>
+                                                                <span>SSE/STC</span>
+                                                            </div>
+                                                            <div class="preview-card">
+                                                                <i class="fas fa-user"></i>
+                                                                <span>Usuário</span>
+                                                            </div>
+                                                            <div class="preview-card">
+                                                                <i class="fas fa-globe"></i>
+                                                                <span>Web Clientes</span>
+                                                            </div>
+                                                            <div class="preview-card">
+                                                                <i class="fas fa-warehouse"></i>
+                                                                <span>Armazém</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="layout-actions">
+                                            <button class="btn btn-outline-primary btn-sm" onclick="selectLayout('quadrados')">
+                                                <i class="fas fa-check"></i> Selecionar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Layout 2: Layout Atual com Navegação -->
+                                <div class="col-12 mb-4">
+                                    <div class="layout-option" data-layout="atual">
+                                        <div class="layout-preview">
+                                            <div class="preview-header">
+                                                <h6>Layout 2: Alternável por Abas</h6>
+                                                <p class="text-muted small">Layout atual com navegação entre Aéreo e Marítimo</p>
+                                            </div>
+                                            <div class="preview-content">
+                                                <div class="preview-current-layout">
+                                                    <div class="preview-nav">
+                                                        <button class="preview-nav-btn active">
+                                                            <i class="fas fa-plane"></i> Aéreo
+                                                        </button>
+                                                        <button class="preview-nav-btn">
+                                                            <i class="fas fa-ship"></i> Marítimo
+                                                        </button>
+                                                    </div>
+                                                    <div class="preview-favorites-grid">
+                                                        <div class="preview-card">
+                                                            <i class="fas fa-file-invoice"></i>
+                                                            <span>Faturamento</span>
+                                                        </div>
+                                                        <div class="preview-card">
+                                                            <i class="fas fa-warehouse"></i>
+                                                            <span>Recinto</span>
+                                                        </div>
+                                                        <div class="preview-card">
+                                                            <i class="fas fa-cube"></i>
+                                                            <span>Processo</span>
+                                                        </div>
+                                                        <div class="preview-card">
+                                                            <i class="fas fa-box"></i>
+                                                            <span>Guias</span>
+                                                        </div>
+                                                        <div class="preview-card">
+                                                            <i class="fas fa-globe"></i>
+                                                            <span>Web Clientes</span>
+                                                        </div>
+                                                        <div class="preview-card">
+                                                            <i class="fas fa-ship"></i>
+                                                            <span>SSE/STC</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="layout-actions">
+                                            <button class="btn btn-outline-primary btn-sm" onclick="selectLayout('atual')">
+                                                <i class="fas fa-check"></i> Selecionar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1070,6 +1199,91 @@ let favoriteModules = {
                 description: 'Relatórios operacionais'
             }
         }
+    },
+    
+    // Módulos Marítimos
+    'sse_stc': {
+        name: 'SSE/STC',
+        icon: 'fas fa-ship',
+        url: '#',
+        description: 'Sistema de Segurança e Emergência / Sistema de Tráfego de Cargas',
+        type: 'maritimo_module',
+        submodules: {
+            'sse_controle': {
+                name: 'Controle SSE',
+                icon: 'fas fa-shield-alt',
+                url: '#',
+                description: 'Controle de segurança e emergência'
+            },
+            'stc_operacoes': {
+                name: 'Operações STC',
+                icon: 'fas fa-anchor',
+                url: '#',
+                description: 'Operações do sistema de tráfego'
+            },
+            'emergencia': {
+                name: 'Emergência',
+                icon: 'fas fa-exclamation-triangle',
+                url: '#',
+                description: 'Protocolos de emergência marítima'
+            }
+        }
+    },
+    
+    'armazem_maritimo': {
+        name: 'Armazém Marítimo',
+        icon: 'fas fa-warehouse',
+        url: '#',
+        description: 'Gestão de armazéns portuários',
+        type: 'maritimo_module',
+        submodules: {
+            'estoque': {
+                name: 'Controle de Estoque',
+                icon: 'fas fa-boxes',
+                url: '#',
+                description: 'Controle de estoque portuário'
+            },
+            'movimentacao': {
+                name: 'Movimentação',
+                icon: 'fas fa-dolly',
+                url: '#',
+                description: 'Movimentação de cargas'
+            },
+            'localizacao': {
+                name: 'Localização',
+                icon: 'fas fa-map-marker-alt',
+                url: '#',
+                description: 'Controle de localização de cargas'
+            }
+        }
+    },
+    
+    'trafego_maritimo': {
+        name: 'Tráfego Marítimo',
+        icon: 'fas fa-water',
+        url: '#',
+        description: 'Controle de tráfego marítimo',
+        type: 'maritimo_module',
+        submodules: {
+            'navios': {
+                name: 'Navios',
+                icon: 'fas fa-ship',
+                url: '#',
+                description: 'Controle de navios'
+            },
+            'portos': {
+                name: 'Portos',
+                icon: 'fas fa-anchor',
+                url: '#',
+                description: 'Gestão de portos'
+            },
+            'rotas': {
+                name: 'Rotas',
+                icon: 'fas fa-route',
+                url: '#',
+                description: 'Planejamento de rotas marítimas'
+            }
+        }
     }
 };
 
@@ -1348,8 +1562,10 @@ function renderFavoritesModal() {
     try {
         renderFavoritesLayout();
         console.log('Layout de favoritos renderizado');
-        renderPersonalizeLayout();
-        console.log('Layout de personalização renderizado');
+        renderPersonalizeAereoLayout();
+        console.log('Layout de personalização aéreo renderizado');
+        renderPersonalizeMaritimoLayout();
+        console.log('Layout de personalização marítimo renderizado');
     } catch (error) {
         console.error('Erro ao renderizar modal:', error);
     }
@@ -1451,27 +1667,36 @@ function renderFavoritesLayout() {
             <div class="d-flex flex-column align-items-center justify-content-center text-center py-5" style="min-height: 200px; grid-column: 1 / -1;">
                 <i class="fas fa-star fa-3x text-muted mb-3"></i>
                 <h5 class="text-muted">Nenhum favorito selecionado</h5>
-                <p class="text-muted">Vá para a aba "Personalizar" para adicionar módulos e submódulos aos seus favoritos.</p>
+                <p class="text-muted">Vá para as abas "Pers Aéreo" ou "Pers Marítimo" para adicionar módulos e submódulos aos seus favoritos.</p>
             </div>
         `;
     }
 }
 
-// Renderizar layout de personalização (aba Personalizar)
-function renderPersonalizeLayout() {
-    console.log('Renderizando layout de personalização...');
+// Renderizar layout de personalização aéreo (aba Pers Aéreo)
+function renderPersonalizeAereoLayout() {
+    console.log('Renderizando layout de personalização aéreo...');
+    console.log('currentFavorites na renderização:', currentFavorites);
     
-    const personalizeLayout = document.getElementById('personalize-layout');
+    const personalizeLayout = document.getElementById('personalize-aereo-layout');
     if (!personalizeLayout) {
-        console.error('Elemento personalize-layout não encontrado!');
+        console.error('Elemento personalize-aereo-layout não encontrado!');
         return;
     }
     
     personalizeLayout.innerHTML = '';
     
+    // Filtrar apenas módulos aéreos (não marítimos)
     Object.keys(favoriteModules).forEach(moduleId => {
         const module = favoriteModules[moduleId];
+        
+        // Pular módulos marítimos
+        if (module.type === 'maritimo_module') {
+            return;
+        }
+        
         const isMainModuleSelected = currentFavorites.includes(moduleId);
+        console.log(`Módulo ${moduleId} (${module.name}) está selecionado:`, isMainModuleSelected);
         
         const moduleContainer = document.createElement('div');
         moduleContainer.className = 'available-module-group';
@@ -1499,6 +1724,7 @@ function renderPersonalizeLayout() {
             Object.keys(module.submodules).forEach(subId => {
                 const sub = module.submodules[subId];
                 const isSubmoduleSelected = currentFavorites.includes(subId);
+                console.log(`Submódulo ${subId} (${sub.name}) está selecionado:`, isSubmoduleSelected);
                 
                 moduleHtml += `
                     <div class="available-submodule ${isSubmoduleSelected ? 'selected' : ''}" onclick="addFavorite('${subId}')" style="cursor: pointer;">
@@ -1520,6 +1746,91 @@ function renderPersonalizeLayout() {
         moduleContainer.innerHTML = moduleHtml;
         personalizeLayout.appendChild(moduleContainer);
     });
+}
+
+// Renderizar layout de personalização marítimo (aba Pers Marítimo)
+function renderPersonalizeMaritimoLayout() {
+    console.log('Renderizando layout de personalização marítimo...');
+    
+    const personalizeLayout = document.getElementById('personalize-maritimo-layout');
+    if (!personalizeLayout) {
+        console.error('Elemento personalize-maritimo-layout não encontrado!');
+        return;
+    }
+    
+    personalizeLayout.innerHTML = '';
+    
+    // Filtrar apenas módulos marítimos
+    Object.keys(favoriteModules).forEach(moduleId => {
+        const module = favoriteModules[moduleId];
+        
+        // Pular módulos não marítimos
+        if (module.type !== 'maritimo_module') {
+            return;
+        }
+        
+        const isMainModuleSelected = currentFavorites.includes(moduleId);
+        
+        const moduleContainer = document.createElement('div');
+        moduleContainer.className = 'available-module-group';
+        
+        let moduleHtml = `
+            <div class="available-main-module ${isMainModuleSelected ? 'selected' : ''}">
+                <div class="main-module-content">
+                    <div class="main-module-icon">
+                        <i class="${module.icon}"></i>
+                    </div>
+                    <div class="main-module-info">
+                        <h5>${module.name}</h5>
+                        <p>Módulo Marítimo</p>
+                    </div>
+                    <button class="add-main-btn" onclick="addFavorite('${moduleId}')" data-state="${isMainModuleSelected ? 'remove' : 'add'}">
+                        <i class="fas fa-${isMainModuleSelected ? 'minus' : 'plus'}"></i> ${isMainModuleSelected ? 'Remover' : 'Adicionar'}
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        // Adicionar submódulos
+        if (module.submodules) {
+            moduleHtml += '<div class="available-submodules">';
+            Object.keys(module.submodules).forEach(subId => {
+                const sub = module.submodules[subId];
+                const isSubmoduleSelected = currentFavorites.includes(subId);
+                console.log(`Submódulo ${subId} (${sub.name}) está selecionado:`, isSubmoduleSelected);
+                
+                moduleHtml += `
+                    <div class="available-submodule ${isSubmoduleSelected ? 'selected' : ''}" onclick="addFavorite('${subId}')" style="cursor: pointer;">
+                        <div class="submodule-content">
+                            <div class="submodule-icon">
+                                <i class="${sub.icon}"></i>
+                            </div>
+                            <div class="submodule-info">
+                                <h6>${sub.name}</h6>
+                                <small class="text-muted">de ${module.name}</small>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            moduleHtml += '</div>';
+        }
+        
+        moduleContainer.innerHTML = moduleHtml;
+        personalizeLayout.appendChild(moduleContainer);
+    });
+}
+
+// Função para selecionar layout (apenas para exibição)
+function selectLayout(layoutType) {
+    // Atualizar visual dos botões
+    document.querySelectorAll('.layout-option').forEach(option => {
+        option.classList.remove('selected');
+    });
+    
+    document.querySelector(`[data-layout="${layoutType}"]`).classList.add('selected');
+    
+    showNotification(`Layout ${layoutType === 'quadrados' ? 'Quadrados Separados' : 'Alternável por Abas'} selecionado!`, 'success');
 }
 
 // Função para mostrar notificações
@@ -1588,16 +1899,25 @@ function cancelFavorites() {
 
 // Adicionar/Remover favorito (toggle)
 function addFavorite(moduleId) {
+    console.log('addFavorite chamada para:', moduleId);
+    console.log('currentFavorites antes:', currentFavorites);
+    
     const index = currentFavorites.indexOf(moduleId);
     if (index === -1) {
         // Se não está nos favoritos, adicionar
         currentFavorites.push(moduleId);
+        console.log('Adicionado aos favoritos');
     } else {
         // Se já está nos favoritos, remover
         currentFavorites.splice(index, 1);
+        console.log('Removido dos favoritos');
     }
+    
+    console.log('currentFavorites depois:', currentFavorites);
+    
     renderFavoritesLayout();
-    renderPersonalizeLayout();
+    renderPersonalizeAereoLayout();
+    renderPersonalizeMaritimoLayout();
 }
 
 // Remover favorito
@@ -1606,7 +1926,8 @@ function removeFavorite(moduleId) {
     if (index > -1) {
         currentFavorites.splice(index, 1);
         renderFavoritesLayout();
-        renderPersonalizeLayout();
+        renderPersonalizeAereoLayout();
+        renderPersonalizeMaritimoLayout();
     }
 }
 

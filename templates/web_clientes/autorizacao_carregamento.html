@@ -10,21 +10,21 @@
 <main class="content main-content--shifted">
     <div class="content-section active">
         <div class="container-fluid">
-            <!-- Header da página -->
+            <!-- Cabeçalho da Página -->
             <div class="page-header">
                 <div class="header-content">
-                    <div class="d-flex align-items-center">
+                    <div class="header-title d-flex align-items-center">
                         <i class="fas fa-check-circle fa-2x text-white me-3"></i>
-                        <div class="header-text">
-                            <h2>Autorização de Carregamento</h2>
-                            <p class="page-subtitle">Gerencie autorizações de carregamento</p>
+                        <div>
+                            <h2 class="mb-0">Autorização de Carregamento</h2>
+                            <p class="header-subtitle mb-0">Gerencie autorizações de carregamento</p>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Barra de Pesquisa e Filtros -->
-            <div class="search-section">
+            <div class="search-section" id="search-section">
                 <div class="search-input-group">
                     <form method="GET" class="search-form">
                         <div class="input-group">
@@ -138,7 +138,7 @@
             </div>
 
             <!-- Tabela de Autorizações -->
-            <div class="table-container">
+            <div class="table-container" id="table-section">
                 <div class="table-responsive">
                     <table class="table table-hover processos-table" id="autorizacoesTable">
                         <thead class="table-header">
@@ -155,7 +155,7 @@
                         </thead>
                         <tbody id="autorizacoesTableBody">
                             <!-- Dados simulados baseados na imagem -->
-                            <tr>
+                            <tr data-id="1">
                                 <td>52.401.444/0001-32 - VALINE CONSULTORIA</td>
                                 <td>2025.66104</td>
                                 <td>14/08/2025</td>
@@ -266,7 +266,7 @@
             </div>
 
             <!-- Paginação -->
-            <nav aria-label="Navegação de páginas" class="mt-4">
+            <nav aria-label="Navegação de páginas" class="mt-4" id="pagination-section">
                 <ul class="pagination justify-content-center" id="pagination">
                     <!-- Paginação será gerada via JavaScript -->
                 </ul>
@@ -499,13 +499,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // Event listeners para botões de ação da tabela
     tbody.addEventListener('click', function(e) {
         if (e.target.closest('.btn-outline-primary')) {
-            // Editar autorização
-            const modal = new bootstrap.Modal(document.getElementById('autorizacaoModal'));
-            modal.show();
+            // Editar autorização - redirecionar para página de edição
+            const row = e.target.closest('tr');
+            const autorizacaoId = row.getAttribute('data-id') || 1; // ID da autorização (simulado)
+            window.location.href = `/web-clientes/autorizacao-carregamento/editar/${autorizacaoId}`;
         } else if (e.target.closest('.btn-outline-info')) {
-            // Visualizar autorização
-            const modal = new bootstrap.Modal(document.getElementById('autorizacaoModal'));
-            modal.show();
+            // Visualizar autorização - redirecionar para página de visualização
+            const row = e.target.closest('tr');
+            const autorizacaoId = row.getAttribute('data-id') || 1; // ID da autorização (simulado)
+            window.location.href = `/web-clientes/autorizacao-carregamento/visualizar/${autorizacaoId}`;
         }
     });
     
@@ -557,6 +559,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('searchInput').value = '';
         clearAdvancedFilters();
     });
+    
 });
 
 // Função para alternar filtros avançados
