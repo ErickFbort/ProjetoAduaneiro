@@ -1634,6 +1634,146 @@ td:last-child {
 }
 
 /* Layout 1: Quadrados Separados */
+.quadrados-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 1rem;
+}
+
+.quadrado-section {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 2px solid #e9ecef;
+    transition: all 0.3s ease;
+}
+
+.quadrado-section:hover {
+    border-color: #007bff;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.1);
+}
+
+.quadrado-section.aereo-section {
+    border-left: 4px solid #1e40af; /* Azul escuro para Aéreo */
+}
+
+.quadrado-section.maritimo-section {
+    border-left: 4px solid #17a2b8;
+}
+
+.quadrado-section .section-header {
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.quadrado-section .section-header h3 {
+    color: #495057;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.quadrado-section .section-header i {
+    font-size: 1.5rem;
+}
+
+.aereo-section .section-header i {
+    color: #1e40af; /* Azul escuro para Aéreo */
+}
+
+.maritimo-section .section-header i {
+    color: #17a2b8;
+}
+
+.section-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.quadrado-card {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+.quadrado-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    border-color: #007bff;
+}
+
+.quadrado-card .card-icon {
+    margin-bottom: 1rem;
+    color: #007bff;
+}
+
+/* Cores específicas para ícones das seções */
+.aereo-section .quadrado-card .card-icon {
+    color: #1e40af; /* Azul mais escuro para Aéreo */
+}
+
+.maritimo-section .quadrado-card .card-icon {
+    color: #3b82f6; /* Azul mais claro para Marítimo */
+}
+
+.quadrado-card .card-content h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #495057;
+    margin: 0 0 0.5rem 0;
+}
+
+.quadrado-card .card-content p {
+    font-size: 0.875rem;
+    color: #6c757d;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.quadrado-card .card-badge {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    color: #ffc107;
+    font-size: 0.875rem;
+}
+
+/* Responsividade para layout quadrados */
+@media (max-width: 768px) {
+    .quadrados-layout {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .section-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 0.75rem;
+    }
+    
+    .quadrado-card {
+        padding: 1rem;
+    }
+    
+    .quadrado-card .card-content h4 {
+        font-size: 0.875rem;
+    }
+    
+    .quadrado-card .card-content p {
+        font-size: 0.75rem;
+    }
+}
 .preview-sections-container {
     display: grid;
     grid-template-columns: 1fr 1fr;

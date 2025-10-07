@@ -1319,13 +1319,27 @@ function loadFavorites() {
             currentFavorites = validFavorites;
         }
     }
-    renderFavorites();
+    
+    // Carregar layout salvo
+    const savedLayout = localStorage.getItem('dashboard_layout');
+    if (savedLayout) {
+        applyLayout(savedLayout);
+    } else {
+        renderFavorites();
+    }
 }
 
 // Salvar favoritos
 function saveFavorites() {
     localStorage.setItem('dashboard_favorites', JSON.stringify(currentFavorites));
-    renderFavorites();
+    
+    // Aplicar layout salvo
+    const savedLayout = localStorage.getItem('dashboard_layout');
+    if (savedLayout) {
+        applyLayout(savedLayout);
+    } else {
+        renderFavorites();
+    }
     
     // Fechar modal usando a instância global
     if (favoritesModalInstance) {
@@ -1566,6 +1580,18 @@ function renderFavoritesModal() {
         console.log('Layout de personalização aéreo renderizado');
         renderPersonalizeMaritimoLayout();
         console.log('Layout de personalização marítimo renderizado');
+        
+        // Marcar layout selecionado
+        const savedLayout = localStorage.getItem('dashboard_layout');
+        if (savedLayout) {
+            document.querySelectorAll('.layout-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            const selectedOption = document.querySelector(`[data-layout="${savedLayout}"]`);
+            if (selectedOption) {
+                selectedOption.classList.add('selected');
+            }
+        }
     } catch (error) {
         console.error('Erro ao renderizar modal:', error);
     }
@@ -1821,7 +1847,7 @@ function renderPersonalizeMaritimoLayout() {
     });
 }
 
-// Função para selecionar layout (apenas para exibição)
+// Função para selecionar layout
 function selectLayout(layoutType) {
     // Atualizar visual dos botões
     document.querySelectorAll('.layout-option').forEach(option => {
@@ -1830,7 +1856,130 @@ function selectLayout(layoutType) {
     
     document.querySelector(`[data-layout="${layoutType}"]`).classList.add('selected');
     
+    // Salvar layout selecionado no localStorage
+    localStorage.setItem('dashboard_layout', layoutType);
+    
+    // Aplicar layout selecionado
+    applyLayout(layoutType);
+    
     showNotification(`Layout ${layoutType === 'quadrados' ? 'Quadrados Separados' : 'Alternável por Abas'} selecionado!`, 'success');
+}
+
+// Função para aplicar o layout selecionado
+function applyLayout(layoutType) {
+    const container = document.getElementById('favorite-actions');
+    if (!container) return;
+    
+    if (layoutType === 'quadrados') {
+        // Aplicar layout de quadrados separados
+        container.className = 'quick-actions-grid-main layout-quadrados';
+        renderQuadradosLayout();
+    } else {
+        // Aplicar layout padrão (atual)
+        container.className = 'quick-actions-grid-main';
+        renderFavorites();
+    }
+}
+
+// Função para renderizar layout de quadrados separados
+function renderQuadradosLayout() {
+    const container = document.getElementById('favorite-actions');
+    container.innerHTML = '';
+    
+    // Separar favoritos por tipo (aéreo/marítimo)
+    const aereoFavorites = [];
+    const maritimoFavorites = [];
+    
+    currentFavorites.forEach((favId) => {
+        let module = null;
+        let isSubmodule = false;
+        
+        // Verificar se é um módulo principal
+        if (favoriteModules[favId]) {
+            module = favoriteModules[favId];
+        } else {
+            // Se não for módulo principal, procurar nos submódulos
+            Object.keys(favoriteModules).forEach(moduleId => {
+                const mainModule = favoriteModules[moduleId];
+                if (mainModule.submodules && mainModule.submodules[favId]) {
+                    module = mainModule.submodules[favId];
+                    isSubmodule = true;
+                }
+            });
+        }
+        
+        if (module && module.icon) {
+            if (isSubmodule) {
+                // Determinar se é aéreo ou marítimo baseado no módulo pai
+                const parentModule = Object.keys(favoriteModules).find(moduleId => 
+                    favoriteModules[moduleId].submodules && 
+                    favoriteModules[moduleId].submodules[favId]
+                );
+                
+                if (parentModule && favoriteModules[parentModule].type === 'maritimo_module') {
+                    maritimoFavorites.push({ id: favId, module, isSubmodule });
+                } else {
+                    aereoFavorites.push({ id: favId, module, isSubmodule });
+                }
+            } else {
+                // Módulo principal
+                if (module.type === 'maritimo_module') {
+                    maritimoFavorites.push({ id: favId, module, isSubmodule });
+                } else {
+                    aereoFavorites.push({ id: favId, module, isSubmodule });
+                }
+            }
+        }
+    });
+    
+    // Criar estrutura de quadrados separados
+    const layoutHTML = `
+        <div class="quadrados-layout">
+            <!-- Seção Aéreo -->
+            <div class="quadrado-section aereo-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-plane"></i> Aéreo</h3>
+                </div>
+                <div class="section-grid" id="aereo-grid">
+                    ${aereoFavorites.map((fav, index) => createQuadradoCard(fav, index)).join('')}
+                </div>
+            </div>
+            
+            <!-- Seção Marítimo -->
+            <div class="quadrado-section maritimo-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-ship"></i> Marítimo</h3>
+                </div>
+                <div class="section-grid" id="maritimo-grid">
+                    ${maritimoFavorites.map((fav, index) => createQuadradoCard(fav, index)).join('')}
+                </div>
+            </div>
+        </div>
+    `;
+    
+    container.innerHTML = layoutHTML;
+}
+
+// Função para criar card do quadrado
+function createQuadradoCard(fav, index) {
+    const { id, module } = fav;
+    
+    return `
+        <div class="quadrado-card animate-on-scroll scale-in delay-${index + 2}" 
+             data-module="${id}" 
+             onclick="window.location.href='${module.url}'">
+            <div class="card-icon">
+                <i class="${module.icon} fa-2x"></i>
+            </div>
+            <div class="card-content">
+                <h4>${module.name}</h4>
+                <p>${module.description}</p>
+            </div>
+            <div class="card-badge">
+                <i class="fas fa-star"></i>
+            </div>
+        </div>
+    `;
 }
 
 // Função para mostrar notificações
@@ -1874,8 +2023,13 @@ function updateFavoritesOrder() {
         item.setAttribute('data-index', index);
     });
     
-    // Atualizar a área de acesso rápido
-    renderFavorites();
+    // Aplicar layout salvo
+    const savedLayout = localStorage.getItem('dashboard_layout');
+    if (savedLayout) {
+        applyLayout(savedLayout);
+    } else {
+        renderFavorites();
+    }
     
     console.log('Ordem salva automaticamente:', currentFavorites);
 }
@@ -1915,6 +2069,17 @@ function addFavorite(moduleId) {
     
     console.log('currentFavorites depois:', currentFavorites);
     
+    // Salvar favoritos atualizados
+    localStorage.setItem('dashboard_favorites', JSON.stringify(currentFavorites));
+    
+    // Aplicar layout salvo na área principal
+    const savedLayout = localStorage.getItem('dashboard_layout');
+    if (savedLayout) {
+        applyLayout(savedLayout);
+    } else {
+        renderFavorites();
+    }
+    
     renderFavoritesLayout();
     renderPersonalizeAereoLayout();
     renderPersonalizeMaritimoLayout();
@@ -1925,6 +2090,18 @@ function removeFavorite(moduleId) {
     const index = currentFavorites.indexOf(moduleId);
     if (index > -1) {
         currentFavorites.splice(index, 1);
+        
+        // Salvar favoritos atualizados
+        localStorage.setItem('dashboard_favorites', JSON.stringify(currentFavorites));
+        
+        // Aplicar layout salvo na área principal
+        const savedLayout = localStorage.getItem('dashboard_layout');
+        if (savedLayout) {
+            applyLayout(savedLayout);
+        } else {
+            renderFavorites();
+        }
+        
         renderFavoritesLayout();
         renderPersonalizeAereoLayout();
         renderPersonalizeMaritimoLayout();
