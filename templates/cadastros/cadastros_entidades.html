@@ -25,27 +25,28 @@
 
             <div id="entidade-list-view">
                 <!-- Barra de Pesquisa e Filtros -->
-                <div class="search-input-group">
-                    <form method="GET" class="search-form">
-                        <div class="input-group">
-                            <input type="text" class="form-control search-input" name="search" placeholder="Buscar por razão social, nome fantasia, CPF/CNPJ ou email..." value="{{ search }}">
-                            <button class="btn btn-primary search-btn" type="submit">
-                                <i class="fas fa-search"></i>
-                            </button>
-                            {% if search %}
-                            <a href="{{ url_for('cadastros.cadastros_entidades') }}" class="btn btn-outline-secondary clear-btn">
-                                <i class="fas fa-times"></i>
-                            </a>
-                            {% endif %}
-                        </div>
-                    </form>
-                    <button class="btn btn-outline-info filter-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#advancedFilters" aria-expanded="false">
-                        <i class="fas fa-filter"></i> Filtros Avançados
-                    </button>
-                    <button id="add-entidade-btn" class="btn btn-success">
-                        <i class="fas fa-plus"></i> Adicionar Entidade
-                    </button>
-                </div>
+                <div class="search-section">
+                    <div class="search-input-group">
+                        <form method="GET" class="search-form">
+                            <div class="input-group">
+                                <input type="text" class="form-control search-input" name="search" placeholder="Buscar por razão social, nome fantasia, CPF/CNPJ ou email..." value="{{ search }}">
+                                <button class="btn btn-primary search-btn" type="submit">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </form>
+                        {% if search %}
+                        <a href="{{ url_for('cadastros.cadastros_entidades') }}" class="btn btn-outline-secondary clear-btn">
+                            <i class="fas fa-times"></i>
+                        </a>
+                        {% endif %}
+                        <button class="btn btn-outline-info filter-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#advancedFilters" aria-expanded="false">
+                            <i class="fas fa-filter"></i> Filtros Avançados
+                        </button>
+                        <button id="add-entidade-btn" class="btn btn-success">
+                            <i class="fas fa-plus"></i> Adicionar Entidade
+                        </button>
+                    </div>
 
                 <!-- Filtros Avançados -->
                 <div class="collapse" id="advancedFilters">

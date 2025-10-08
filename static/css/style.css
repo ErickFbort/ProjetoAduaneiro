@@ -4650,6 +4650,309 @@ td:last-child {
 }
 
 /* ========================================
+   TELA DE ACOMPANHAMENTO DESPACHANTE - WEB CLIENTE
+   ======================================== */
+
+.acompanhamento-table {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    font-size: 0.85rem;
+}
+
+.acompanhamento-table thead {
+    background: #000000 !important;
+}
+
+.acompanhamento-table thead tr {
+    background: #000000 !important;
+}
+
+.acompanhamento-table thead th {
+    background: #000000 !important;
+    color: white !important;
+    border: none !important;
+    font-weight: 600;
+    text-align: center;
+    padding: 1rem 0.5rem;
+    border-bottom: 2px solid #000000 !important;
+}
+
+.acompanhamento-table .table-header {
+    background: #000000 !important;
+    color: white !important;
+}
+
+.acompanhamento-table .table-header th {
+    background: #000000 !important;
+    color: white !important;
+    border: none !important;
+    font-weight: 600;
+    text-align: center;
+    padding: 1rem 0.5rem;
+    vertical-align: middle;
+}
+
+.acompanhamento-table .processo-row {
+    transition: all 0.3s ease;
+}
+
+.acompanhamento-table .processo-row:hover {
+    background-color: rgba(0, 123, 255, 0.05);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.acompanhamento-table .processo-row td {
+    padding: 0.75rem 0.5rem;
+    vertical-align: middle;
+    border-bottom: 1px solid #dee2e6;
+    font-size: 0.8rem;
+}
+
+.acompanhamento-table .small {
+    font-size: 0.75rem !important;
+}
+
+/* Botões de ação diretos na tabela de acompanhamento */
+.acompanhamento-table .btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    line-height: 1.2;
+    border-radius: 0.25rem;
+}
+
+.acompanhamento-table .btn-sm i {
+    font-size: 0.75rem;
+}
+
+/* Container dos botões de ação */
+.acompanhamento-table .d-flex.gap-1 {
+    gap: 0.5rem !important;
+    justify-content: center;
+    padding: 0.5rem;
+}
+
+/* Badges para tipo de operação */
+.acompanhamento-table .badge {
+    font-size: 0.7rem;
+    padding: 0.4rem 0.6rem;
+    border-radius: 0.25rem;
+}
+
+.acompanhamento-table .badge.bg-primary {
+    background-color: #007bff !important;
+}
+
+.acompanhamento-table .badge.bg-success {
+    background-color: #28a745 !important;
+}
+
+/* Célula de ações com padding adicional */
+.acompanhamento-table td:last-child {
+    padding: 0.75rem 1rem !important;
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* Responsividade da tabela de acompanhamento */
+@media (max-width: 1200px) {
+    .acompanhamento-table {
+        font-size: 0.75rem;
+    }
+    
+    .acompanhamento-table th,
+    .acompanhamento-table td {
+        padding: 0.5rem 0.25rem;
+    }
+    
+    .acompanhamento-table .btn-sm {
+        padding: 0.2rem 0.4rem;
+        font-size: 0.7rem;
+    }
+    
+    .acompanhamento-table .btn-sm i {
+        font-size: 0.7rem;
+    }
+    
+    .acompanhamento-table td:last-child {
+        padding: 0.5rem 0.75rem !important;
+    }
+    
+    .acompanhamento-table .d-flex.gap-1 {
+        gap: 0.4rem !important;
+        padding: 0.25rem;
+    }
+}
+
+/* ========================================
+   PADRONIZAÇÃO GLOBAL DA BARRA DE PESQUISA
+   ======================================== */
+
+/* Container da barra de pesquisa com flexbox - APLICADO GLOBALMENTE */
+.search-section .search-input-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+/* Garantir que o input-group tenha altura consistente - APLICADO GLOBALMENTE */
+.search-section .input-group {
+    display: flex;
+    align-items: stretch;
+    height: 48px; /* Altura fixa para garantir consistência */
+    flex: 1; /* Ocupa o espaço disponível */
+    min-width: 300px; /* Largura mínima para responsividade */
+}
+
+/* Campo de pesquisa com altura consistente - APLICADO GLOBALMENTE */
+.search-section .search-input {
+    height: 48px !important;
+    border-radius: 8px 0 0 8px !important;
+    border: 2px solid #e9ecef !important;
+    border-right: none !important;
+    padding: 0.75rem 1rem !important;
+    font-size: 1rem !important;
+    line-height: 1.5 !important;
+    box-sizing: border-box !important;
+    transition: all 0.3s ease !important;
+}
+
+/* Botão de pesquisa com altura consistente - APLICADO GLOBALMENTE */
+.search-section .search-btn {
+    height: 48px !important;
+    border-radius: 0 8px 8px 0 !important;
+    border: 2px solid #667eea !important;
+    border-left: none !important;
+    padding: 0.75rem 1rem !important;
+    font-size: 1rem !important;
+    line-height: 1.5 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-sizing: border-box !important;
+    background: #667eea !important;
+    color: white !important;
+    transition: all 0.3s ease !important;
+    font-weight: 600 !important;
+}
+
+/* Botão de limpar com altura consistente - APLICADO GLOBALMENTE */
+.search-section .clear-btn {
+    height: 48px !important;
+    border-radius: 8px !important;
+    padding: 0.75rem 1rem !important;
+    font-size: 1rem !important;
+    line-height: 1.5 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-sizing: border-box !important;
+    border: 2px solid #6c757d !important;
+    color: #6c757d !important;
+    background: white !important;
+    transition: all 0.3s ease !important;
+    white-space: nowrap !important;
+    text-decoration: none !important;
+}
+
+/* Foco no campo de pesquisa - APLICADO GLOBALMENTE */
+.search-section .search-input:focus {
+    border-color: #667eea !important;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25) !important;
+    outline: none !important;
+}
+
+/* Hover no botão de pesquisa - APLICADO GLOBALMENTE */
+.search-section .search-btn:hover {
+    background: #5a6fd8 !important;
+    border-color: #5a6fd8 !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3) !important;
+    color: white !important;
+}
+
+/* Hover no botão de limpar - APLICADO GLOBALMENTE */
+.search-section .clear-btn:hover {
+    background: #6c757d !important;
+    color: white !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3) !important;
+    text-decoration: none !important;
+}
+
+/* Botões adicionais na barra de pesquisa (Filtros, Adicionar, etc.) */
+.search-section .filter-toggle,
+.search-section .btn-success {
+    height: 48px !important;
+    padding: 0.75rem 1rem !important;
+    font-size: 1rem !important;
+    line-height: 1.5 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-sizing: border-box !important;
+    white-space: nowrap !important;
+    transition: all 0.3s ease !important;
+}
+
+/* Hover nos botões adicionais */
+.search-section .filter-toggle:hover,
+.search-section .btn-success:hover {
+    transform: translateY(-1px) !important;
+}
+
+/* Responsividade para a barra de pesquisa - APLICADO GLOBALMENTE */
+@media (max-width: 768px) {
+    .search-section .search-input-group {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .search-section .input-group {
+        flex-direction: column;
+        height: auto;
+        flex: none;
+        min-width: 100%;
+    }
+    
+    .search-section .search-input,
+    .search-section .search-btn,
+    .search-section .clear-btn,
+    .search-section .filter-toggle,
+    .search-section .btn-success {
+        height: 48px !important;
+        border-radius: 8px !important;
+        margin-left: 0 !important;
+        margin-top: 0 !important;
+        width: 100% !important;
+    }
+    
+    .search-section .search-input {
+        border-right: 2px solid #e9ecef !important;
+        border-bottom: none !important;
+    }
+    
+    .search-section .search-btn {
+        border-left: 2px solid #667eea !important;
+        border-top: none !important;
+    }
+}
+
+/* Responsividade para tablets */
+@media (max-width: 992px) and (min-width: 769px) {
+    .search-section .search-input-group {
+        flex-wrap: wrap;
+    }
+    
+    .search-section .input-group {
+        min-width: 250px;
+    }
+}
+
+/* ========================================
    MODAL DE RELATÓRIOS
    ======================================== */
 
@@ -5968,6 +6271,72 @@ td:last-child {
 .sortable-drag {
     transform: rotate(5deg);
     box-shadow: 0 8px 25px rgba(0,123,255,0.3);
+}
+
+/* Estilos específicos para drag and drop com categorias */
+.dragging-aereo {
+    border: 2px solid #28a745 !important;
+    background: rgba(40, 167, 69, 0.1) !important;
+}
+
+.dragging-maritimo {
+    border: 2px solid #007bff !important;
+    background: rgba(0, 123, 255, 0.1) !important;
+}
+
+/* Indicadores visuais para categorias durante drag */
+.preview-grid[data-category="aereo"] {
+    border: 2px dashed #28a745;
+    background: rgba(40, 167, 69, 0.05);
+    transition: all 0.3s ease;
+}
+
+.preview-grid[data-category="maritimo"] {
+    border: 2px dashed #007bff;
+    background: rgba(0, 123, 255, 0.05);
+    transition: all 0.3s ease;
+}
+
+/* Efeito hover para indicar área de drop válida */
+.preview-grid.drag-over {
+    border-style: solid !important;
+    background: rgba(0, 123, 255, 0.1) !important;
+    transform: scale(1.02);
+}
+
+/* Estilos para preview cards arrastáveis */
+.preview-card {
+    cursor: grab;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.preview-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.preview-card:active {
+    cursor: grabbing;
+}
+
+/* Indicador de categoria no card */
+.preview-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    border-radius: 2px 0 0 2px;
+}
+
+.preview-card[data-category="aereo"]::before {
+    background: #28a745;
+}
+
+.preview-card[data-category="maritimo"]::before {
+    background: #007bff;
 }
 
 .favorites-drag-container:empty::before {

@@ -1764,7 +1764,13 @@ function openFavoritesModal() {
 // Renderizar modal de favoritos
 function renderFavoritesModal() {
     console.log('Iniciando renderização do modal...');
+    console.log('Favoritos atuais antes da renderização:', currentFavorites);
+    
     try {
+        // Recarregar favoritos do localStorage para garantir consistência
+        loadFavorites();
+        console.log('Favoritos recarregados:', currentFavorites);
+        
         renderFavoritesLayout();
         console.log('Layout de favoritos renderizado');
         renderPersonalizeAereoLayout();
@@ -1892,6 +1898,7 @@ function renderFavoritesLayoutNormal(container) {
 // Renderizar layout de quadrados separados na aba de favoritos
 function renderFavoritesLayoutQuadrados(container) {
     console.log('Renderizando preview layout quadrados...');
+    console.log('Favoritos atuais:', currentFavorites);
     
     // Separar favoritos por tipo
     const aereoFavorites = [];
@@ -1925,6 +1932,9 @@ function renderFavoritesLayoutQuadrados(container) {
         }
     });
     
+    console.log('Favoritos aéreos encontrados:', aereoFavorites.length);
+    console.log('Favoritos marítimos encontrados:', maritimoFavorites.length);
+    
     // Criar seção Aéreo
     const aereoSection = document.createElement('div');
     aereoSection.className = 'preview-section aereo-section';
@@ -1945,17 +1955,31 @@ function renderFavoritesLayoutQuadrados(container) {
     
     // Renderizar favoritos aéreos
     const aereoGrid = document.getElementById('preview-aereo-grid');
-    aereoFavorites.forEach(({ id, module }) => {
-        const card = createPreviewCard(id, module, 'aereo');
-        aereoGrid.appendChild(card);
-    });
+    if (aereoGrid) {
+        aereoFavorites.forEach(({ id, module }) => {
+            const card = createPreviewCard(id, module, 'aereo');
+            aereoGrid.appendChild(card);
+            console.log(`Card aéreo renderizado: ${module.name}`);
+        });
+    }
     
     // Renderizar favoritos marítimos
     const maritimoGrid = document.getElementById('preview-maritimo-grid');
-    maritimoFavorites.forEach(({ id, module }) => {
-        const card = createPreviewCard(id, module, 'maritimo');
-        maritimoGrid.appendChild(card);
-    });
+    if (maritimoGrid) {
+        maritimoFavorites.forEach(({ id, module }) => {
+            const card = createPreviewCard(id, module, 'maritimo');
+            maritimoGrid.appendChild(card);
+            console.log(`Card marítimo renderizado: ${module.name}`);
+        });
+    }
+    
+    // Inicializar SortableJS para ambos os grids com restrições de categoria
+    if (aereoGrid) {
+        initializeSortableWithCategory(aereoGrid, 'aereo');
+    }
+    if (maritimoGrid) {
+        initializeSortableWithCategory(maritimoGrid, 'maritimo');
+    }
 }
 
 // Renderizar layout com abas na aba de favoritos
@@ -1990,6 +2014,7 @@ function createPreviewCard(favId, module, type) {
     const card = document.createElement('div');
     card.className = 'preview-card';
     card.setAttribute('data-favorite-id', favId);
+    card.setAttribute('data-category', type);
     
     card.innerHTML = `
         <i class="${module.icon}"></i>
@@ -2027,18 +2052,82 @@ function initializeSortable(container) {
     }
 }
 
+// Função auxiliar para inicializar SortableJS com restrições de categoria
+function initializeSortableWithCategory(container, category) {
+    if (typeof Sortable !== 'undefined') {
+        console.log(`Inicializando SortableJS para categoria: ${category}`);
+        
+        // Destruir instância anterior se existir
+        if (container.sortableInstance) {
+            container.sortableInstance.destroy();
+        }
+        
+        const sortable = new Sortable(container, {
+            animation: 200,
+            ghostClass: 'sortable-ghost',
+            chosenClass: 'sortable-chosen',
+            dragClass: 'sortable-drag',
+            group: category, // Restringir drag and drop apenas dentro da mesma categoria
+            onStart: function(evt) {
+                console.log(`Drag iniciado na categoria: ${category}`);
+                container.classList.add('dragging');
+                
+                // Adicionar indicador visual de categoria
+                evt.item.classList.add(`dragging-${category}`);
+            },
+            onEnd: function(evt) {
+                console.log(`Drag finalizado na categoria: ${category}`);
+                container.classList.remove('dragging');
+                evt.item.classList.remove(`dragging-${category}`);
+                
+                // Atualizar ordem apenas para a categoria específica
+                updateFavoritesOrderByCategory(category);
+            },
+            onMove: function(evt) {
+                // Verificar se o item está sendo movido para a categoria correta
+                const targetCategory = evt.to ? (evt.to.getAttribute('data-category') || category) : category;
+                const itemCategory = evt.item ? (evt.item.getAttribute('data-category') || category) : category;
+                
+                // Permitir movimento apenas dentro da mesma categoria
+                return targetCategory === itemCategory;
+            }
+        });
+        
+        // Armazenar referência da instância
+        container.sortableInstance = sortable;
+        container.setAttribute('data-category', category);
+        
+        console.log(`SortableJS inicializado para categoria ${category}:`, sortable);
+    } else {
+        console.warn('SortableJS não está disponível!');
+    }
+}
+
 // Função para alternar abas no preview
 function switchPreviewTab(tabType) {
+    console.log(`Alternando para aba: ${tabType}`);
+    
     // Atualizar estado das abas
-    document.getElementById('preview-tab-aereo').classList.remove('active');
-    document.getElementById('preview-tab-maritimo').classList.remove('active');
-    document.getElementById('preview-tab-' + tabType).classList.add('active');
+    const tabAereo = document.getElementById('preview-tab-aereo');
+    const tabMaritimo = document.getElementById('preview-tab-maritimo');
+    const tabAtual = document.getElementById('preview-tab-' + tabType);
+    
+    if (tabAereo) tabAereo.classList.remove('active');
+    if (tabMaritimo) tabMaritimo.classList.remove('active');
+    if (tabAtual) tabAtual.classList.add('active');
     
     // Renderizar favoritos filtrados
     const gridContainer = document.getElementById('preview-favorites-grid');
-    if (!gridContainer) return;
+    if (!gridContainer) {
+        console.error('Grid container não encontrado!');
+        return;
+    }
     
     gridContainer.innerHTML = '';
+    console.log('Renderizando favoritos para aba:', tabType);
+    console.log('Favoritos atuais:', currentFavorites);
+    
+    let renderedCount = 0;
     
     currentFavorites.forEach((favId) => {
         let module = null;
@@ -2070,8 +2159,15 @@ function switchPreviewTab(tabType) {
         if (module && module.icon && shouldShow) {
             const card = createPreviewCard(favId, module, tabType);
             gridContainer.appendChild(card);
+            renderedCount++;
+            console.log(`Renderizado: ${module.name} (${favId})`);
         }
     });
+    
+    console.log(`Total de cards renderizados: ${renderedCount}`);
+    
+    // Inicializar SortableJS para o grid atual com restrição de categoria
+    initializeSortableWithCategory(gridContainer, tabType);
 }
 
 // Renderizar layout de personalização aéreo (aba Pers Aéreo)
@@ -2408,11 +2504,89 @@ function updateFavoritesOrder() {
     // Atualizar currentFavorites e salvar automaticamente
     currentFavorites = newOrder;
     localStorage.setItem('dashboard_favorites', JSON.stringify(currentFavorites));
+}
+
+// Função para atualizar ordem dos favoritos por categoria
+function updateFavoritesOrderByCategory(category) {
+    console.log(`Atualizando ordem dos favoritos para categoria: ${category}`);
     
-    // Atualizar índices dos elementos
-    items.forEach((item, index) => {
-        item.setAttribute('data-index', index);
-    });
+    let categoryItems = [];
+    
+    try {
+        if (category === 'aereo') {
+            // Obter itens da seção aéreo
+            const aereoGrid = document.getElementById('preview-aereo-grid');
+            if (aereoGrid) {
+                const cards = aereoGrid.querySelectorAll('.preview-card');
+                categoryItems = Array.from(cards).map(item => {
+                    const favId = item.getAttribute('data-favorite-id');
+                    return favId ? favId : null;
+                }).filter(id => id !== null);
+            }
+        } else if (category === 'maritimo') {
+            // Obter itens da seção marítimo
+            const maritimoGrid = document.getElementById('preview-maritimo-grid');
+            if (maritimoGrid) {
+                const cards = maritimoGrid.querySelectorAll('.preview-card');
+                categoryItems = Array.from(cards).map(item => {
+                    const favId = item.getAttribute('data-favorite-id');
+                    return favId ? favId : null;
+                }).filter(id => id !== null);
+            }
+        } else {
+            // Para layout com abas, obter itens do grid atual
+            const gridContainer = document.getElementById('preview-favorites-grid');
+            if (gridContainer) {
+                const cards = gridContainer.querySelectorAll('.preview-card');
+                categoryItems = Array.from(cards).map(item => {
+                    const favId = item.getAttribute('data-favorite-id');
+                    return favId ? favId : null;
+                }).filter(id => id !== null);
+            }
+        }
+    } catch (error) {
+        console.error('Erro ao obter itens da categoria:', error);
+        return;
+    }
+    
+    console.log(`Nova ordem para categoria ${category}:`, categoryItems);
+    
+    // Para layouts com separação de categorias, não reordenar currentFavorites
+    // Apenas atualizar a ordem visual dos cards
+    console.log(`Ordem atual dos favoritos mantida para categoria: ${category}`);
+    
+    // Não alterar currentFavorites para layouts com categorias separadas
+    // A ordem é mantida visualmente apenas
+    
+    console.log('Ordem final dos favoritos:', currentFavorites);
+    
+    // Atualizar índices dos elementos da categoria específica
+    if (category === 'aereo') {
+        const aereoGrid = document.getElementById('preview-aereo-grid');
+        if (aereoGrid) {
+            const aereoItems = aereoGrid.querySelectorAll('.preview-card');
+            aereoItems.forEach((item, index) => {
+                item.setAttribute('data-index', index);
+            });
+        }
+    } else if (category === 'maritimo') {
+        const maritimoGrid = document.getElementById('preview-maritimo-grid');
+        if (maritimoGrid) {
+            const maritimoItems = maritimoGrid.querySelectorAll('.preview-card');
+            maritimoItems.forEach((item, index) => {
+                item.setAttribute('data-index', index);
+            });
+        }
+    } else {
+        // Para layout com abas
+        const gridContainer = document.getElementById('preview-favorites-grid');
+        if (gridContainer) {
+            const gridItems = gridContainer.querySelectorAll('.preview-card');
+            gridItems.forEach((item, index) => {
+                item.setAttribute('data-index', index);
+            });
+        }
+    }
     
     // Aplicar layout salvo
     const savedLayout = localStorage.getItem('dashboard_layout');

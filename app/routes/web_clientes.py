@@ -43,6 +43,12 @@ def web_clientes_agendamento_vistorias():
     """Página de Agendamento de vistorias - Web Cliente"""
     return render_template('web_clientes/agendamento_vistorias.html', user=current_user)
 
+@web_clientes_bp.route('/web-clientes/acompanhamento-despachante')
+@login_required
+def web_clientes_acompanhamento_despachante():
+    """Página de Acompanhamento Despachante (Em aberto) - Web Cliente"""
+    return render_template('web_clientes/acompanhamento_despachante.html', user=current_user)
+
 @web_clientes_bp.route('/web-clientes/autorizacao-carregamento')
 @login_required
 def web_clientes_autorizacao_carregamento():
