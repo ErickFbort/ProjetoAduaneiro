@@ -173,6 +173,22 @@
                         </div>
                     </div>
                 </div>
+                
+                <div class="col-md-6 mb-4" data-module="ordem-servico">
+                    <div class="card h-100 draggable-card">
+                        <div class="card-body text-center">
+                            <div class="drag-handle" style="display: none;">
+                                <i class="fas fa-grip-vertical text-muted"></i>
+                            </div>
+                            <i class="fas fa-clipboard-list fa-3x text-indigo mb-3"></i>
+                            <h5 class="card-title">Ordem de Serviço</h5>
+                            <p class="card-text">Gerencie e acompanhe ordens de serviço dos clientes.</p>
+                            <a href="{{ url_for('web_clientes.web_clientes_ordem_servico') }}" class="btn btn-indigo w-100">
+                                <i class="fas fa-arrow-right"></i> Acessar
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -260,6 +276,23 @@
 .btn-purple:hover {
     background-color: #5a32a3;
     border-color: #5a32a3;
+    color: white;
+}
+
+/* Estilos para cor índigo */
+.text-indigo {
+    color: #4c63d2 !important;
+}
+
+.btn-indigo {
+    background-color: #4c63d2;
+    border-color: #4c63d2;
+    color: white;
+}
+
+.btn-indigo:hover {
+    background-color: #3d4fc7;
+    border-color: #3d4fc7;
     color: white;
 }
 

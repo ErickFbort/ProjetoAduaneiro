@@ -166,3 +166,9 @@ def web_clientes_detalhes_perdimento():
 def web_clientes_acompanhamento_motorista():
     """Página de Acompanhamento Motorista - Web Cliente"""
     return render_template('web_clientes/acompanhamento_motorista.html', user=current_user)
+
+@web_clientes_bp.route('/web-clientes/ordem-servico')
+@login_required
+def web_clientes_ordem_servico():
+    """Página de Ordem de Serviço - Web Cliente"""
+    return render_template('web_clientes/ordem_servico.html', user=current_user)

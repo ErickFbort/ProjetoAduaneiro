@@ -1,0 +1,476 @@
+{% extends "base.html" %}
+
+{% block title %}Ordem de Serviço - Web Cliente{% endblock %}
+
+{% block body_class %}main-body{% endblock %}
+
+{% block content %}
+{% include 'partials/sidebar.html' %}
+
+<main class="content main-content--shifted">
+    <div class="content-section active">
+        <div class="container-fluid">
+            <!-- Header da página -->
+            <div class="page-header">
+                <div class="header-content">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-clipboard-list fa-2x text-white me-3"></i>
+                        <div class="header-text">
+                            <h2>Listagem de Ordens de Serviço</h2>
+                            <p class="page-subtitle">Gerencie e acompanhe todas as ordens de serviço dos clientes</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Barra de Pesquisa e Filtros -->
+            <div class="search-section">
+                <div class="search-input-group">
+                    <form method="GET" class="search-form">
+                        <div class="input-group">
+                            <input type="text" 
+                                   name="search" 
+                                   id="searchInput"
+                                   class="form-control search-input" 
+                                   placeholder="Pesquisar por ficha, serviço, processo, entidade...">
+                            <button type="submit" class="btn btn-primary search-btn" id="searchBtn">
+                                <i class="fas fa-search"></i>
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary clear-btn" id="clearFilters">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </form>
+                    <button class="btn btn-outline-info filter-toggle" onclick="toggleAdvancedFilters()">
+                        <i class="fas fa-filter"></i> Filtros Avançados
+                    </button>
+                    <button class="btn btn-success" id="cadastrarServico">
+                        <i class="fas fa-plus"></i> Cadastrar Serviço
+                    </button>
+                </div>
+
+                <!-- Filtros Avançados -->
+                <div class="advanced-filters" id="advancedFilters" style="display: none;">
+                    <div class="filters-header">
+                        <h5>Filtros</h5>
+                    </div>
+                    <form method="GET" class="filters-form">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Status</label>
+                                        <select name="status" id="statusFilter" class="form-select">
+                                            <option value="">Selecione...</option>
+                                            <option value="SOLICITACAO">Solicitação</option>
+                                            <option value="EXECUTADO">Executado</option>
+                                            <option value="AGENDAMENTO">Agendamento</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Tipo de Serviço</label>
+                                        <select name="tipo_servico" id="tipoServicoFilter" class="form-select">
+                                            <option value="">Selecione...</option>
+                                            <option value="acesso_veiculos">Acesso de Veículos</option>
+                                            <option value="coleta_carga">Coleta de Carga com Pátio Vencido</option>
+                                            <option value="descarregamento_exportacao">Descarregamento - Exportação</option>
+                                            <option value="visualizacao_video">Visualização de gravação de video</option>
+                                            <option value="carga_nacional">Carga nacional</option>
+                                            <option value="alteracao_cnpj">Alteração de CNPJ</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Entidade</label>
+                                        <input type="text" name="entidade" id="entidadeFilter" class="form-control" placeholder="Entidade">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Ficha</label>
+                                        <input type="text" name="ficha" id="fichaFilter" class="form-control" placeholder="Ficha">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Processo</label>
+                                        <input type="text" name="processo" id="processoFilter" class="form-control" placeholder="Processo">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">AWB</label>
+                                        <input type="text" name="awb" id="awbFilter" class="form-control" placeholder="AWB">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">HAWB</label>
+                                        <input type="text" name="hawb" id="hawbFilter" class="form-control" placeholder="HAWB">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">DI/DUE</label>
+                                        <input type="text" name="di_due" id="diDueFilter" class="form-control" placeholder="DI/DUE">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Placa</label>
+                                        <input type="text" name="placa" id="placaFilter" class="form-control" placeholder="Placa">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Data de</label>
+                                        <input type="date" name="data_de" id="dataDeFilter" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Data até</label>
+                                        <input type="date" name="data_ate" id="dataAteFilter" class="form-control">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-check mt-4">
+                                            <input class="form-check-input" type="checkbox" id="semCargaAtreladaFilter">
+                                            <label class="form-check-label" for="semCargaAtreladaFilter">
+                                                Sem carga atrelada
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="d-flex justify-content-between">
+                                    <button type="button" class="btn btn-secondary" onclick="clearAdvancedFilters()">
+                                        <i class="fas fa-eraser"></i> Limpar Pesquisa
+                                    </button>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-search"></i> Pesquisar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Ações da Tabela -->
+            <div class="table-actions">
+                <div class="actions-left">
+                    <button type="button" class="btn btn-outline-secondary" onclick="refreshTable()" title="Atualizar">
+                        <i class="fas fa-sync-alt"></i> Atualizar
+                    </button>
+                </div>
+                <div class="actions-right">
+                    <div class="items-per-page-container">
+                        <span class="items-label">Itens por página:</span>
+                        <select class="form-select items-select" id="itemsPorPagina">
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabela de Ordens de Serviço -->
+            <div class="table-container">
+                <div class="table-responsive">
+                    <table class="table table-hover ordens-table" id="ordensTable">
+                        <thead class="table-header">
+                            <tr class="table-header-row">
+                                <th width="8%" class="text-start">Status</th>
+                                <th width="8%" class="text-start">Ficha</th>
+                                <th width="15%" class="text-start">Serviço</th>
+                                <th width="8%" class="text-center">Data</th>
+                                <th width="8%" class="text-center">Hora</th>
+                                <th width="10%" class="text-start">Processo</th>
+                                <th width="15%" class="text-start">Entidade</th>
+                                <th width="8%" class="text-center">AWB</th>
+                                <th width="8%" class="text-center">HAWB</th>
+                                <th width="8%" class="text-center">DI/DUE</th>
+                                <th width="5%" class="text-center">DTA</th>
+                                <th width="8%" class="text-center">Placa</th>
+                                <th width="8%" class="text-center">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordensTableBody">
+                            <!-- Dados serão carregados via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Estado vazio -->
+                <div class="empty-state d-none" id="emptyState">
+                    <i class="fas fa-clipboard-list fa-4x text-muted mb-3"></i>
+                    <h5>Nenhuma ordem de serviço encontrada</h5>
+                    <p>Não há ordens de serviço que correspondam aos critérios de busca.</p>
+                    <button class="btn btn-primary" id="clearFiltersEmpty">
+                        <i class="fas fa-refresh"></i> Limpar Filtros
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Paginação -->
+            <nav aria-label="Navegação de páginas" class="mt-4">
+                <ul class="pagination justify-content-center" id="pagination">
+                    <!-- Paginação será gerada via JavaScript -->
+                </ul>
+            </nav>
+        </div>
+    </div>
+</main>
+
+<!-- Modal para Cadastro de Serviço -->
+<div class="modal fade" id="cadastroServicoModal" tabindex="-1" aria-labelledby="cadastroServicoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cadastroServicoModalLabel">
+                    <i class="fas fa-arrow-left me-2" onclick="fecharCadastroServico()"></i>
+                    Cadastro de Ordem de Serviço
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="cadastroServicoForm">
+                    <div class="form-section">
+                        <h6 class="section-title">Detalhes do Serviço</h6>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
+                                    <label for="tipoServico" class="form-label required">Tipo de Serviço</label>
+                                    <select class="form-select" id="tipoServico" required>
+                                        <option value="">Selecione o tipo de serviço</option>
+                                        <option value="acesso_veiculos">Acesso de Veículos</option>
+                                        <option value="coleta_carga">Coleta de Carga com Pátio Vencido</option>
+                                        <option value="descarregamento_exportacao">Descarregamento - Exportação</option>
+                                        <option value="visualizacao_video">Visualização de gravação de video</option>
+                                        <option value="carga_nacional">Carga nacional</option>
+                                        <option value="alteracao_cnpj">Alteração de CNPJ</option>
+                                        <option value="outros">Outros</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
+                                    <label for="entidadeServico" class="form-label required">Entidade</label>
+                                    <input type="text" class="form-control" id="entidadeServico" placeholder="Nome da entidade" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
+                                    <label for="dataServico" class="form-label required">Data do Serviço</label>
+                                    <input type="date" class="form-control" id="dataServico" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
+                                    <label for="horaServico" class="form-label required">Hora do Serviço</label>
+                                    <input type="time" class="form-control" id="horaServico" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
+                                    <label for="processoServico" class="form-label">Processo</label>
+                                    <input type="text" class="form-control" id="processoServico" placeholder="Número do processo">
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
+                                    <label for="fichaServico" class="form-label">Ficha</label>
+                                    <input type="text" class="form-control" id="fichaServico" placeholder="Número da ficha">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
+                                    <label for="awbServico" class="form-label">AWB</label>
+                                    <input type="text" class="form-control" id="awbServico" placeholder="Número AWB">
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
+                                    <label for="hawbServico" class="form-label">HAWB</label>
+                                    <input type="text" class="form-control" id="hawbServico" placeholder="Número HAWB">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
+                                    <label for="diDueServico" class="form-label">DI/DUE</label>
+                                    <input type="text" class="form-control" id="diDueServico" placeholder="Número DI/DUE">
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
+                                    <label for="placaServico" class="form-label">Placa</label>
+                                    <input type="text" class="form-control" id="placaServico" placeholder="Placa do veículo">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <div class="form-group">
+                                    <label for="observacoesServico" class="form-label">Observações</label>
+                                    <textarea class="form-control" id="observacoesServico" rows="3" placeholder="Observações adicionais"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success" onclick="salvarServico()">
+                    <i class="fas fa-save"></i> Salvar Serviço
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Visualizar/Editar Serviço -->
+<div class="modal fade" id="visualizarServicoModal" tabindex="-1" aria-labelledby="visualizarServicoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="visualizarServicoModalLabel">
+                    <i class="fas fa-eye me-2"></i>Detalhes da Ordem de Serviço
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="visualizarServicoBody">
+                <!-- Conteúdo será carregado via JavaScript -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-primary" onclick="editarServico()">
+                    <i class="fas fa-edit"></i> Editar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Estilos para cabeçalho da tabela com barra preta */
+.table-header-row {
+    background-color: #000 !important;
+    color: white !important;
+}
+
+.table-header-row th {
+    background-color: #000 !important;
+    color: white !important;
+    border-color: #333 !important;
+    font-weight: 600;
+    padding: 12px 8px;
+    vertical-align: middle;
+}
+
+.table-header-row th:first-child {
+    border-top-left-radius: 8px;
+}
+
+.table-header-row th:last-child {
+    border-top-right-radius: 8px;
+}
+
+/* Garantir que o cabeçalho tenha altura consistente */
+.table-header-row th {
+    height: 50px;
+    line-height: 1.2;
+}
+
+/* Estilos para hover no cabeçalho */
+.table-header-row:hover th {
+    background-color: #000 !important;
+}
+
+/* Ajustar espaçamento da tabela */
+.ordens-table {
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Estilos para o container da tabela */
+.table-container {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Estilos para as linhas da tabela */
+.ordens-table tbody tr {
+    border-bottom: 1px solid #e9ecef;
+}
+
+.ordens-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.ordens-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+/* Estilos para células da tabela */
+.ordens-table td {
+    padding: 12px 8px;
+    vertical-align: middle;
+    border: none;
+}
+
+/* Alinhamento específico para colunas */
+.ordens-table th.text-start,
+.ordens-table td.text-start {
+    text-align: left !important;
+}
+
+.ordens-table th.text-center,
+.ordens-table td.text-center {
+    text-align: center !important;
+}
+
+/* Estilos específicos para a coluna Status */
+.ordens-table td.text-start .d-flex {
+    justify-content: flex-start;
+}
+
+/* Garantir que ícones e texto fiquem alinhados à esquerda */
+.ordens-table td.text-start .d-flex .fas {
+    margin-right: 0.5rem;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .table-header-row th {
+        padding: 8px 4px;
+        font-size: 0.875rem;
+    }
+    
+    .ordens-table td {
+        padding: 8px 4px;
+        font-size: 0.875rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/ordem_servico.js') }}"></script>
+{% endblock %}
