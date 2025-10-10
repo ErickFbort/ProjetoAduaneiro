@@ -1209,6 +1209,18 @@ let favoriteModules = {
                 icon: 'fas fa-check-circle',
                 url: "{{ url_for('web_clientes.web_clientes_autorizacao_carregamento') }}",
                 description: 'Autorização de carregamento'
+            },
+            'acompanhamento_despachante': {
+                name: 'Acompanhamento Despachante',
+                icon: 'fas fa-user-check',
+                url: "{{ url_for('web_clientes.web_clientes_acompanhamento_despachante') }}",
+                description: 'Acompanhe processos em aberto dos despachantes'
+            },
+            'acompanhamento_motorista': {
+                name: 'Acompanhamento Motorista',
+                icon: 'fas fa-truck',
+                url: "{{ url_for('web_clientes.web_clientes_acompanhamento_motorista') }}",
+                description: 'Acompanhe processos e atividades dos motoristas'
             }
         }
     },

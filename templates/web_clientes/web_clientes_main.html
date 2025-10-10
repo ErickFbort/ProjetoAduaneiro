@@ -141,6 +141,38 @@
                         </div>
                     </div>
                 </div>
+                
+                <div class="col-md-6 mb-4" data-module="acompanhamento-despachante">
+                    <div class="card h-100 draggable-card">
+                        <div class="card-body text-center">
+                            <div class="drag-handle" style="display: none;">
+                                <i class="fas fa-grip-vertical text-muted"></i>
+                            </div>
+                            <i class="fas fa-user-check fa-3x text-purple mb-3"></i>
+                            <h5 class="card-title">Acompanhamento Despachante</h5>
+                            <p class="card-text">Acompanhe processos em aberto dos despachantes.</p>
+                            <a href="{{ url_for('web_clientes.web_clientes_acompanhamento_despachante') }}" class="btn btn-purple w-100">
+                                <i class="fas fa-arrow-right"></i> Acessar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-4" data-module="acompanhamento-motorista">
+                    <div class="card h-100 draggable-card">
+                        <div class="card-body text-center">
+                            <div class="drag-handle" style="display: none;">
+                                <i class="fas fa-grip-vertical text-muted"></i>
+                            </div>
+                            <i class="fas fa-truck fa-3x text-secondary mb-3"></i>
+                            <h5 class="card-title">Acompanhamento Motorista</h5>
+                            <p class="card-text">Acompanhe processos e atividades dos motoristas.</p>
+                            <a href="{{ url_for('web_clientes.web_clientes_acompanhamento_motorista') }}" class="btn btn-secondary w-100">
+                                <i class="fas fa-arrow-right"></i> Acessar
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -212,6 +244,23 @@
 
 .dragging {
     animation: pulse 1s infinite;
+}
+
+/* Estilos para cores personalizadas */
+.text-purple {
+    color: #6f42c1 !important;
+}
+
+.btn-purple {
+    background-color: #6f42c1;
+    border-color: #6f42c1;
+    color: white;
+}
+
+.btn-purple:hover {
+    background-color: #5a32a3;
+    border-color: #5a32a3;
+    color: white;
 }
 
 /* Responsividade */
