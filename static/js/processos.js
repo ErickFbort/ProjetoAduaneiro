@@ -1,5 +1,7 @@
 // JavaScript para a tela de Processos - Web Cliente
-class ProcessosManager {
+// Verificar se a classe já existe para evitar redeclaração
+if (typeof ProcessosManager === 'undefined') {
+    class ProcessosManager {
     constructor() {
         this.currentPage = 1;
         this.itemsPerPage = 10;
@@ -607,9 +609,11 @@ class ProcessosManager {
         
         return `
             <tr class="processo-row">
-                <td>
-                    ${statusIcon}
-                    <span class="ms-1 small">${processo.status}</span>
+                <td class="text-center">
+                    <div class="d-flex align-items-center justify-content-center gap-2">
+                        ${statusIcon}
+                        <span class="small fw-bold">${processo.status}</span>
+                    </div>
                 </td>
                 <td>${processo.impoExpo}</td>
                 <td class="text-center">${pendenciasIcon}</td>
@@ -626,8 +630,8 @@ class ProcessosManager {
                 <td>${processo.di}</td>
                 <td>${processo.dta}</td>
                 <td>${processo.nfe}</td>
-                <td>
-                    <div class="d-flex flex-column gap-1 align-items-center py-2">
+                <td class="text-center">
+                    <div class="d-flex gap-1 justify-content-center align-items-center">
                         <button class="btn btn-sm btn-outline-primary" onclick="processosManager.editProcesso(${processo.id})" title="Editar">
                             <i class="fas fa-edit"></i>
                         </button>
@@ -1260,13 +1264,22 @@ class ProcessosManager {
 
 // Funções globais para filtros
 function toggleAdvancedFilters() {
+    console.log('toggleAdvancedFilters chamada');
     const filtersDiv = document.getElementById('advancedFilters');
+    if (!filtersDiv) {
+        console.error('Elemento advancedFilters não encontrado');
+        return;
+    }
+    
     const isVisible = filtersDiv.style.display !== 'none';
+    console.log('Filtros atualmente visíveis:', !isVisible);
     
     if (isVisible) {
         filtersDiv.style.display = 'none';
+        console.log('Ocultando filtros avançados');
     } else {
         filtersDiv.style.display = 'block';
+        console.log('Mostrando filtros avançados');
     }
 }
 
@@ -1296,8 +1309,12 @@ function clearAdvancedFilters() {
 
 
 function refreshTable() {
+    console.log('refreshTable chamada');
     if (window.processosManager) {
+        console.log('processosManager encontrado, recarregando dados...');
         window.processosManager.loadProcessos();
+    } else {
+        console.error('processosManager não encontrado');
     }
 }
 
@@ -1310,5 +1327,10 @@ function fecharCadastroProcesso() {
 
 // Inicializar quando o DOM estiver carregado
 document.addEventListener('DOMContentLoaded', function() {
-    window.processosManager = new ProcessosManager();
+    // Verificar se já existe uma instância para evitar duplicação
+    if (!window.processosManager) {
+        window.processosManager = new ProcessosManager();
+    }
 });
+
+} // Fechar o bloco if da verificação de classe

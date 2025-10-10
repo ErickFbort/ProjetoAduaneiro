@@ -183,6 +183,72 @@
     </div>
 </main>
 
+<!-- Modal de Detalhes do DAPE -->
+<div class="modal fade" id="detalhesDapeModal" tabindex="-1" aria-labelledby="detalhesDapeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="detalhesDapeModalLabel">
+                    <i class="fas fa-file-alt me-2"></i>Detalhes
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Informações do Cliente -->
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <label for="clienteDetalhes" class="form-label">
+                            Cliente <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" class="form-control" id="clienteDetalhes" readonly>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="tipoPagamentoDetalhes" class="form-label">
+                            Tipo Pagamento <span class="text-danger">*</span>
+                        </label>
+                        <select class="form-select" id="tipoPagamentoDetalhes" disabled>
+                            <option value="002">002 - Correntista</option>
+                            <option value="001">001 - Avulso</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="emailGuiaDetalhes" class="form-label">E-mail Guia</label>
+                        <div class="input-group">
+                            <input type="email" class="form-control" id="emailGuiaDetalhes" readonly>
+                            <button class="btn btn-outline-secondary" type="button" title="Enviar E-mail">
+                                <i class="fas fa-envelope"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabela de Itens -->
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Nome</th>
+                                <th>Parâmetro</th>
+                                <th>Quantidade</th>
+                                <th>Valor</th>
+                                <th>Valor Final</th>
+                            </tr>
+                        </thead>
+                        <tbody id="itensDapeTableBody">
+                            <!-- Dados serão carregados via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Fechar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% block extra_js %}
 <script src="{{ url_for('static', filename='js/dape_sem_carga.js') }}"></script>
 {% endblock %}

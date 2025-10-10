@@ -3,8 +3,12 @@
  * Funcionalidades para gerenciar processos em aberto do despachante
  */
 
-// Dados simulados para demonstração
-const dadosAcompanhamento = [
+// Envolver em função auto-executável para evitar conflitos de escopo
+(function() {
+    'use strict';
+
+    // Dados simulados para demonstração
+    const dadosAcompanhamento = [
     {
         id: 1,
         tipoOperacao: 'IMPORTACAO',
@@ -172,9 +176,6 @@ function carregarDados() {
     const emptyState = document.getElementById('emptyState');
     
     if (!tbody) return;
-
-    // Aplicar filtros
-    aplicarFiltros();
     
     // Calcular paginação
     const inicio = (estadoAplicacao.paginaAtual - 1) * estadoAplicacao.itensPorPagina;
@@ -189,7 +190,7 @@ function carregarDados() {
         if (emptyState) {
             emptyState.classList.remove('d-none');
         }
-        tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted">Nenhum processo em aberto encontrado</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">Nenhum processo em aberto encontrado</td></tr>';
     } else {
         // Ocultar estado vazio
         if (emptyState) {
@@ -223,41 +224,26 @@ function criarLinhaProcesso(processo) {
     const statusText = getStatusText(processo.status);
 
     row.innerHTML = `
-        <td>
-            <span class="badge ${processo.tipoOperacao === 'IMPORTACAO' ? 'bg-primary' : 'bg-success'}">
-                ${tipoOperacao}
-            </span>
+        <td class="text-center">
+            <span class="fw-bold">${tipoOperacao}</span>
         </td>
-        <td>
-            <span class="fw-bold text-primary">${processo.requisicao}</span>
+        <td class="text-center">
+            <span class="fw-bold">${processo.requisicao}</span>
         </td>
-        <td>
-            <span class="text-muted">${processo.protocolo || '-'}</span>
+        <td class="text-center">
+            <span>${processo.protocolo || '-'}</span>
         </td>
-        <td>
+        <td class="text-center">
             <span class="small">${processo.dataCriacao}</span>
         </td>
-        <td>
+        <td class="text-center">
             <span class="small">${processo.ultimaAtualizacao}</span>
         </td>
-        <td>
+        <td class="text-center">
             <span class="fw-bold">${processo.di}</span>
         </td>
-        <td>
-            <span class="text-muted">${processo.dta || '-'}</span>
-        </td>
-        <td>
-            <div class="d-flex gap-1">
-                <button class="btn btn-sm btn-outline-primary" onclick="visualizarProcesso(${processo.id})" title="Visualizar">
-                    <i class="fas fa-eye"></i>
-                </button>
-                <button class="btn btn-sm btn-outline-warning" onclick="editarProcesso(${processo.id})" title="Editar">
-                    <i class="fas fa-edit"></i>
-                </button>
-                <button class="btn btn-sm btn-outline-info" onclick="atualizarStatus(${processo.id})" title="Atualizar Status">
-                    <i class="fas fa-sync"></i>
-                </button>
-            </div>
+        <td class="text-center">
+            <span>${processo.dta || '-'}</span>
         </td>
     `;
 
@@ -458,3 +444,5 @@ function debounce(func, wait) {
         timeout = setTimeout(later, wait);
     };
 }
+
+})(); // Fechar função auto-executável

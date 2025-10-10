@@ -1,7 +1,9 @@
 // Módulo de Perdimento - Web Clientes
 // Funcionalidades para gerenciamento de registros de perdimento
 
-class PerdimentoManager {
+// Verificar se a classe já existe para evitar redeclaração
+if (typeof PerdimentoManager === 'undefined') {
+    class PerdimentoManager {
     constructor() {
         this.currentPage = 1;
         this.itemsPerPage = 10;
@@ -290,20 +292,25 @@ class PerdimentoManager {
     }
 }
 
-// Funções globais para compatibilidade
-function refreshTable() {
-    if (window.perdimentoManager) {
-        window.perdimentoManager.refreshTable();
+    // Funções globais para compatibilidade
+    function refreshTable() {
+        if (window.perdimentoManager) {
+            window.perdimentoManager.refreshTable();
+        }
     }
-}
-
-function fecharCadastroPerdimento() {
-    if (window.perdimentoManager) {
-        window.perdimentoManager.fecharCadastroModal();
+    
+    // Funções globais
+    function fecharCadastroPerdimento() {
+        if (window.perdimentoManager) {
+            window.perdimentoManager.fecharCadastroModal();
+        }
     }
+    
+    // Inicializar quando o DOM estiver carregado
+    document.addEventListener('DOMContentLoaded', function() {
+        // Verificar se já existe uma instância para evitar duplicação
+        if (!window.perdimentoManager) {
+            window.perdimentoManager = new PerdimentoManager();
+        }
+    });
 }
-
-// Inicializar quando o DOM estiver carregado
-document.addEventListener('DOMContentLoaded', function() {
-    window.perdimentoManager = new PerdimentoManager();
-});

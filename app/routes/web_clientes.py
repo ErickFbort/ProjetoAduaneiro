@@ -160,3 +160,9 @@ def web_clientes_perdimento():
 def web_clientes_detalhes_perdimento():
     """Página de Detalhes do Perdimento - Web Cliente"""
     return render_template('web_clientes/detalhes_perdimento.html', user=current_user)
+
+@web_clientes_bp.route('/web-clientes/acompanhamento-motorista')
+@login_required
+def web_clientes_acompanhamento_motorista():
+    """Página de Acompanhamento Motorista - Web Cliente"""
+    return render_template('web_clientes/acompanhamento_motorista.html', user=current_user)

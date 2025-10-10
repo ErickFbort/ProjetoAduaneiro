@@ -1,5 +1,8 @@
 // JavaScript para a tela de Agendamento de Carregamento - Web Cliente
-class AgendamentoCarregamentoManager {
+
+// Verificar se a classe já existe para evitar redeclaração
+if (typeof AgendamentoCarregamentoManager === 'undefined') {
+    class AgendamentoCarregamentoManager {
     constructor() {
         this.currentPage = 1;
         this.itemsPerPage = 10;
@@ -346,35 +349,40 @@ class AgendamentoCarregamentoManager {
             }
         }, 5000);
     }
-}
-
-// Funções globais para filtros
-function toggleAdvancedFilters() {
-    const filtersDiv = document.getElementById('advancedFilters');
-    const isVisible = filtersDiv.style.display !== 'none';
+    }
     
-    if (isVisible) {
-        filtersDiv.style.display = 'none';
-    } else {
-        filtersDiv.style.display = 'block';
+    // Funções globais para filtros
+    function toggleAdvancedFilters() {
+        const filtersDiv = document.getElementById('advancedFilters');
+        const isVisible = filtersDiv.style.display !== 'none';
+        
+        if (isVisible) {
+            filtersDiv.style.display = 'none';
+        } else {
+            filtersDiv.style.display = 'block';
+        }
     }
-}
 
-function applyAdvancedFilters() {
-    if (window.agendamentoManager) {
-        // Os filtros já são aplicados automaticamente via event listeners
-        window.agendamentoManager.renderTable();
-        window.agendamentoManager.updatePaginationInfo();
+    // Funções globais para compatibilidade
+    function applyAdvancedFilters() {
+        if (window.agendamentoManager) {
+            // Os filtros já são aplicados automaticamente via event listeners
+            window.agendamentoManager.renderTable();
+            window.agendamentoManager.updatePaginationInfo();
+        }
     }
-}
 
-function clearAdvancedFilters() {
-    if (window.agendamentoManager) {
-        window.agendamentoManager.clearFilters();
+    function clearAdvancedFilters() {
+        if (window.agendamentoManager) {
+            window.agendamentoManager.clearFilters();
+        }
     }
-}
 
-// Inicializar quando o DOM estiver carregado
-document.addEventListener('DOMContentLoaded', function() {
-    window.agendamentoManager = new AgendamentoCarregamentoManager();
-});
+    // Inicializar quando o DOM estiver carregado
+    document.addEventListener('DOMContentLoaded', function() {
+        // Verificar se já existe uma instância para evitar duplicação
+        if (!window.agendamentoManager) {
+            window.agendamentoManager = new AgendamentoCarregamentoManager();
+        }
+    });
+}

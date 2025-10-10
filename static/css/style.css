@@ -119,9 +119,37 @@ body {
   height: 100%;
   background: var(--primary-color);
   padding-top: 2rem;
+  overflow-y: auto;
+  overflow-x: hidden;
   z-index: 1000;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); /* Transição mais suave e fluida */
+}
+
+/* Personalização da barra de scroll da sidebar */
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+  transition: background 0.3s ease;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* Para Firefox */
+.sidebar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1);
 }
 
 .logo-sidebar {
@@ -198,12 +226,16 @@ body {
 .sidebar-collapsed {
   width: var(--sidebar-width-collapsed);
   padding-top: 1rem;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 /* Efeito de HOVER: a barra expande */
 .sidebar-collapsed:hover {
   width: var(--sidebar-width);
   padding-top: 2rem;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 /* Mostra o logo completo no topo quando recolhido */
@@ -680,14 +712,42 @@ body {
     white-space: nowrap;
     border: 2px solid #17a2b8;
     background: #17a2b8;
-    color: white;
+    color: white !important;
     transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: auto;
 }
 
 .filter-toggle:hover {
     background: #138496;
     border-color: #138496;
-    color: white;
+    color: white !important;
+}
+
+.filter-toggle i {
+    margin-right: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.filter-toggle span,
+.filter-toggle:not(:empty) {
+    color: white !important;
+    font-weight: 500;
+}
+
+/* Garantir que o texto do botão seja visível */
+.btn-outline-info.filter-toggle {
+    color: white !important;
+    background-color: #17a2b8 !important;
+    border-color: #17a2b8 !important;
+}
+
+.btn-outline-info.filter-toggle:hover {
+    color: white !important;
+    background-color: #138496 !important;
+    border-color: #138496 !important;
 }
 
 .filter-toggle:focus {
@@ -4795,7 +4855,7 @@ td:last-child {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
 }
 
 /* Garantir que o input-group tenha altura consistente - APLICADO GLOBALMENTE */
@@ -4888,7 +4948,7 @@ td:last-child {
 .search-section .btn-success {
     height: 48px !important;
     padding: 0.75rem 1rem !important;
-    font-size: 1rem !important;
+    font-size: 0.9rem !important;
     line-height: 1.5 !important;
     display: flex !important;
     align-items: center !important;
@@ -4896,12 +4956,54 @@ td:last-child {
     box-sizing: border-box !important;
     white-space: nowrap !important;
     transition: all 0.3s ease !important;
+    flex-shrink: 0 !important;
+    font-weight: 500 !important;
+}
+
+/* Texto menor para o botão de cadastrar autorização */
+.search-section .btn-success {
+    font-size: 0.85rem !important;
 }
 
 /* Hover nos botões adicionais */
 .search-section .filter-toggle:hover,
 .search-section .btn-success:hover {
     transform: translateY(-1px) !important;
+}
+
+/* Garantir que os botões fiquem na mesma linha */
+.search-section .search-input-group {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    flex-wrap: nowrap !important;
+}
+
+.search-section .search-form {
+    flex: 1 !important;
+    min-width: 300px !important;
+}
+
+.search-section .filter-toggle,
+.search-section .btn-success {
+    flex-shrink: 0 !important;
+    margin-left: 0.5rem !important;
+}
+
+/* Ícones uniformes nos botões */
+.search-section .filter-toggle i {
+    font-size: 0.9rem !important;
+    margin-right: 0.5rem !important;
+    width: 16px !important;
+    text-align: center !important;
+}
+
+/* Ícone menor para o botão de cadastrar autorização */
+.search-section .btn-success i {
+    font-size: 0.85rem !important;
+    margin-right: 0.5rem !important;
+    width: 14px !important;
+    text-align: center !important;
 }
 
 /* Responsividade para a barra de pesquisa - APLICADO GLOBALMENTE */
@@ -7213,4 +7315,488 @@ td:last-child {
         grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
         gap: 0.5rem;
     }
+}
+
+/* ========================================
+   ACOMPANHAMENTO MOTORISTA STYLES
+   ======================================== */
+
+.motorista-table {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.motorista-table thead th {
+    background: #000000;
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    border: none;
+    padding: 1rem 0.75rem;
+    position: relative;
+    text-align: center;
+}
+
+.motorista-table thead th i {
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+.motorista-table thead th:hover i {
+    opacity: 1;
+}
+
+.motorista-table tbody tr {
+    transition: all 0.2s ease;
+    border-bottom: 1px solid #f8f9fa;
+}
+
+.motorista-table tbody tr:hover {
+    background-color: #f8f9fa;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.motorista-table tbody td {
+    padding: 1rem 0.75rem;
+    vertical-align: middle;
+    border: none;
+    text-align: center;
+}
+
+.motorista-table tbody td.fw-bold {
+    font-weight: 600;
+    color: #495057;
+}
+
+.motorista-table tbody td.small {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+/* Status badges */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-badge.aprovado {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.status-badge.em-analise {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.status-badge.rejeitado {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+/* Icons for Impo/Expo */
+.motorista-table .fas.fa-download {
+    color: #007bff;
+}
+
+.motorista-table .fas.fa-upload {
+    color: #28a745;
+}
+
+.motorista-table .fas.fa-question-circle {
+    color: #6c757d;
+}
+
+/* Search section specific styles */
+.search-section .btn-primary {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    border: none;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+.search-section .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,123,255,0.3);
+}
+
+.search-section .btn-outline-info {
+    border-color: #17a2b8;
+    color: #17a2b8;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.search-section .btn-outline-info:hover {
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+    transform: translateY(-1px);
+}
+
+/* Table actions */
+.table-actions {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+.table-actions .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.table-actions .btn i {
+    font-size: 0.9rem;
+}
+
+.table-actions .btn-outline-secondary {
+    border-color: #6c757d;
+    color: #6c757d;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.table-actions .btn-outline-secondary:hover {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    transform: translateY(-1px);
+}
+
+/* Items per page */
+.items-per-page-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.items-label {
+    font-weight: 600;
+    color: #495057;
+    font-size: 0.9rem;
+}
+
+.items-select {
+    min-width: 80px;
+    border-color: #ced4da;
+    font-weight: 600;
+}
+
+/* Empty state */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.empty-state i {
+    color: #dee2e6;
+}
+
+.empty-state h5 {
+    color: #6c757d;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+    color: #adb5bd;
+    margin-bottom: 1.5rem;
+}
+
+/* Pagination */
+.pagination .page-link {
+    color: #007bff;
+    border-color: #dee2e6;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.pagination .page-link:hover {
+    background-color: #e9ecef;
+    border-color: #adb5bd;
+    transform: translateY(-1px);
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #007bff;
+    border-color: #007bff;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,123,255,0.3);
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #6c757d;
+    background-color: #fff;
+    border-color: #dee2e6;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .motorista-table {
+        font-size: 0.875rem;
+    }
+    
+    .motorista-table thead th,
+    .motorista-table tbody td {
+        padding: 0.75rem 0.5rem;
+    }
+    
+    .table-actions {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .actions-right {
+        width: 100%;
+    }
+    
+    .items-per-page-container {
+        justify-content: center;
+    }
+}
+
+/* ========================================
+   ACOMPANHAMENTO DESPACHANTE STYLES
+   ======================================== */
+
+.acompanhamento-table {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.acompanhamento-table thead th {
+    background: #000000;
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    border: none;
+    padding: 1rem 0.75rem;
+    text-align: center;
+}
+
+.acompanhamento-table tbody tr {
+    transition: all 0.2s ease;
+    border-bottom: 1px solid #f8f9fa;
+}
+
+.acompanhamento-table tbody tr:hover {
+    background-color: #f8f9fa;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.acompanhamento-table tbody td {
+    padding: 1rem 0.75rem;
+    vertical-align: middle;
+    border: none;
+    text-align: center;
+}
+
+.acompanhamento-table tbody td.fw-bold {
+    font-weight: 600;
+    color: #495057;
+}
+
+.acompanhamento-table tbody td.small {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+/* Remover estilos de badge para tipo de operação */
+.acompanhamento-table .badge {
+    background: none !important;
+    color: inherit !important;
+    padding: 0 !important;
+    font-size: inherit !important;
+    font-weight: 600;
+}
+
+/* Estilos para Modal de Detalhes do DAPE */
+#detalhesDapeModal .modal-header {
+    background: linear-gradient(135deg, #007bff, #0056b3) !important;
+    border-bottom: none;
+}
+
+#detalhesDapeModal .modal-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+#detalhesDapeModal .form-label {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 0.5rem;
+}
+
+#detalhesDapeModal .form-control,
+#detalhesDapeModal .form-select {
+    border: 1px solid #ced4da;
+    border-radius: 0.375rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9rem;
+}
+
+#detalhesDapeModal .form-control:focus,
+#detalhesDapeModal .form-select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+#detalhesDapeModal .table {
+    margin-bottom: 0;
+}
+
+#detalhesDapeModal .table th {
+    background-color: #343a40;
+    color: white;
+    font-weight: 600;
+    text-align: center;
+    padding: 0.75rem;
+    border: 1px solid #495057;
+}
+
+#detalhesDapeModal .table td {
+    padding: 0.75rem;
+    border: 1px solid #dee2e6;
+    text-align: center;
+    vertical-align: middle;
+}
+
+#detalhesDapeModal .table tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+#detalhesDapeModal .table tbody tr:hover {
+    background-color: #e9ecef;
+}
+
+#detalhesDapeModal .btn-close-white {
+    filter: invert(1);
+}
+
+#detalhesDapeModal .input-group .btn {
+    border-left: none;
+}
+
+#detalhesDapeModal .input-group .form-control {
+    border-right: none;
+}
+
+#detalhesDapeModal .input-group .form-control:focus {
+    border-right: none;
+    box-shadow: none;
+}
+
+#detalhesDapeModal .input-group .btn:focus {
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Estilos para tabela de processos - melhorar layout */
+.processos-table {
+    min-width: 1400px; /* Largura mínima para acomodar todas as colunas */
+}
+
+.processos-table th {
+    white-space: nowrap;
+    font-size: 0.85rem;
+    padding: 0.75rem 0.5rem;
+}
+
+.processos-table td {
+    white-space: nowrap;
+    font-size: 0.85rem;
+    padding: 0.75rem 0.5rem;
+    vertical-align: middle;
+}
+
+/* Melhorar layout da coluna de status */
+.processos-table td:first-child {
+    min-width: 120px;
+}
+
+.processos-table td:first-child .d-flex {
+    flex-wrap: nowrap;
+}
+
+.processos-table td:first-child i {
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.processos-table td:first-child span {
+    font-size: 0.8rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Melhorar layout da coluna de ações */
+.processos-table td:last-child {
+    min-width: 140px;
+}
+
+.processos-table td:last-child .d-flex {
+    flex-wrap: nowrap;
+    gap: 0.25rem;
+}
+
+.processos-table td:last-child .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    min-width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Ajustar largura das colunas menores */
+.processos-table td:nth-child(3), /* Pendências */
+.processos-table td:nth-child(4), /* Carga */
+.processos-table td:nth-child(9), /* Referência */
+.processos-table td:nth-child(13), /* AWB */
+.processos-table td:nth-child(14), /* HAWB */
+.processos-table td:nth-child(15), /* DI */
+.processos-table td:nth-child(16), /* DTA */
+.processos-table td:nth-child(17) { /* NFE */
+    min-width: 60px;
+    text-align: center;
+}
+
+/* Ajustar colunas de texto longo */
+.processos-table td:nth-child(10) { /* Cliente */
+    min-width: 150px;
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.processos-table td:nth-child(11) { /* Despachante */
+    min-width: 120px;
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

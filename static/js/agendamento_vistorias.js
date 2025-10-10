@@ -1,4 +1,5 @@
 // JavaScript para a tela de Agendamento de Vistorias - Web Cliente
+if (typeof AgendamentoVistoriasManager === 'undefined') {
 class AgendamentoVistoriasManager {
     constructor() {
         this.currentPage = 1;
@@ -474,7 +475,16 @@ class AgendamentoVistoriasManager {
     }
 }
 
-// Funções globais para filtros
+// Inicializar quando o DOM estiver carregado
+document.addEventListener('DOMContentLoaded', function() {
+    // Verificar se já existe uma instância para evitar duplicação
+    if (!window.vistoriasManager) {
+        window.vistoriasManager = new AgendamentoVistoriasManager();
+    }
+});
+}
+
+// Funções globais para filtros (fora do bloco if)
 function toggleAdvancedFilters() {
     const filtersDiv = document.getElementById('advancedFilters');
     const isVisible = filtersDiv.style.display !== 'none';
@@ -499,8 +509,3 @@ function clearAdvancedFilters() {
         window.vistoriasManager.clearFilters();
     }
 }
-
-// Inicializar quando o DOM estiver carregado
-document.addEventListener('DOMContentLoaded', function() {
-    window.vistoriasManager = new AgendamentoVistoriasManager();
-});

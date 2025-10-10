@@ -1,7 +1,9 @@
 // Módulo de Detalhes do Perdimento - Web Clientes
 // Funcionalidades para visualização e edição de detalhes do perdimento
 
-class DetalhesPerdimentoManager {
+// Verificar se a classe já existe para evitar redeclaração
+if (typeof DetalhesPerdimentoManager === 'undefined') {
+    class DetalhesPerdimentoManager {
     constructor() {
         this.perdimentoId = null;
         this.perdimentoData = null;
@@ -418,25 +420,30 @@ function editarInformacoesGerais() {
     modal.show();
 }
 
-function salvarInformacoes() {
-    if (window.detalhesPerdimentoManager) {
-        window.detalhesPerdimentoManager.salvarInformacoes();
+    // Funções globais para compatibilidade
+    function salvarInformacoes() {
+        if (window.detalhesPerdimentoManager) {
+            window.detalhesPerdimentoManager.salvarInformacoes();
+        }
     }
-}
 
-function adicionarVolume() {
-    if (window.detalhesPerdimentoManager) {
-        window.detalhesPerdimentoManager.adicionarVolume();
+    function adicionarVolume() {
+        if (window.detalhesPerdimentoManager) {
+            window.detalhesPerdimentoManager.adicionarVolume();
+        }
     }
-}
 
-function adicionarAnexo() {
-    if (window.detalhesPerdimentoManager) {
-        window.detalhesPerdimentoManager.adicionarAnexo();
+    function adicionarAnexo() {
+        if (window.detalhesPerdimentoManager) {
+            window.detalhesPerdimentoManager.adicionarAnexo();
+        }
     }
-}
 
-// Inicializar quando o DOM estiver carregado
-document.addEventListener('DOMContentLoaded', function() {
-    window.detalhesPerdimentoManager = new DetalhesPerdimentoManager();
-});
+    // Inicializar quando o DOM estiver carregado
+    document.addEventListener('DOMContentLoaded', function() {
+        // Verificar se já existe uma instância para evitar duplicação
+        if (!window.detalhesPerdimentoManager) {
+            window.detalhesPerdimentoManager = new DetalhesPerdimentoManager();
+        }
+    });
+}

@@ -33,6 +33,7 @@ const AppConfig = {
                 { path: '/web-clientes/agendamento-carregamento', name: 'Agendamento de Carregamento', icon: 'fas fa-truck-loading' },
                 { path: '/web-clientes/agendamento-vistorias', name: 'Agendamento de Vistorias', icon: 'fas fa-search' },
                 { path: '/web-clientes/acompanhamento-despachante', name: 'Acompanhamento Despachante (Em aberto)', icon: 'fas fa-user-check' },
+                { path: '/web-clientes/acompanhamento-motorista', name: 'Acompanhamento Motorista', icon: 'fas fa-truck' },
                 { path: '/web-clientes/autorizacao-carregamento', name: 'Autorização de Carregamento', icon: 'fas fa-check-circle' },
                 { path: '/web-clientes/perdimento', name: 'Perdimento', icon: 'fas fa-exclamation-triangle' }
             ]
