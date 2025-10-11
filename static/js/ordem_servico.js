@@ -2,15 +2,16 @@
 // Verificar se a classe já existe para evitar redeclaração
 if (typeof OrdemServicoManager === 'undefined') {
     class OrdemServicoManager {
-        constructor() {
-            this.currentPage = 1;
-            this.itemsPerPage = 10;
-            this.totalItems = 0;
-            this.filters = {};
-            this.ordens = [];
-            this.currentOrdem = null;
-            this.searchBy = 'ficha';
-            
+    constructor() {
+        this.currentPage = 1;
+        this.itemsPerPage = 10;
+        this.totalItems = 0;
+        this.filters = {};
+        this.ordens = [];
+        this.currentOrdem = null;
+        this.searchBy = 'ficha';
+        this.currentView = 'listagem'; // 'listagem' ou 'cadastro'
+        
         this.init();
     }
     
@@ -30,6 +31,9 @@ if (typeof OrdemServicoManager === 'undefined') {
         document.getElementById('clearFilters')?.addEventListener('click', () => this.clearFilters());
         document.getElementById('clearFiltersEmpty')?.addEventListener('click', () => this.clearFilters());
         document.getElementById('itemsPorPagina')?.addEventListener('change', (e) => this.changeItemsPerPage(e.target.value));
+        
+        // Event listener para o checkbox "Serviço sem carga atrelada"
+        document.getElementById('servicoSemCargaAtrelada')?.addEventListener('change', (e) => this.toggleCamposCarga(e.target.checked));
     }
     
     // Dados simulados baseados na imagem
@@ -487,7 +491,7 @@ if (typeof OrdemServicoManager === 'undefined') {
         document.getElementById('placaFilter').value = '';
         document.getElementById('dataDeFilter').value = '';
         document.getElementById('dataAteFilter').value = '';
-        document.getElementById('semCargaAtreladaFilter').checked = false;
+        document.getElementById('semCargaAtrelada').checked = false;
         document.getElementById('itemsPorPagina').value = '10';
         
         this.itemsPerPage = 10;
@@ -511,21 +515,45 @@ if (typeof OrdemServicoManager === 'undefined') {
         this.clearFilters();
     }
     
-    fecharCadastroServico() {
-        const modal = bootstrap.Modal.getInstance(document.getElementById('cadastroServicoModal'));
-        if (modal) {
-            modal.hide();
-        }
-    }
     
     cadastrarServico() {
-        const modal = new bootstrap.Modal(document.getElementById('cadastroServicoModal'));
-        modal.show();
+        this.showCadastroView();
         this.resetCadastroForm();
+    }
+    
+    showCadastroView() {
+        this.currentView = 'cadastro';
+        document.getElementById('listagemView').style.display = 'none';
+        document.getElementById('cadastroView').style.display = 'block';
+    }
+    
+    showListagemView() {
+        this.currentView = 'listagem';
+        document.getElementById('cadastroView').style.display = 'none';
+        document.getElementById('listagemView').style.display = 'block';
     }
     
     resetCadastroForm() {
         document.getElementById('cadastroServicoForm').reset();
+        
+        // Resetar campos específicos
+        document.getElementById('servicoSemCargaAtrelada').checked = false;
+        this.toggleCamposCarga(false); // Começar com campos de com carga visíveis
+        
+        // Limpar tabela de serviços
+        const tbody = document.getElementById('servicosTableBody');
+        if (tbody) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="12" class="text-center text-danger py-3">
+                        Nenhum serviço adicionado
+                    </td>
+                </tr>
+            `;
+        }
+        
+        // Limpar formulário de adição de serviços
+        this.limparFormularioServico();
     }
     
     salvarServico() {
@@ -542,28 +570,44 @@ if (typeof OrdemServicoManager === 'undefined') {
         // Simular salvamento
         this.showNotification('Ordem de serviço cadastrada com sucesso!', 'success');
         
-        // Fechar modal
-        const modal = bootstrap.Modal.getInstance(document.getElementById('cadastroServicoModal'));
-        modal.hide();
+        // Voltar para a listagem
+        this.showListagemView();
         
         // Recarregar lista
         this.loadOrdens();
     }
     
     validateCadastroForm() {
-        const requiredFields = ['tipoServico', 'entidadeServico', 'dataServico', 'horaServico'];
-        
+        const servicoSemCarga = document.getElementById('servicoSemCargaAtrelada').checked;
         let isValid = true;
         
-        requiredFields.forEach(fieldId => {
-            const field = document.getElementById(fieldId);
-            if (field && !field.value.trim()) {
-                field.classList.add('is-invalid');
+        if (servicoSemCarga) {
+            // Validar campos para serviço SEM carga atrelada
+            const camposObrigatorios = ['entidadeServico', 'tipoServico'];
+            
+            camposObrigatorios.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (field && !field.value.trim()) {
+                    field.classList.add('is-invalid');
+                    isValid = false;
+                } else if (field) {
+                    field.classList.remove('is-invalid');
+                }
+            });
+        } else {
+            // Para serviço COM carga atrelada, não há campos obrigatórios específicos
+            // mas podemos validar se pelo menos um campo foi preenchido
+            const camposComCarga = ['awbServico', 'hawbServico', 'diServico', 'dtaServico'];
+            const algumCampoPreenchido = camposComCarga.some(campoId => {
+                const campo = document.getElementById(campoId);
+                return campo && campo.value.trim();
+            });
+            
+            if (!algumCampoPreenchido) {
+                this.showNotification('Preencha pelo menos um campo do processo (AWB, HAWB, DI ou DTA).', 'error');
                 isValid = false;
-            } else if (field) {
-                field.classList.remove('is-invalid');
             }
-        });
+        }
         
         if (!isValid) {
             this.showNotification('Por favor, preencha todos os campos obrigatórios.', 'error');
@@ -573,19 +617,62 @@ if (typeof OrdemServicoManager === 'undefined') {
     }
     
     collectCadastroFormData() {
-        return {
-            tipoServico: document.getElementById('tipoServico')?.value || '',
-            entidadeServico: document.getElementById('entidadeServico')?.value || '',
-            dataServico: document.getElementById('dataServico')?.value || '',
-            horaServico: document.getElementById('horaServico')?.value || '',
-            processoServico: document.getElementById('processoServico')?.value || '',
-            fichaServico: document.getElementById('fichaServico')?.value || '',
-            awbServico: document.getElementById('awbServico')?.value || '',
-            hawbServico: document.getElementById('hawbServico')?.value || '',
-            diDueServico: document.getElementById('diDueServico')?.value || '',
-            placaServico: document.getElementById('placaServico')?.value || '',
-            observacoesServico: document.getElementById('observacoesServico')?.value || ''
+        const servicoSemCarga = document.getElementById('servicoSemCargaAtrelada').checked;
+        
+        const baseData = {
+            servicoSemCargaAtrelada: servicoSemCarga,
+            servicos: this.coletarServicos()
         };
+        
+        if (servicoSemCarga) {
+            // Coletar dados para serviço SEM carga atrelada
+            return {
+                ...baseData,
+                entidadeServico: document.getElementById('entidadeServico')?.value || '',
+                tipoServico: document.getElementById('tipoServico')?.value || '',
+                termoServico: document.getElementById('termoServico')?.value || '',
+                placaServico: document.getElementById('placaServico')?.value || ''
+            };
+        } else {
+            // Coletar dados para serviço COM carga atrelada
+            return {
+                ...baseData,
+                awbServico: document.getElementById('awbServico')?.value || '',
+                hawbServico: document.getElementById('hawbServico')?.value || '',
+                diServico: document.getElementById('diServico')?.value || '',
+                dtaServico: document.getElementById('dtaServico')?.value || '',
+                termoServicoComCarga: document.getElementById('termoServicoComCarga')?.value || '',
+                placaServicoComCarga: document.getElementById('placaServicoComCarga')?.value || ''
+            };
+        }
+    }
+    
+    coletarServicos() {
+        const tbody = document.getElementById('servicosTableBody');
+        if (!tbody) return [];
+        
+        const servicos = [];
+        const linhas = tbody.querySelectorAll('tr');
+        
+        linhas.forEach(linha => {
+            const celulas = linha.querySelectorAll('td');
+            if (celulas.length >= 11) { // Verificar se é uma linha válida (não a mensagem de "nenhum serviço")
+                servicos.push({
+                    servico: celulas[1].textContent,
+                    data: celulas[2].textContent,
+                    hora: celulas[3].textContent,
+                    dataFim: celulas[4].textContent !== '-' ? celulas[4].textContent : '',
+                    horaFim: celulas[5].textContent !== '-' ? celulas[5].textContent : '',
+                    quantidade: celulas[6].textContent,
+                    status: celulas[7].textContent.trim(),
+                    observacao: celulas[8].textContent !== '-' ? celulas[8].textContent : '',
+                    cnpjCpf: celulas[9].textContent !== '-' ? celulas[9].textContent : '',
+                    previaValor: celulas[10].textContent !== '-' ? celulas[10].textContent : ''
+                });
+            }
+        });
+        
+        return servicos;
     }
     
     viewOrdem(id) {
@@ -693,6 +780,175 @@ if (typeof OrdemServicoManager === 'undefined') {
             }
         }, 5000);
     }
+    
+    toggleCamposCarga(semCargaAtrelada) {
+        const camposSemCarga = document.getElementById('camposSemCarga');
+        const camposComCarga = document.getElementById('camposComCarga');
+        
+        if (semCargaAtrelada) {
+            // Mostrar apenas campos para serviço SEM carga atrelada
+            camposSemCarga.style.display = 'block';
+            camposComCarga.style.display = 'none';
+            
+            // Tornar campos obrigatórios para sem carga
+            document.getElementById('entidadeServico').required = true;
+            document.getElementById('tipoServico').required = true;
+            
+            // Limpar campos de com carga
+            this.limparCamposComCarga();
+        } else {
+            // Mostrar apenas campos para serviço COM carga atrelada
+            camposSemCarga.style.display = 'none';
+            camposComCarga.style.display = 'block';
+            
+            // Remover obrigatoriedade dos campos sem carga
+            document.getElementById('entidadeServico').required = false;
+            document.getElementById('tipoServico').required = false;
+            
+            // Limpar campos de sem carga
+            this.limparCamposSemCarga();
+        }
+    }
+    
+    limparCamposSemCarga() {
+        const campos = ['entidadeServico', 'tipoServico', 'termoServico', 'placaServico'];
+        campos.forEach(campoId => {
+            const campo = document.getElementById(campoId);
+            if (campo) {
+                campo.value = '';
+            }
+        });
+    }
+    
+    limparCamposComCarga() {
+        const campos = ['awbServico', 'hawbServico', 'diServico', 'dtaServico', 'termoServicoComCarga', 'placaServicoComCarga'];
+        campos.forEach(campoId => {
+            const campo = document.getElementById(campoId);
+            if (campo) {
+                campo.value = '';
+            }
+        });
+    }
+    
+    limparFormularioServico() {
+        const campos = [
+            'novoServico', 'novaDataServico', 'novaHoraServico', 
+            'novaDataFimServico', 'novaHoraFimServico', 'novaQuantidadeServico',
+            'novoStatusServico', 'novaObservacaoServico', 'novoCnpjCpfServico', 
+            'novaPreviaValorServico'
+        ];
+        
+        campos.forEach(campoId => {
+            const campo = document.getElementById(campoId);
+            if (campo) {
+                campo.value = campoId === 'novaQuantidadeServico' ? '0' : '';
+            }
+        });
+    }
+    
+    adicionarServico() {
+        const servico = document.getElementById('novoServico').value.trim();
+        const data = document.getElementById('novaDataServico').value;
+        const hora = document.getElementById('novaHoraServico').value;
+        const dataFim = document.getElementById('novaDataFimServico').value;
+        const horaFim = document.getElementById('novaHoraFimServico').value;
+        const quantidade = document.getElementById('novaQuantidadeServico').value;
+        const status = document.getElementById('novoStatusServico').value;
+        const observacao = document.getElementById('novaObservacaoServico').value.trim();
+        const cnpjCpf = document.getElementById('novoCnpjCpfServico').value.trim();
+        const previaValor = document.getElementById('novaPreviaValorServico').value.trim();
+        
+        if (!servico || servico.length < 3) {
+            this.showNotification('Digite pelo menos 3 caracteres para o serviço.', 'error');
+            return;
+        }
+        
+        if (!data) {
+            this.showNotification('Selecione uma data para o serviço.', 'error');
+            return;
+        }
+        
+        if (!hora) {
+            this.showNotification('Selecione uma hora para o serviço.', 'error');
+            return;
+        }
+        
+        if (!status) {
+            this.showNotification('Selecione um status para o serviço.', 'error');
+            return;
+        }
+        
+        // Adicionar serviço à tabela
+        this.adicionarServicoATabela({
+            servico, data, hora, dataFim, horaFim, quantidade, 
+            status, observacao, cnpjCpf, previaValor
+        });
+        
+        // Limpar formulário
+        this.limparFormularioServico();
+        
+        this.showNotification('Serviço adicionado com sucesso!', 'success');
+    }
+    
+    adicionarServicoATabela(dadosServico) {
+        const tbody = document.getElementById('servicosTableBody');
+        if (!tbody) return;
+        
+        // Se é a primeira linha (mensagem de "nenhum serviço"), substituir
+        if (tbody.children.length === 1 && tbody.children[0].children.length === 1) {
+            tbody.innerHTML = '';
+        }
+        
+        const novaLinha = document.createElement('tr');
+        novaLinha.innerHTML = `
+            <td>${tbody.children.length + 1}</td>
+            <td>${dadosServico.servico}</td>
+            <td>${this.formatarData(dadosServico.data)}</td>
+            <td>${dadosServico.hora}</td>
+            <td>${dadosServico.dataFim ? this.formatarData(dadosServico.dataFim) : '-'}</td>
+            <td>${dadosServico.horaFim || '-'}</td>
+            <td>${dadosServico.quantidade}</td>
+            <td>
+                <span class="badge ${this.getStatusClass(dadosServico.status)}">
+                    ${this.getStatusText(dadosServico.status)}
+                </span>
+            </td>
+            <td>${dadosServico.observacao || '-'}</td>
+            <td>${dadosServico.cnpjCpf || '-'}</td>
+            <td>${dadosServico.previaValor || '-'}</td>
+            <td>
+                <button class="btn btn-sm btn-outline-danger" onclick="removerServico(this)" title="Remover">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </td>
+        `;
+        
+        tbody.appendChild(novaLinha);
+    }
+    
+    formatarData(data) {
+        if (!data) return '-';
+        const [ano, mes, dia] = data.split('-');
+        return `${dia}/${mes}/${ano}`;
+    }
+    
+    getStatusClass(status) {
+        switch(status) {
+            case 'SOLICITACAO': return 'bg-warning';
+            case 'EXECUTADO': return 'bg-success';
+            case 'AGENDAMENTO': return 'bg-danger';
+            default: return 'bg-secondary';
+        }
+    }
+    
+    getStatusText(status) {
+        switch(status) {
+            case 'SOLICITACAO': return 'Solicitação';
+            case 'EXECUTADO': return 'Executado';
+            case 'AGENDAMENTO': return 'Agendamento';
+            default: return status;
+        }
+    }
 }
 
 // Funções globais
@@ -714,9 +970,9 @@ function clearAdvancedFilters() {
     }
 }
 
-function fecharCadastroServico() {
+function voltarParaListagem() {
     if (window.ordemServicoManager) {
-        window.ordemServicoManager.fecharCadastroServico();
+        window.ordemServicoManager.showListagemView();
     }
 }
 
@@ -729,6 +985,44 @@ function salvarServico() {
 function editarServico() {
     if (window.ordemServicoManager) {
         window.ordemServicoManager.editOrdem(window.ordemServicoManager.currentOrdem?.id);
+    }
+}
+
+function adicionarServico() {
+    if (window.ordemServicoManager) {
+        window.ordemServicoManager.adicionarServico();
+    }
+}
+
+function removerServico(botao) {
+    if (window.ordemServicoManager) {
+        const linha = botao.closest('tr');
+        linha.remove();
+        
+        // Renumerar as linhas
+        const tbody = document.getElementById('servicosTableBody');
+        if (tbody) {
+            const linhas = tbody.querySelectorAll('tr');
+            linhas.forEach((linha, index) => {
+                const primeiraCelula = linha.querySelector('td:first-child');
+                if (primeiraCelula) {
+                    primeiraCelula.textContent = index + 1;
+                }
+            });
+            
+            // Se não há mais serviços, mostrar mensagem
+            if (linhas.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="12" class="text-center text-danger py-3">
+                            Nenhum serviço adicionado
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+        
+        window.ordemServicoManager.showNotification('Serviço removido com sucesso!', 'success');
     }
 }
 

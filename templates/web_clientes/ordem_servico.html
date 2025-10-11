@@ -8,7 +8,8 @@
 {% include 'partials/sidebar.html' %}
 
 <main class="content main-content--shifted">
-    <div class="content-section active">
+    <!-- View de Listagem -->
+    <div class="content-section active" id="listagemView">
         <div class="container-fluid">
             <!-- Header da página -->
             <div class="page-header">
@@ -47,6 +48,18 @@
                     <button class="btn btn-success" id="cadastrarServico">
                         <i class="fas fa-plus"></i> Cadastrar Serviço
                     </button>
+                </div>
+                
+                <!-- Checkbox para Sem Carga Atrelada -->
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="semCargaAtrelada" onchange="ordemServicoManager.filterSemCarga()">
+                            <label class="form-check-label fw-bold text-dark" for="semCargaAtrelada">
+                                Mostrar apenas serviços sem carga atrelada
+                            </label>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Filtros Avançados -->
@@ -127,14 +140,6 @@
                                         <label class="form-label">Data até</label>
                                         <input type="date" name="data_ate" id="dataAteFilter" class="form-control">
                                     </div>
-                                    <div class="col-md-6 mb-3">
-                                        <div class="form-check mt-4">
-                                            <input class="form-check-input" type="checkbox" id="semCargaAtreladaFilter">
-                                            <label class="form-check-label" for="semCargaAtreladaFilter">
-                                                Sem carga atrelada
-                                            </label>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -212,123 +217,218 @@
                 </div>
             </div>
             
-            <!-- Paginação -->
-            <nav aria-label="Navegação de páginas" class="mt-4">
-                <ul class="pagination justify-content-center" id="pagination">
-                    <!-- Paginação será gerada via JavaScript -->
-                </ul>
             </nav>
         </div>
     </div>
-</main>
-
-<!-- Modal para Cadastro de Serviço -->
-<div class="modal fade" id="cadastroServicoModal" tabindex="-1" aria-labelledby="cadastroServicoModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="cadastroServicoModalLabel">
-                    <i class="fas fa-arrow-left me-2" onclick="fecharCadastroServico()"></i>
-                    Cadastro de Ordem de Serviço
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    
+    <!-- View de Cadastro -->
+    <div class="content-section" id="cadastroView" style="display: none;">
+        <div class="container-fluid">
+            <!-- Header da página de cadastro -->
+            <div class="page-header">
+                <div class="header-content">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-arrow-left fa-2x text-white me-3" onclick="voltarParaListagem()" style="cursor: pointer;"></i>
+                        <div class="header-text">
+                            <h2>Cadastro de Ordem de Serviço</h2>
+                            <p class="page-subtitle">Preencha as informações para criar uma nova ordem de serviço</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="modal-body">
+            
+            <!-- Formulário de Cadastro -->
+            <div class="card">
+                <div class="card-body">
                 <form id="cadastroServicoForm">
                     <div class="form-section">
                         <h6 class="section-title">Detalhes do Serviço</h6>
+                            
+                            <!-- Checkbox para Serviço sem carga atrelada -->
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="servicoSemCargaAtrelada">
+                                        <label class="form-check-label" for="servicoSemCargaAtrelada">
+                                            Serviço sem carga atrelada
+                                        </label>
+                                </div>
+                            </div>
+                        </div>
+
+                            <!-- Campos para serviço SEM carga atrelada -->
+                            <div id="camposSemCarga">
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
-                                    <label for="tipoServico" class="form-label required">Tipo de Serviço</label>
-                                    <select class="form-select" id="tipoServico" required>
-                                        <option value="">Selecione o tipo de serviço</option>
-                                        <option value="acesso_veiculos">Acesso de Veículos</option>
-                                        <option value="coleta_carga">Coleta de Carga com Pátio Vencido</option>
-                                        <option value="descarregamento_exportacao">Descarregamento - Exportação</option>
-                                        <option value="visualizacao_video">Visualização de gravação de video</option>
-                                        <option value="carga_nacional">Carga nacional</option>
-                                        <option value="alteracao_cnpj">Alteração de CNPJ</option>
-                                        <option value="outros">Outros</option>
-                                    </select>
+                                            <label for="entidadeServico" class="form-label required">Selecione a Entidade</label>
+                                            <input type="text" class="form-control" id="entidadeServico" placeholder="Digite 3 ou mais caracteres para pesquisar a Entidade" required>
                                 </div>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
-                                    <label for="entidadeServico" class="form-label required">Entidade</label>
-                                    <input type="text" class="form-control" id="entidadeServico" placeholder="Nome da entidade" required>
+                                            <label for="tipoServico" class="form-label required">Tipo <span class="text-danger">*</span></label>
+                                            <select class="form-select" id="tipoServico" required>
+                                                <option value="">Selecione...</option>
+                                                <option value="IMPORTAÇÃO">IMPORTAÇÃO</option>
+                                                <option value="EXPORTAÇÃO">EXPORTAÇÃO</option>
+                                            </select>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
-                                    <label for="dataServico" class="form-label required">Data do Serviço</label>
-                                    <input type="date" class="form-control" id="dataServico" required>
+                                            <label for="termoServico" class="form-label">Termo</label>
+                                            <input type="text" class="form-control" id="termoServico" placeholder="Termo">
                                 </div>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
-                                    <label for="horaServico" class="form-label required">Hora do Serviço</label>
-                                    <input type="time" class="form-control" id="horaServico" required>
+                                            <label for="placaServico" class="form-label">Placa</label>
+                                            <input type="text" class="form-control" id="placaServico" placeholder="Placa">
+                                        </div>
                                 </div>
+                                </div>
+                            </div>
+
+                            <!-- Campos para serviço COM carga atrelada -->
+                            <div id="camposComCarga" style="display: none;">
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <label class="form-label">Selecione o Processo</label>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <div class="form-group">
-                                    <label for="processoServico" class="form-label">Processo</label>
-                                    <input type="text" class="form-control" id="processoServico" placeholder="Número do processo">
-                                </div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <div class="form-group">
-                                    <label for="fichaServico" class="form-label">Ficha</label>
-                                    <input type="text" class="form-control" id="fichaServico" placeholder="Número da ficha">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
+                                    <div class="col-md-3 mb-3">
                                 <div class="form-group">
                                     <label for="awbServico" class="form-label">AWB</label>
-                                    <input type="text" class="form-control" id="awbServico" placeholder="Número AWB">
+                                            <input type="text" class="form-control" id="awbServico" placeholder="AWB">
                                 </div>
                             </div>
-                            <div class="col-md-6 mb-3">
+                                    <div class="col-md-3 mb-3">
                                 <div class="form-group">
                                     <label for="hawbServico" class="form-label">HAWB</label>
-                                    <input type="text" class="form-control" id="hawbServico" placeholder="Número HAWB">
+                                            <input type="text" class="form-control" id="hawbServico" placeholder="HAWB">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <div class="form-group">
+                                            <label for="diServico" class="form-label">DI</label>
+                                            <input type="text" class="form-control" id="diServico" placeholder="DI">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <div class="form-group">
+                                            <label for="dtaServico" class="form-label">DTA</label>
+                                            <input type="text" class="form-control" id="dtaServico" placeholder="DTA">
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
-                                    <label for="diDueServico" class="form-label">DI/DUE</label>
-                                    <input type="text" class="form-control" id="diDueServico" placeholder="Número DI/DUE">
+                                            <label for="termoServicoComCarga" class="form-label">Termo</label>
+                                            <input type="text" class="form-control" id="termoServicoComCarga" placeholder="Termo">
                                 </div>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
-                                    <label for="placaServico" class="form-label">Placa</label>
-                                    <input type="text" class="form-control" id="placaServico" placeholder="Placa do veículo">
+                                            <label for="placaServicoComCarga" class="form-label">Placa</label>
+                                            <input type="text" class="form-control" id="placaServicoComCarga" placeholder="Placa">
+                                        </div>
                                 </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Seção de Serviços -->
+                            <div class="form-section mt-4">
+                                <h6 class="section-title">Serviços</h6>
+                                
+                                <!-- Tabela de serviços -->
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th width="5%">#</th>
+                                                <th width="15%">Serviço</th>
+                                                <th width="10%">Data</th>
+                                                <th width="8%">Hora</th>
+                                                <th width="10%">Data Fim</th>
+                                                <th width="8%">Hora Fim</th>
+                                                <th width="8%">Quantidade</th>
+                                                <th width="10%">Status</th>
+                                                <th width="15%">Observação</th>
+                                                <th width="10%">CNPJ/CPF Pagador</th>
+                                                <th width="8%">Prévia Valor</th>
+                                                <th width="8%">Opções</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="servicosTableBody">
+                                            <tr>
+                                                <td colspan="12" class="text-center text-danger py-3">
+                                                    Nenhum serviço adicionado
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                                <!-- Formulário para adicionar serviço -->
+                                <div class="row mt-3">
+                                    <div class="col-md-3 mb-2">
+                                        <input type="text" class="form-control" id="novoServico" placeholder="Digite 3 ou mais carac">
+                                    </div>
+                                    <div class="col-md-2 mb-2">
+                                        <input type="date" class="form-control" id="novaDataServico" placeholder="dd/mm/aaaa">
+                                    </div>
+                                    <div class="col-md-2 mb-2">
+                                        <input type="time" class="form-control" id="novaHoraServico" placeholder="00:00">
+                                    </div>
+                                    <div class="col-md-2 mb-2">
+                                        <input type="date" class="form-control" id="novaDataFimServico" placeholder="dd/mm/aaaa">
+                                    </div>
+                                    <div class="col-md-2 mb-2">
+                                        <input type="time" class="form-control" id="novaHoraFimServico" placeholder="00:00">
+                                    </div>
+                                    <div class="col-md-1 mb-2">
+                                        <input type="number" class="form-control" id="novaQuantidadeServico" value="0">
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-12 mb-3">
-                                <div class="form-group">
-                                    <label for="observacoesServico" class="form-label">Observações</label>
-                                    <textarea class="form-control" id="observacoesServico" rows="3" placeholder="Observações adicionais"></textarea>
+                                    <div class="col-md-2 mb-2">
+                                        <select class="form-select" id="novoStatusServico">
+                                            <option value="">Selecione...</option>
+                                            <option value="SOLICITACAO">Solicitação</option>
+                                            <option value="EXECUTADO">Executado</option>
+                                            <option value="AGENDAMENTO">Agendamento</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <input type="text" class="form-control" id="novaObservacaoServico" placeholder="Observação">
+                                    </div>
+                                    <div class="col-md-2 mb-2">
+                                        <input type="text" class="form-control" id="novoCnpjCpfServico" placeholder="CNPJ/CPF Pagador">
+                                    </div>
+                                    <div class="col-md-2 mb-2">
+                                        <input type="text" class="form-control" id="novaPreviaValorServico" placeholder="Prévia Valor">
+                                    </div>
+                                    <div class="col-md-1 mb-2">
+                                        <button type="button" class="btn btn-dark w-100 d-flex align-items-center justify-content-center" onclick="adicionarServico()" title="Adicionar Serviço">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </form>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <div class="card-footer">
+                    <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-secondary" onclick="voltarParaListagem()">
+                            <i class="fas fa-arrow-left"></i> Cancelar
+                        </button>
                 <button type="button" class="btn btn-success" onclick="salvarServico()">
                     <i class="fas fa-save"></i> Salvar Serviço
                 </button>
@@ -336,6 +436,9 @@
         </div>
     </div>
 </div>
+    </div>
+</main>
+
 
 <!-- Modal para Visualizar/Editar Serviço -->
 <div class="modal fade" id="visualizarServicoModal" tabindex="-1" aria-labelledby="visualizarServicoModalLabel" aria-hidden="true">
