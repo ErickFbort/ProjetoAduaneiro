@@ -575,6 +575,123 @@
     </div>
 </main>
 
+<!-- Modal de Edição/Visualização de Serviço -->
+<div class="modal fade" id="servicoModal" tabindex="-1" aria-labelledby="servicoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="servicoModalLabel">
+                    <i class="fas fa-cogs me-2"></i>
+                    <span id="servicoModalTitle">Editar Serviço</span> - <span id="servicoIdDisplay"></span>
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="servicoForm">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="servicoNome" class="form-label required">Serviço *</label>
+                                <input type="text" class="form-control" id="servicoNome" placeholder="Digite o nome do serviço" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="servicoStatus" class="form-label required">Status *</label>
+                                <select class="form-select" id="servicoStatus" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="EXECUTADO">Executado</option>
+                                    <option value="EM_ANDAMENTO">Em Andamento</option>
+                                    <option value="AGENDADO">Agendado</option>
+                                    <option value="CANCELADO">Cancelado</option>
+                                    <option value="PENDENTE">Pendente</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="servicoData" class="form-label required">Data *</label>
+                                <input type="date" class="form-control" id="servicoData" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="servicoHora" class="form-label required">Hora *</label>
+                                <input type="time" class="form-control" id="servicoHora" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="servicoDataFinal" class="form-label">Data Final</label>
+                                <input type="date" class="form-control" id="servicoDataFinal">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="servicoHoraFinal" class="form-label">Hora Final</label>
+                                <input type="time" class="form-control" id="servicoHoraFinal">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="servicoQuantidade" class="form-label">Quantidade</label>
+                                <input type="number" class="form-control" id="servicoQuantidade" value="1" min="1">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="servicoObservacao" class="form-label">Observação</label>
+                                <input type="text" class="form-control" id="servicoObservacao" placeholder="Observações sobre o serviço">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="confirmarServico">
+                    <i class="fas fa-save"></i> Confirmar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Estilos para o modo visualização do modal de serviços */
+#servicoModal .view-mode .form-control:read-only,
+#servicoModal .view-mode .form-select:disabled {
+    background-color: #f8f9fa !important;
+    border-color: #dee2e6 !important;
+    color: #6c757d !important;
+    cursor: not-allowed !important;
+}
+
+#servicoModal .view-mode .form-control:read-only:focus,
+#servicoModal .view-mode .form-select:disabled:focus {
+    box-shadow: none !important;
+    border-color: #dee2e6 !important;
+}
+
+#servicoModal .view-mode .form-label {
+    color: #6c757d !important;
+    font-weight: 500;
+}
+
+#servicoModal .view-mode .required::after {
+    color: #6c757d !important;
+}
+</style>
+
 {% block extra_js %}
 <script src="{{ url_for('static', filename='js/processos.js') }}"></script>
 <script>
@@ -801,33 +918,37 @@ function carregarServicos() {
     const servicosTableBody = document.getElementById('servicosTableBody');
     if (!servicosTableBody) return;
     
-    // Dados simulados de serviços
-    const servicos = [
-        {
-            id: 1,
-            servico: 'GRIS',
-            status: 'EXECUTADO',
-            responsavel: 'Sistema',
-            dataInicio: '01/09/2025',
-            dataConclusao: '01/09/2025',
-            observacao: 'Serviço compulsório gerado automaticamente',
-            parametro: '1',
-            horaInicio: '14:41',
-            horaConclusao: '14:41'
-        },
-        {
-            id: 2,
-            servico: 'Carregamento / descarregamento - 100,01kg a 500kg',
-            status: 'AGENDAMENTO',
-            responsavel: 'Sistema',
-            dataInicio: '',
-            dataConclusao: '',
-            observacao: 'Serviço de carregamento gerado automaticamente',
-            parametro: '1',
-            horaInicio: '',
-            horaConclusao: ''
-        }
-    ];
+    // Se servicosData estiver vazio, inicializar com dados simulados
+    if (servicosData.length === 0) {
+        servicosData = [
+            {
+                id: 1,
+                servico: 'GRIS',
+                status: 'EXECUTADO',
+                responsavel: 'Sistema',
+                dataInicio: '01/09/2025',
+                dataConclusao: '01/09/2025',
+                observacao: 'Serviço compulsório gerado automaticamente',
+                parametro: '1',
+                horaInicio: '14:41',
+                horaConclusao: '14:41'
+            },
+            {
+                id: 2,
+                servico: 'Carregamento / descarregamento - 100,01kg a 500kg',
+                status: 'AGENDAMENTO',
+                responsavel: 'Sistema',
+                dataInicio: '',
+                dataConclusao: '',
+                observacao: 'Serviço de carregamento gerado automaticamente',
+                parametro: '1',
+                horaInicio: '',
+                horaConclusao: ''
+            }
+        ];
+    }
+    
+    const servicos = servicosData;
     
     if (servicos.length === 0) {
         servicosTableBody.innerHTML = `
@@ -841,44 +962,44 @@ function carregarServicos() {
         return;
     }
     
-    servicosTableBody.innerHTML = servicos.map(servico => `
-        <tr>
-            <td>${servico.id}</td>
-            <td>${servico.servico}</td>
-            <td>${servico.observacao}</td>
-            <td>${servico.dataInicio || '-'}</td>
-            <td>${servico.horaInicio || '-'}</td>
-            <td>${servico.dataConclusao || '-'}</td>
-            <td>${servico.horaConclusao || '-'}</td>
-            <td>${servico.parametro}</td>
-            <td>${servico.status}</td>
-            <td>
-                <div class="dropdown">
-                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <button class="dropdown-item" title="Editar">
-                                <i class="fas fa-edit me-2"></i> Editar
-                            </button>
-                        </li>
-                        <li>
-                            <button class="dropdown-item" title="Visualizar">
-                                <i class="fas fa-search-plus me-2"></i> Visualizar
-                            </button>
-                        </li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li>
-                            <button class="dropdown-item text-danger" title="Excluir">
-                                <i class="fas fa-trash me-2"></i> Excluir
-                            </button>
-                        </li>
-                    </ul>
-                </div>
-            </td>
-        </tr>
-    `).join('');
+     servicosTableBody.innerHTML = servicos.map(servico => `
+         <tr>
+             <td>${servico.id}</td>
+             <td>${servico.servico}</td>
+             <td>${servico.observacao}</td>
+             <td>${servico.dataInicio || '-'}</td>
+             <td>${servico.horaInicio || '-'}</td>
+             <td>${servico.dataConclusao || '-'}</td>
+             <td>${servico.horaConclusao || '-'}</td>
+             <td>${servico.parametro}</td>
+             <td>${servico.status}</td>
+             <td>
+                 <div class="dropdown">
+                     <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                         <i class="fas fa-bars"></i>
+                     </button>
+                     <ul class="dropdown-menu">
+                         <li>
+                             <button class="dropdown-item" title="Editar" onclick="editarServico(${servico.id})">
+                                 <i class="fas fa-edit me-2"></i> Editar
+                             </button>
+                         </li>
+                         <li>
+                             <button class="dropdown-item" title="Visualizar" onclick="visualizarServico(${servico.id})">
+                                 <i class="fas fa-search-plus me-2"></i> Visualizar
+                             </button>
+                         </li>
+                         <li><hr class="dropdown-divider"></li>
+                         <li>
+                             <button class="dropdown-item text-danger" title="Excluir" onclick="excluirServico(${servico.id})">
+                                 <i class="fas fa-trash me-2"></i> Excluir
+                             </button>
+                         </li>
+                     </ul>
+                 </div>
+             </td>
+         </tr>
+     `).join('');
 }
 
 
@@ -904,6 +1025,241 @@ function configurarCamposServicos() {
             campo.setAttribute('disabled', true);
         }
     });
+}
+
+// Variáveis globais para controle do modal de serviços
+let servicosData = [];
+let servicoAtual = null;
+let modoServico = 'edicao'; // 'edicao' ou 'visualizacao'
+
+// Função para editar serviço
+function editarServico(servicoId) {
+    const servico = servicosData.find(s => s.id === servicoId);
+    if (!servico) return;
+    
+    servicoAtual = servico;
+    modoServico = 'edicao';
+    abrirModalServico('Editar Serviço', servicoId);
+    preencherFormularioServico(servico);
+}
+
+// Função para visualizar serviço
+function visualizarServico(servicoId) {
+    const servico = servicosData.find(s => s.id === servicoId);
+    if (!servico) return;
+    
+    servicoAtual = servico;
+    modoServico = 'visualizacao';
+    abrirModalServico('Visualizar Serviço', servicoId);
+    preencherFormularioServico(servico);
+    
+    // Aguardar um pouco para garantir que o modal esteja totalmente carregado
+    setTimeout(() => {
+        tornarCamposReadonly();
+    }, 100);
+}
+
+// Função para excluir serviço
+function excluirServico(servicoId) {
+    if (confirm('Tem certeza que deseja excluir este serviço?')) {
+        servicosData = servicosData.filter(s => s.id !== servicoId);
+        carregarServicos();
+    }
+}
+
+// Função para abrir o modal de serviço
+function abrirModalServico(titulo, servicoId) {
+    document.getElementById('servicoModalTitle').textContent = titulo;
+    document.getElementById('servicoIdDisplay').textContent = servicoId;
+    
+    const modal = new bootstrap.Modal(document.getElementById('servicoModal'));
+    modal.show();
+}
+
+// Função para preencher o formulário do serviço
+function preencherFormularioServico(servico) {
+    document.getElementById('servicoNome').value = servico.servico || '';
+    document.getElementById('servicoStatus').value = servico.status || '';
+    
+    // Converter datas do formato DD/MM/YYYY para YYYY-MM-DD
+    if (servico.dataInicio) {
+        const dataInicio = converterDataParaInput(servico.dataInicio);
+        document.getElementById('servicoData').value = dataInicio;
+    }
+    
+    if (servico.horaInicio) {
+        document.getElementById('servicoHora').value = servico.horaInicio;
+    }
+    
+    if (servico.dataConclusao) {
+        const dataConclusao = converterDataParaInput(servico.dataConclusao);
+        document.getElementById('servicoDataFinal').value = dataConclusao;
+    }
+    
+    if (servico.horaConclusao) {
+        document.getElementById('servicoHoraFinal').value = servico.horaConclusao;
+    }
+    
+    document.getElementById('servicoQuantidade').value = servico.parametro || '1';
+    document.getElementById('servicoObservacao').value = servico.observacao || '';
+}
+
+// Função para converter data do formato DD/MM/YYYY para YYYY-MM-DD
+function converterDataParaInput(dataString) {
+    if (!dataString || dataString === '-') return '';
+    const partes = dataString.split('/');
+    if (partes.length === 3) {
+        return `${partes[2]}-${partes[1].padStart(2, '0')}-${partes[0].padStart(2, '0')}`;
+    }
+    return '';
+}
+
+// Função para converter data do formato YYYY-MM-DD para DD/MM/YYYY
+function converterDataParaExibicao(dataString) {
+    if (!dataString) return '';
+    const data = new Date(dataString);
+    return data.toLocaleDateString('pt-BR');
+}
+
+// Função para tornar campos readonly no modo visualização
+function tornarCamposReadonly() {
+    const campos = [
+        'servicoNome', 'servicoStatus', 'servicoData', 'servicoHora',
+        'servicoDataFinal', 'servicoHoraFinal', 'servicoQuantidade', 'servicoObservacao'
+    ];
+    
+    campos.forEach(campoId => {
+        const campo = document.getElementById(campoId);
+        if (campo) {
+            // Para inputs de texto e number
+            if (campo.type === 'text' || campo.type === 'number') {
+                campo.setAttribute('readonly', true);
+                campo.style.backgroundColor = '#f8f9fa';
+                campo.style.cursor = 'not-allowed';
+            }
+            // Para selects
+            else if (campo.tagName === 'SELECT') {
+                campo.setAttribute('disabled', true);
+                campo.style.backgroundColor = '#f8f9fa';
+                campo.style.cursor = 'not-allowed';
+            }
+            // Para inputs de data e hora
+            else if (campo.type === 'date' || campo.type === 'time') {
+                campo.setAttribute('readonly', true);
+                campo.setAttribute('disabled', true);
+                campo.style.backgroundColor = '#f8f9fa';
+                campo.style.cursor = 'not-allowed';
+            }
+        }
+    });
+    
+    // Ocultar botão de confirmar no modo visualização
+    const confirmarBtn = document.getElementById('confirmarServico');
+    if (confirmarBtn) {
+        confirmarBtn.style.display = 'none';
+    }
+    
+    // Adicionar classe visual para indicar modo visualização
+    const modalBody = document.querySelector('#servicoModal .modal-body');
+    if (modalBody) {
+        modalBody.classList.add('view-mode');
+    }
+}
+
+// Função para tornar campos editáveis no modo edição
+function tornarCamposEditaveis() {
+    const campos = [
+        'servicoNome', 'servicoStatus', 'servicoData', 'servicoHora',
+        'servicoDataFinal', 'servicoHoraFinal', 'servicoQuantidade', 'servicoObservacao'
+    ];
+    
+    campos.forEach(campoId => {
+        const campo = document.getElementById(campoId);
+        if (campo) {
+            // Remover atributos de readonly/disabled
+            campo.removeAttribute('readonly');
+            campo.removeAttribute('disabled');
+            
+            // Restaurar estilos normais
+            campo.style.backgroundColor = '';
+            campo.style.cursor = '';
+        }
+    });
+    
+    // Mostrar botão de confirmar no modo edição
+    const confirmarBtn = document.getElementById('confirmarServico');
+    if (confirmarBtn) {
+        confirmarBtn.style.display = 'inline-block';
+    }
+    
+    // Remover classe visual do modo visualização
+    const modalBody = document.querySelector('#servicoModal .modal-body');
+    if (modalBody) {
+        modalBody.classList.remove('view-mode');
+    }
+}
+
+// Event listener para o botão de confirmar serviço
+document.addEventListener('DOMContentLoaded', function() {
+    const confirmarServicoBtn = document.getElementById('confirmarServico');
+    if (confirmarServicoBtn) {
+        confirmarServicoBtn.addEventListener('click', function() {
+            if (modoServico === 'edicao') {
+                salvarServico();
+            }
+        });
+    }
+    
+    // Event listener para quando o modal é fechado
+    const servicoModal = document.getElementById('servicoModal');
+    if (servicoModal) {
+        servicoModal.addEventListener('hidden.bs.modal', function() {
+            // Limpar formulário
+            document.getElementById('servicoForm').reset();
+            servicoAtual = null;
+            modoServico = 'edicao';
+            tornarCamposEditaveis();
+        });
+    }
+});
+
+// Função para salvar serviço
+function salvarServico() {
+    const servicoNome = document.getElementById('servicoNome').value;
+    const servicoStatus = document.getElementById('servicoStatus').value;
+    const servicoData = document.getElementById('servicoData').value;
+    const servicoHora = document.getElementById('servicoHora').value;
+    const servicoDataFinal = document.getElementById('servicoDataFinal').value;
+    const servicoHoraFinal = document.getElementById('servicoHoraFinal').value;
+    const servicoQuantidade = document.getElementById('servicoQuantidade').value;
+    const servicoObservacao = document.getElementById('servicoObservacao').value;
+    
+    // Validação básica
+    if (!servicoNome || !servicoStatus || !servicoData || !servicoHora) {
+        alert('Por favor, preencha todos os campos obrigatórios.');
+        return;
+    }
+    
+    // Atualizar dados do serviço
+    if (servicoAtual) {
+        servicoAtual.servico = servicoNome;
+        servicoAtual.status = servicoStatus;
+        servicoAtual.dataInicio = converterDataParaExibicao(servicoData);
+        servicoAtual.horaInicio = servicoHora;
+        servicoAtual.dataConclusao = servicoDataFinal ? converterDataParaExibicao(servicoDataFinal) : '';
+        servicoAtual.horaConclusao = servicoHoraFinal;
+        servicoAtual.parametro = servicoQuantidade;
+        servicoAtual.observacao = servicoObservacao;
+    }
+    
+    // Atualizar tabela
+    carregarServicos();
+    
+    // Fechar modal
+    const modal = bootstrap.Modal.getInstance(document.getElementById('servicoModal'));
+    modal.hide();
+    
+    alert('Serviço salvo com sucesso!');
 }
 </script>
 {% endblock %}
