@@ -130,8 +130,8 @@ if (typeof ProcessosManager === 'undefined') {
                     previsaoCarregamento: '2023-07-18',
                     observacao: '',
                     reexportacao: 'nao',
-                    impedimentoCarga: 'nao',
-                    receberGuias: 'nao',
+                    impedimentoCarga: '',
+                    receberGuiasEmail: 'nao',
                     emailGuias: '',
                     observacaoInterna: '',
                     // Dados da carga
@@ -179,8 +179,8 @@ if (typeof ProcessosManager === 'undefined') {
                     previsaoCarregamento: '2020-08-13',
                     observacao: '',
                     reexportacao: 'nao',
-                    impedimentoCarga: 'nao',
-                    receberGuias: 'nao',
+                    impedimentoCarga: '',
+                    receberGuiasEmail: 'nao',
                     emailGuias: '',
                     observacaoInterna: '',
                     regimeAduaneiro: 'importacao_definitiva',
@@ -227,8 +227,8 @@ if (typeof ProcessosManager === 'undefined') {
                     previsaoCarregamento: '2025-09-28',
                     observacao: '',
                     reexportacao: 'nao',
-                    impedimentoCarga: 'nao',
-                    receberGuias: 'nao',
+                    impedimentoCarga: '',
+                    receberGuiasEmail: 'nao',
                     emailGuias: '',
                     observacaoInterna: '',
                     regimeAduaneiro: 'exportacao_definitiva',
@@ -275,8 +275,8 @@ if (typeof ProcessosManager === 'undefined') {
                     previsaoCarregamento: '2023-08-26',
                     observacao: '',
                     reexportacao: 'nao',
-                    impedimentoCarga: 'nao',
-                    receberGuias: 'nao',
+                    impedimentoCarga: '',
+                    receberGuiasEmail: 'nao',
                     emailGuias: '',
                     observacaoInterna: '',
                     regimeAduaneiro: 'exportacao_definitiva',
@@ -323,8 +323,8 @@ if (typeof ProcessosManager === 'undefined') {
                     previsaoCarregamento: '2023-07-19',
                     observacao: '',
                     reexportacao: 'nao',
-                    impedimentoCarga: 'nao',
-                    receberGuias: 'nao',
+                    impedimentoCarga: '',
+                    receberGuiasEmail: 'nao',
                     emailGuias: '',
                     observacaoInterna: '',
                     regimeAduaneiro: 'exportacao_definitiva',
@@ -371,8 +371,8 @@ if (typeof ProcessosManager === 'undefined') {
                     previsaoCarregamento: '2023-07-20',
                     observacao: '',
                     reexportacao: 'nao',
-                    impedimentoCarga: 'nao',
-                    receberGuias: 'nao',
+                    impedimentoCarga: '',
+                    receberGuiasEmail: 'nao',
                     emailGuias: '',
                     observacaoInterna: '',
                     regimeAduaneiro: 'exportacao_definitiva',
@@ -419,8 +419,8 @@ if (typeof ProcessosManager === 'undefined') {
                     previsaoCarregamento: '2023-07-21',
                     observacao: '',
                     reexportacao: 'nao',
-                    impedimentoCarga: 'nao',
-                    receberGuias: 'nao',
+                    impedimentoCarga: '',
+                    receberGuiasEmail: 'nao',
                     emailGuias: '',
                     observacaoInterna: '',
                     regimeAduaneiro: 'exportacao_definitiva',
@@ -467,8 +467,8 @@ if (typeof ProcessosManager === 'undefined') {
                     previsaoCarregamento: '2023-07-22',
                     observacao: '',
                     reexportacao: 'nao',
-                    impedimentoCarga: 'nao',
-                    receberGuias: 'nao',
+                    impedimentoCarga: '',
+                    receberGuiasEmail: 'nao',
                     emailGuias: '',
                     observacaoInterna: '',
                     regimeAduaneiro: 'exportacao_definitiva',
@@ -515,8 +515,8 @@ if (typeof ProcessosManager === 'undefined') {
                     previsaoCarregamento: '2023-09-20',
                     observacao: '',
                     reexportacao: 'nao',
-                    impedimentoCarga: 'nao',
-                    receberGuias: 'nao',
+                    impedimentoCarga: '',
+                    receberGuiasEmail: 'nao',
                     emailGuias: '',
                     observacaoInterna: '',
                     regimeAduaneiro: 'exportacao_definitiva',
@@ -774,18 +774,13 @@ if (typeof ProcessosManager === 'undefined') {
     }
     
     editProcesso(id) {
-        this.viewProcesso(id, true);
+        // Redirecionar para a página de cadastro em modo de edição
+        window.location.href = `/web-clientes/processos/cadastro?modo=edicao&id=${id}`;
     }
     
     viewProcesso(id, editable = false) {
-        const processo = this.processos.find(p => p.id === id);
-        if (!processo) return;
-        
-        this.currentProcesso = processo;
-        this.populateModal(processo, editable);
-        
-        const modal = new bootstrap.Modal(document.getElementById('processoModal'));
-        modal.show();
+        // Redirecionar para a página de cadastro em modo de visualização
+        window.location.href = `/web-clientes/processos/cadastro?modo=visualizacao&id=${id}`;
     }
     
     populateModal(processo, editable = false) {
@@ -802,7 +797,7 @@ if (typeof ProcessosManager === 'undefined') {
         document.getElementById('observacao').value = processo.detalhes.observacao;
         document.getElementById('reexportacao').value = processo.detalhes.reexportacao;
         document.getElementById('impedimentoCarga').value = processo.detalhes.impedimentoCarga;
-        document.getElementById('receberGuias').value = processo.detalhes.receberGuias;
+        document.getElementById('receberGuiasEmail').value = processo.detalhes.receberGuiasEmail;
         document.getElementById('emailGuias').value = processo.detalhes.emailGuias;
         document.getElementById('observacaoInterna').value = processo.detalhes.observacaoInterna;
         
@@ -863,7 +858,7 @@ if (typeof ProcessosManager === 'undefined') {
             observacao: document.getElementById('observacao').value,
             reexportacao: document.getElementById('reexportacao').value,
             impedimentoCarga: document.getElementById('impedimentoCarga').value,
-            receberGuias: document.getElementById('receberGuias').value,
+            receberGuiasEmail: document.getElementById('receberGuiasEmail').value,
             emailGuias: document.getElementById('emailGuias').value,
             observacaoInterna: document.getElementById('observacaoInterna').value,
             // Dados da carga
@@ -1001,8 +996,7 @@ if (typeof ProcessosManager === 'undefined') {
             'despachanteCadastro',
             'clienteCadastro', 
             'naturezaOperacaoCadastro',
-            'tabelaAplicada',
-            'receberGuiasCadastro'
+            'tabelaAplicada'
         ];
         
         let isValid = true;
@@ -1016,6 +1010,19 @@ if (typeof ProcessosManager === 'undefined') {
                 field.classList.remove('is-invalid');
             }
         });
+        
+        // Validação específica para E-mail Guias quando Receber Guias E-mail = Sim
+        const receberGuiasEmail = document.getElementById('receberGuiasEmail');
+        const emailGuias = document.getElementById('emailGuias');
+        
+        if (receberGuiasEmail && receberGuiasEmail.value === 'sim') {
+            if (!emailGuias || !emailGuias.value.trim()) {
+                emailGuias.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                emailGuias.classList.remove('is-invalid');
+            }
+        }
         
         if (!isValid) {
             this.showNotification('Por favor, preencha todos os campos obrigatórios.', 'error');
@@ -1031,16 +1038,15 @@ if (typeof ProcessosManager === 'undefined') {
             cliente: document.getElementById('clienteCadastro')?.value || '',
             naturezaOperacao: document.getElementById('naturezaOperacaoCadastro')?.value || '',
             tabelaAplicada: document.getElementById('tabelaAplicada')?.value || '',
-            dataPontoZero: document.getElementById('dataPontoZeroCadastro')?.value || '',
-            referenciaCliente: document.getElementById('referenciaClienteCadastro')?.value || '',
-            previsaoCarregamento: document.getElementById('previsaoCarregamentoCadastro')?.value || '',
-            observacao: document.getElementById('observacaoCadastro')?.value || '',
-            reexportacao: document.getElementById('reexportacaoCadastro')?.value || '',
-            receberGuias: document.getElementById('receberGuiasCadastro')?.value || '',
-            emailGuias: document.getElementById('emailGuiasCadastro')?.value || '',
-            impedimentoCarga: document.getElementById('impedimentoCargaCadastro')?.value || '',
-            statusFaturamento: document.getElementById('statusFaturamentoCadastro')?.value || '',
-            observacaoInterna: document.getElementById('observacaoInternaCadastro')?.value || '',
+            dataPontoZero: document.getElementById('dataPontoZero')?.value || '',
+            referenciaCliente: document.getElementById('referenciaCliente')?.value || '',
+            previsaoCarregamento: document.getElementById('previsaoCarregamento')?.value || '',
+            observacao: document.getElementById('observacao')?.value || '',
+            reexportacao: document.getElementById('reexportacao')?.value || '',
+            receberGuiasEmail: document.getElementById('receberGuiasEmail')?.value || '',
+            emailGuias: document.getElementById('emailGuias')?.value || '',
+            impedimentoCarga: document.getElementById('impedimentoCarga')?.value || '',
+            observacaoInterna: document.getElementById('observacaoInterna')?.value || '',
             
             // Carga
             regimeAduaneiro: document.getElementById('regimeAduaneiroCadastro')?.value || '',
@@ -1086,16 +1092,43 @@ if (typeof ProcessosManager === 'undefined') {
         const documentosContainer = document.getElementById('documentosLista');
         const documentosList = document.getElementById('documentosList');
         const documentosDetails = document.getElementById('documentosDetails');
+        const mensagemNaturezaOperacao = document.getElementById('mensagemNaturezaOperacao');
+        const mensagemNaturezaOperacaoCadastro = document.getElementById('mensagemNaturezaOperacaoCadastro');
+        
+        // Determinar o modo atual (assumindo que está disponível globalmente)
+        const modo = window.modo || 'cadastro';
         
         if (!naturezaOperacao) {
             documentosContainer.style.display = 'none';
+            // Mostrar mensagem quando não há natureza selecionada
+            if (mensagemNaturezaOperacao && (modo === 'edicao' || modo === 'visualizacao')) {
+                mensagemNaturezaOperacao.style.display = 'block';
+            }
+            if (mensagemNaturezaOperacaoCadastro && modo === 'cadastro') {
+                mensagemNaturezaOperacaoCadastro.style.display = 'block';
+            }
             return;
         }
         
         const documentos = this.documentosPorNatureza[naturezaOperacao];
         if (!documentos) {
             documentosContainer.style.display = 'none';
+            // Mostrar mensagem quando não há documentos para a natureza
+            if (mensagemNaturezaOperacao && (modo === 'edicao' || modo === 'visualizacao')) {
+                mensagemNaturezaOperacao.style.display = 'block';
+            }
+            if (mensagemNaturezaOperacaoCadastro && modo === 'cadastro') {
+                mensagemNaturezaOperacaoCadastro.style.display = 'block';
+            }
             return;
+        }
+        
+        // Ocultar mensagem quando natureza é selecionada e há documentos
+        if (mensagemNaturezaOperacao && (modo === 'edicao' || modo === 'visualizacao')) {
+            mensagemNaturezaOperacao.style.display = 'none';
+        }
+        if (mensagemNaturezaOperacaoCadastro && modo === 'cadastro') {
+            mensagemNaturezaOperacaoCadastro.style.display = 'none';
         }
         
         // Limpar lista atual

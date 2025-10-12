@@ -16,8 +16,16 @@
                     <div class="header-title d-flex align-items-center">
                         <i class="fas fa-arrow-left fa-2x me-3" onclick="voltarParaProcessos()" style="cursor: pointer;"></i>
                         <div>
-                            <h2 class="mb-0">Cadastro de Processo</h2>
-                            <p class="header-subtitle mb-0">Preencha as informações do processo aduaneiro</p>
+                            {% if modo == 'edicao' %}
+                                <h2 class="mb-0">Editar Processo</h2>
+                                <p class="header-subtitle mb-0">Edite as informações do processo aduaneiro</p>
+                            {% elif modo == 'visualizacao' %}
+                                <h2 class="mb-0">Visualizar Processo</h2>
+                                <p class="header-subtitle mb-0">Visualize as informações do processo aduaneiro</p>
+                            {% else %}
+                                <h2 class="mb-0">Cadastro de Processo</h2>
+                                <p class="header-subtitle mb-0">Preencha as informações do processo aduaneiro</p>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -170,40 +178,139 @@
                                 </div>
                             </div>
                             
+                            <!-- Novos campos solicitados -->
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="receberGuiasEmail" class="form-label">Receber Guias E-mail</label>
+                                        <select class="form-select" id="receberGuiasEmail">
+                                            <option value="">Selecione...</option>
+                                            <option value="sim">Sim</option>
+                                            <option value="nao">Não</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="emailGuias" class="form-label">E-mail Guias</label>
+                                        <input type="email" 
+                                               class="form-control" 
+                                               id="emailGuias" 
+                                               placeholder="E-mail Guia">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="impedimentoCarga" class="form-label">Impedimento da Carga</label>
+                                        <select class="form-select" id="impedimentoCarga">
+                                            <option value="">Selecione...</option>
+                                            <option value="impedimento_cct_bloqueio_pgto_frete">Impedimento CCT - Bloqueio Pgto Frete</option>
+                                            <option value="impedimento_cct_conhecimento_sem_di">Impedimento CCT - Conhecimento sem DI vinculada</option>
+                                            <option value="impedimento_cct_di_manual_sem_autorizacao">Impedimento CCT - DI vinculada manualmente sem autorização de entrega da RFB</option>
+                                            <option value="impedimento_cct_carga_abandono">Impedimento CCT - Carga em Abandono</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
                         </form>
                     </div>
                     
                     <!-- Seção Documentos -->
                     <div class="form-section" id="documentos-section">
+                        <!-- Abas no lugar do título -->
+                        {% if modo == 'edicao' or modo == 'visualizacao' %}
+                        <div class="section-tabs-left">
+                            <button class="section-tab-btn active" data-tab="documentos-content">
+                                <i class="fas fa-file-alt"></i> Documentos
+                            </button>
+                            <button class="section-tab-btn" data-tab="servicos-content">
+                                <i class="fas fa-cogs"></i> Serviços
+                            </button>
+                        </div>
+                        {% else %}
                         <h6 class="section-title">Documentos</h6>
-                        <p class="text-muted mb-3" style="font-size: 0.85rem;">
+                        <p class="text-muted mb-3" style="font-size: 0.85rem;" id="mensagemNaturezaOperacaoCadastro">
                             <i class="fas fa-info-circle me-2"></i>
                             Selecione uma natureza de operação para listar os documentos
                         </p>
+                        {% endif %}
                         
-                        <!-- Lista de Documentos -->
-                        <div id="documentosLista" class="documentos-container" style="display: none;">
-                            <div class="documentos-layout">
-                                <!-- Lista de Documentos (Lado Esquerdo) -->
-                                <div class="documentos-sidebar">
-                                    <div class="documentos-list" id="documentosList">
-                                        <!-- Documentos serão carregados dinamicamente -->
-                                    </div>
-                                </div>
+                        <!-- Conteúdo das Abas -->
+                        <div class="section-tab-content">
+                            <!-- Aba Documentos -->
+                            <div class="tab-content-pane active" id="documentos-content-tab">
+                                <!-- Mensagem informativa apenas na aba Documentos (modo edição/visualização) -->
+                                {% if modo == 'edicao' or modo == 'visualizacao' %}
+                                <p class="text-muted mb-3" style="font-size: 0.85rem;" id="mensagemNaturezaOperacao">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    Selecione uma natureza de operação para listar os documentos
+                                </p>
+                                {% endif %}
                                 
-                                <!-- Detalhes do Documento (Lado Direito) -->
-                                <div class="documentos-details" id="documentosDetails">
-                                    <div class="documento-placeholder">
-                                        <i class="fas fa-file-alt fa-3x text-muted mb-3"></i>
-                                        <h6 class="text-muted">Selecione um documento para visualizar os detalhes</h6>
+                                <!-- Lista de Documentos -->
+                                <div id="documentosLista" class="documentos-container" style="display: none;">
+                                    <div class="documentos-layout">
+                                        <!-- Lista de Documentos (Lado Esquerdo) -->
+                                        <div class="documentos-sidebar">
+                                            <div class="documentos-list" id="documentosList">
+                                                <!-- Documentos serão carregados dinamicamente -->
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Detalhes do Documento (Lado Direito) -->
+                                        <div class="documentos-details" id="documentosDetails">
+                                            <div class="documento-placeholder">
+                                                <i class="fas fa-file-alt fa-3x text-muted mb-3"></i>
+                                                <h6 class="text-muted">Selecione um documento para visualizar os detalhes</h6>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            
+                            <!-- Aba Serviços (apenas para edição e visualização) -->
+                            {% if modo == 'edicao' or modo == 'visualizacao' %}
+                            <div class="tab-content-pane" id="servicos-content-tab">
+                                <!-- Lista de Serviços -->
+                                <div class="servicos-lista mt-3">
+                                        <h6 class="mb-3">Serviços Prestados</h6>
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-sm">
+                                                <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Serviço</th>
+                                                        <th>Observação</th>
+                                                        <th>Data</th>
+                                                        <th>Hora</th>
+                                                        <th>Data Final</th>
+                                                        <th>Hora Final</th>
+                                                        <th>Parâmetro</th>
+                                                        <th>Status</th>
+                                                        <th>Opções</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="servicosTableBody">
+                                                    <!-- Serviços serão carregados dinamicamente -->
+                                                    <tr>
+                                                        <td colspan="10" class="text-center text-muted">
+                                                            <i class="fas fa-info-circle me-2"></i>
+                                                            Nenhum serviço registrado ainda
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
                         </div>
                     </div>
 
                     <!-- Seção Carga -->
-                    <div class="form-section" id="carga-section">
+                    <div class="form-section mt-4" id="carga-section">
                         <h6 class="section-title">Carga</h6>
                         <form id="cargaForm">
                             <div class="row">
@@ -422,15 +529,24 @@
                                 </div>
                             </div>
                             <div class="col-md-4 d-flex flex-column align-items-end">
-                                <button type="button" class="btn btn-primary btn-salvar mb-2">
-                                    <i class="fas fa-save"></i> Salvar
-                                </button>
-                                <button type="button" class="btn btn-warning btn-solicitar-faturamento mb-2">
-                                    <i class="fas fa-file-invoice-dollar"></i> Solicitar Faturamento
-                                </button>
-                                <button type="button" class="btn btn-secondary" id="descartarAlteracoesCadastro">
-                                    <i class="fas fa-times"></i> Descartar Alterações
-                                </button>
+                                {% if modo == 'visualizacao' %}
+                                    <button type="button" class="btn btn-primary mb-2" onclick="voltarParaProcessos()">
+                                        <i class="fas fa-arrow-left"></i> Voltar
+                                    </button>
+                                    <button type="button" class="btn btn-warning mb-2" onclick="editarProcesso()">
+                                        <i class="fas fa-edit"></i> Editar Processo
+                                    </button>
+                                {% else %}
+                                    <button type="button" class="btn btn-primary btn-salvar mb-2">
+                                        <i class="fas fa-save"></i> Salvar
+                                    </button>
+                                    <button type="button" class="btn btn-warning btn-solicitar-faturamento mb-2">
+                                        <i class="fas fa-file-invoice-dollar"></i> Solicitar Faturamento
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" id="descartarAlteracoesCadastro">
+                                        <i class="fas fa-times"></i> Descartar Alterações
+                                    </button>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -471,6 +587,44 @@ function voltarParaProcessos() {
 document.addEventListener('DOMContentLoaded', function() {
     // ProcessosManager já é inicializado no arquivo processos.js
     
+    // Configurar modo da página
+    const urlParams = new URLSearchParams(window.location.search);
+    const modo = urlParams.get('modo') || 'cadastro';
+    const processoId = urlParams.get('id');
+    
+    // Configurar campos baseado no modo
+    if (modo === 'visualizacao') {
+        configurarModoVisualizacao();
+    } else if (modo === 'edicao') {
+        configurarModoEdicao();
+    }
+    
+    // Configurar abas da seção de documentos
+    setupSectionTabs();
+    
+    // Carregar serviços se estiver em modo de edição ou visualização
+    if (modo === 'edicao' || modo === 'visualizacao') {
+        carregarServicos();
+    }
+    
+    // Controlar visibilidade inicial da mensagem
+    if (modo === 'cadastro') {
+        controlarVisibilidadeMensagem('cadastro');
+    }
+    
+// Configurar listener para natureza de operação
+const naturezaOperacaoCadastro = document.getElementById('naturezaOperacaoCadastro');
+if (naturezaOperacaoCadastro) {
+    naturezaOperacaoCadastro.addEventListener('change', function() {
+        // Chamar função de controle de visibilidade da mensagem
+        if (modo === 'cadastro') {
+            controlarVisibilidadeMensagem('cadastro');
+        } else {
+            controlarVisibilidadeMensagem('documentos-content');
+        }
+    });
+}
+    
     // Controlar exibição dos campos de temperatura
     const controleTemperatura = document.getElementById('controleTemperaturaCadastro');
     const camposTemperatura = document.getElementById('camposTemperatura');
@@ -484,6 +638,43 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Limpar os campos quando ocultar
                 document.getElementById('temperaturaMinimaCadastro').value = '';
                 document.getElementById('temperaturaMaximaCadastro').value = '';
+            }
+        });
+    }
+    
+    // Controlar obrigatoriedade do campo E-mail Guias baseado em Receber Guias E-mail
+    const receberGuiasEmail = document.getElementById('receberGuiasEmail');
+    const emailGuias = document.getElementById('emailGuias');
+    
+    if (receberGuiasEmail && emailGuias) {
+        receberGuiasEmail.addEventListener('change', function() {
+            if (this.value === 'sim') {
+                // Tornar o campo obrigatório
+                emailGuias.setAttribute('required', 'required');
+                emailGuias.classList.add('required-field');
+                
+                // Adicionar asterisco ao label
+                const label = emailGuias.previousElementSibling;
+                if (label && !label.querySelector('.required-asterisk')) {
+                    const asterisk = document.createElement('span');
+                    asterisk.className = 'required-asterisk text-danger';
+                    asterisk.textContent = ' *';
+                    label.appendChild(asterisk);
+                }
+            } else {
+                // Remover obrigatoriedade
+                emailGuias.removeAttribute('required');
+                emailGuias.classList.remove('required-field');
+                
+                // Remover asterisco do label
+                const label = emailGuias.previousElementSibling;
+                const asterisk = label?.querySelector('.required-asterisk');
+                if (asterisk) {
+                    asterisk.remove();
+                }
+                
+                // Limpar o campo
+                emailGuias.value = '';
             }
         });
     }
@@ -517,6 +708,203 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+// Funções para configurar modos da página
+function configurarModoVisualizacao() {
+    // Tornar todos os campos readonly
+    const formElements = document.querySelectorAll('input, select, textarea, button');
+    formElements.forEach(element => {
+        if (element.type !== 'button' && element.onclick !== voltarParaProcessos) {
+            element.setAttribute('readonly', true);
+            element.setAttribute('disabled', true);
+        }
+    });
+    
+    // Remover readonly dos botões de ação específicos
+    const voltarBtn = document.querySelector('button[onclick="voltarParaProcessos()"]');
+    const editarBtn = document.querySelector('button[onclick="editarProcesso()"]');
+    if (voltarBtn) voltarBtn.removeAttribute('disabled');
+    if (editarBtn) editarBtn.removeAttribute('disabled');
+    
+    // Configurar campos específicos da aba de serviços
+    configurarCamposServicos();
+}
+
+function configurarModoEdicao() {
+    // Campos editáveis (modo padrão)
+    // Não precisa fazer nada especial, campos já estão editáveis
+}
+
+function editarProcesso() {
+    // Redirecionar para modo de edição
+    const urlParams = new URLSearchParams(window.location.search);
+    const processoId = urlParams.get('id');
+    window.location.href = `/web-clientes/processos/cadastro?modo=edicao&id=${processoId}`;
+}
+
+// Função para configurar as abas da seção de documentos
+function setupSectionTabs() {
+    const tabButtons = document.querySelectorAll('.section-tab-btn');
+    const tabPanes = document.querySelectorAll('.tab-content-pane');
+    
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const targetTab = button.getAttribute('data-tab');
+            
+            // Remove active class from all buttons and panes
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabPanes.forEach(pane => pane.classList.remove('active'));
+            
+            // Add active class to clicked button and corresponding pane
+            button.classList.add('active');
+            document.getElementById(`${targetTab}-tab`).classList.add('active');
+            
+            // Controlar visibilidade da mensagem baseado na aba ativa
+            controlarVisibilidadeMensagem(targetTab);
+        });
+    });
+}
+
+// Função para controlar a visibilidade da mensagem baseado na aba ativa
+function controlarVisibilidadeMensagem(abaAtiva) {
+    const mensagemNaturezaOperacao = document.getElementById('mensagemNaturezaOperacao');
+    const mensagemNaturezaOperacaoCadastro = document.getElementById('mensagemNaturezaOperacaoCadastro');
+    const naturezaOperacaoCadastro = document.getElementById('naturezaOperacaoCadastro');
+    
+    // Controlar mensagem da aba Documentos (apenas em modo edição/visualização)
+    if (mensagemNaturezaOperacao && (modo === 'edicao' || modo === 'visualizacao')) {
+        if (abaAtiva === 'documentos-content') {
+            // Na aba Documentos, mostrar mensagem apenas se não há natureza selecionada
+            if (!naturezaOperacaoCadastro || !naturezaOperacaoCadastro.value) {
+                mensagemNaturezaOperacao.style.display = 'block';
+            } else {
+                mensagemNaturezaOperacao.style.display = 'none';
+            }
+        } else if (abaAtiva === 'servicos-content') {
+            // Na aba Serviços, sempre ocultar a mensagem
+            mensagemNaturezaOperacao.style.display = 'none';
+        }
+    }
+    
+    // Controlar mensagem do modo cadastro (sem abas)
+    if (mensagemNaturezaOperacaoCadastro && modo === 'cadastro') {
+        if (!naturezaOperacaoCadastro || !naturezaOperacaoCadastro.value) {
+            mensagemNaturezaOperacaoCadastro.style.display = 'block';
+        } else {
+            mensagemNaturezaOperacaoCadastro.style.display = 'none';
+        }
+    }
+}
+
+// Função para carregar dados de serviços (simulação)
+function carregarServicos() {
+    const servicosTableBody = document.getElementById('servicosTableBody');
+    if (!servicosTableBody) return;
+    
+    // Dados simulados de serviços
+    const servicos = [
+        {
+            id: 1,
+            servico: 'GRIS',
+            status: 'EXECUTADO',
+            responsavel: 'Sistema',
+            dataInicio: '01/09/2025',
+            dataConclusao: '01/09/2025',
+            observacao: 'Serviço compulsório gerado automaticamente',
+            parametro: '1',
+            horaInicio: '14:41',
+            horaConclusao: '14:41'
+        },
+        {
+            id: 2,
+            servico: 'Carregamento / descarregamento - 100,01kg a 500kg',
+            status: 'AGENDAMENTO',
+            responsavel: 'Sistema',
+            dataInicio: '',
+            dataConclusao: '',
+            observacao: 'Serviço de carregamento gerado automaticamente',
+            parametro: '1',
+            horaInicio: '',
+            horaConclusao: ''
+        }
+    ];
+    
+    if (servicos.length === 0) {
+        servicosTableBody.innerHTML = `
+            <tr>
+                <td colspan="10" class="text-center text-muted">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Nenhum serviço registrado ainda
+                </td>
+            </tr>
+        `;
+        return;
+    }
+    
+    servicosTableBody.innerHTML = servicos.map(servico => `
+        <tr>
+            <td>${servico.id}</td>
+            <td>${servico.servico}</td>
+            <td>${servico.observacao}</td>
+            <td>${servico.dataInicio || '-'}</td>
+            <td>${servico.horaInicio || '-'}</td>
+            <td>${servico.dataConclusao || '-'}</td>
+            <td>${servico.horaConclusao || '-'}</td>
+            <td>${servico.parametro}</td>
+            <td>${servico.status}</td>
+            <td>
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <button class="dropdown-item" title="Editar">
+                                <i class="fas fa-edit me-2"></i> Editar
+                            </button>
+                        </li>
+                        <li>
+                            <button class="dropdown-item" title="Visualizar">
+                                <i class="fas fa-search-plus me-2"></i> Visualizar
+                            </button>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <button class="dropdown-item text-danger" title="Excluir">
+                                <i class="fas fa-trash me-2"></i> Excluir
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    `).join('');
+}
+
+
+function formatarData(data) {
+    if (!data) return '-';
+    return new Date(data).toLocaleDateString('pt-BR');
+}
+
+function configurarCamposServicos() {
+    // Configurar campos específicos da aba de serviços
+    const camposServicos = [
+        'statusServico',
+        'responsavelServico', 
+        'dataInicioServico',
+        'dataConclusaoServico',
+        'observacoesServico'
+    ];
+    
+    camposServicos.forEach(campoId => {
+        const campo = document.getElementById(campoId);
+        if (campo) {
+            campo.setAttribute('readonly', true);
+            campo.setAttribute('disabled', true);
+        }
+    });
+}
 </script>
 {% endblock %}
 {% endblock %}

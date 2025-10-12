@@ -16,27 +16,6 @@
     {% block extra_css %}{% endblock %}
 </head>
 <body class="{% block body_class %}{% endblock %}">
-    <!-- Loading Screen -->
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="loading-content">
-            <div class="loading-text">
-                <span>C</span>
-                <span>A</span>
-                <span>R</span>
-                <span>R</span>
-                <span>E</span>
-                <span>G</span>
-                <span>A</span>
-                <span>N</span>
-                <span>D</span>
-                <span>O</span>
-                <span class="dot">.</span>
-                <span class="dot">.</span>
-                <span class="dot">.</span>
-            </div>
-            <i class="fas fa-plane airplane-icon"></i>
-        </div>
-    </div>
     
     {% block content %}{% endblock %}
     
@@ -45,7 +24,6 @@
     <!-- Custom JS -->
     <script src="{{ url_for('static', filename='js/config.js') }}"></script>
     <script src="{{ url_for('static', filename='js/utils.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/loading.js') }}"></script>
     <!-- All Reports Data -->
     <script src="{{ url_for('static', filename='js/all-reports-data.js') }}"></script>
     <!-- All Reports Complete -->

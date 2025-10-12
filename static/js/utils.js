@@ -199,21 +199,6 @@ const Validators = {
 
 // Gerenciador de Feedback Visual
 const FeedbackManager = {
-    showLoading(element, originalText = null) {
-        if (!originalText) {
-            originalText = element.innerHTML;
-            element.dataset.originalText = originalText;
-        }
-        element.disabled = true;
-        element.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Carregando...';
-    },
-    
-    hideLoading(element) {
-        const originalText = element.dataset.originalText || 'Salvar';
-        element.disabled = false;
-        element.innerHTML = originalText;
-    },
-    
     showSuccess(message, container = null) {
         this.showAlert(message, 'success', container);
     },
@@ -251,8 +236,6 @@ const FormManager = {
         const originalText = submitButton.innerHTML;
         
         try {
-            // Mostrar loading
-            FeedbackManager.showLoading(submitButton, originalText);
             
             const formData = new FormData(form);
             const data = Object.fromEntries(formData.entries());
@@ -289,8 +272,6 @@ const FormManager = {
             }
         } catch (error) {
             FeedbackManager.showError('Erro de conexão. Tente novamente.');
-        } finally {
-            FeedbackManager.hideLoading(submitButton);
         }
     }
 };

@@ -23,7 +23,16 @@ def web_clientes_processos():
 @login_required
 def web_clientes_cadastro_processo():
     """Página de Cadastro de Processo - Web Cliente"""
-    return render_template('web_clientes/cadastro_processo.html', user=current_user)
+    from flask import request
+    
+    # Obter parâmetros da URL
+    modo = request.args.get('modo', 'cadastro')  # cadastro, edicao, visualizacao
+    processo_id = request.args.get('id')
+    
+    return render_template('web_clientes/cadastro_processo.html', 
+                         user=current_user,
+                         modo=modo,
+                         processo_id=processo_id)
 
 @web_clientes_bp.route('/web-clientes/dape-sem-carga')
 @login_required
