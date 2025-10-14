@@ -1,0 +1,373 @@
+/* ========================================
+   USER PROFILE CARD REACT COMPONENT STYLES
+   ======================================== */
+
+.user-profile-card {
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+  border-radius: 6px;
+  padding: 0.4rem;
+  margin: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 50px;
+  cursor: pointer;
+}
+
+.user-profile-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+              radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.user-profile-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+}
+
+.user-profile-avatar {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  margin: 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.user-profile-avatar:hover {
+  transform: scale(1.05);
+}
+
+.profile-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.avatar-upload-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  color: white;
+  font-size: 0.8rem;
+}
+
+.user-profile-avatar:hover .avatar-upload-overlay {
+  opacity: 1;
+}
+
+.user-profile-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.user-name {
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+}
+
+.user-display-info {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.user-role {
+  font-size: 0.65rem;
+  font-weight: 500;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.2;
+}
+
+.user-department {
+  font-size: 0.75rem;
+  margin: 0 0 0.25rem 0;
+  color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+}
+
+.user-last-login {
+  font-size: 0.7rem;
+  margin: 0 0 0.5rem 0;
+  color: rgba(255, 255, 255, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+}
+
+.edit-profile-btn {
+  font-size: 0.7rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  border-color: rgba(255, 255, 255, 0.3);
+  color: white;
+}
+
+.edit-profile-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: scale(1.05);
+  color: white;
+}
+
+/* Formulário de edição */
+.user-edit-form {
+  text-align: left;
+}
+
+.form-group {
+  margin-bottom: 0.75rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 0.25rem;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.form-control::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+.form-actions .btn {
+  font-size: 0.7rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.form-actions .btn-success {
+  background: #28a745;
+  border-color: #28a745;
+}
+
+.form-actions .btn-success:hover {
+  background: #218838;
+  border-color: #1e7e34;
+  transform: scale(1.05);
+}
+
+.form-actions .btn-secondary {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: white;
+}
+
+.form-actions .btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: scale(1.05);
+}
+
+/* Preview de upload de avatar */
+.avatar-upload-preview {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  backdrop-filter: blur(5px);
+}
+
+.preview-container {
+  background: white;
+  border-radius: 15px;
+  padding: 2rem;
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.preview-image {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto 1rem;
+  display: block;
+  border: 3px solid #e9ecef;
+}
+
+.preview-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.preview-actions .btn {
+  min-width: 100px;
+}
+
+.preview-error {
+  color: #dc3545;
+  text-align: center;
+}
+
+.preview-error i {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.preview-error p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .user-profile-card {
+    padding: 0.8rem;
+    margin: 0.5rem 0;
+  }
+
+  .user-profile-avatar {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 0.75rem;
+  }
+
+  .user-name {
+    font-size: 0.9rem;
+  }
+
+  .user-role {
+    font-size: 0.8rem;
+  }
+
+  .user-department,
+  .user-last-login {
+    font-size: 0.7rem;
+  }
+
+  .edit-profile-btn {
+    font-size: 0.65rem;
+    padding: 0.2rem 0.4rem;
+  }
+
+  .form-group {
+    margin-bottom: 0.5rem;
+  }
+
+  .form-control {
+    font-size: 0.7rem;
+    padding: 0.3rem 0.5rem;
+  }
+
+  .form-actions {
+    gap: 0.3rem;
+  }
+
+  .form-actions .btn {
+    font-size: 0.65rem;
+    padding: 0.25rem 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .user-profile-card {
+    padding: 0.6rem;
+    margin: 0.3rem 0;
+  }
+
+  .user-profile-avatar {
+    width: 45px;
+    height: 45px;
+    margin-bottom: 0.5rem;
+  }
+
+  .user-name {
+    font-size: 0.85rem;
+  }
+
+  .preview-container {
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+
+  .preview-image {
+    width: 100px;
+    height: 100px;
+  }
+
+  .preview-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .preview-actions .btn {
+    min-width: auto;
+  }
+}

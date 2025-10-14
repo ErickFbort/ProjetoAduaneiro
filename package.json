@@ -1,0 +1,37 @@
+{
+  "name": "projetoaduaneiro",
+  "version": "1.0.0",
+  "description": "Sistema web para gestão de processos aduaneiros desenvolvido em Flask.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ErickFbort/ProjetoAduaneiro.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ErickFbort/ProjetoAduaneiro/issues"
+  },
+  "homepage": "https://github.com/ErickFbort/ProjetoAduaneiro#readme",
+  "dependencies": {
+    "gsap": "^3.13.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.7.2",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "@vitejs/plugin-react": "^5.0.4",
+    "terser": "^5.44.0",
+    "typescript": "^5.9.3",
+    "vite": "^7.1.9"
+  }
+}

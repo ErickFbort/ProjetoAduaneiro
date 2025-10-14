@@ -1,0 +1,142 @@
+/* ========================================
+   CARD SWAP REACT COMPONENT STYLES
+   ======================================== */
+
+.card-swap-container {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  transform: translate(-10%, 10%);
+  transform-origin: bottom right;
+  width: 90%;
+  height: 600px;
+  perspective: 1000px;
+  overflow: visible;
+}
+
+.card-swap-card {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  width: 450px;
+  height: 320px;
+  border-radius: 25px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.15);
+  transform-style: preserve-3d;
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  cursor: default;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+}
+
+/* Apenas o card da frente é clicável */
+.card-swap-card.front-card {
+  cursor: pointer;
+}
+
+.card-swap-card.front-card:hover {
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  transform: translateY(-10px);
+}
+
+.terminal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding: 2rem 2rem 0 2rem;
+}
+
+.terminal-header h3 {
+  margin: 0;
+  font-size: 1.8rem;
+  color: #1e293b;
+  font-weight: 700;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.terminal-status {
+  font-size: 1.1rem;
+  padding: 0.8rem 1.5rem;
+  border-radius: 30px;
+  font-weight: 600;
+  background: rgba(76, 175, 80, 0.2);
+  color: #4caf50;
+  border: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+.terminal-status.ativo {
+  background: rgba(76, 175, 80, 0.2);
+  color: #4caf50;
+}
+
+.terminal-status.inativo {
+  background: rgba(244, 67, 54, 0.2);
+  color: #f44336;
+}
+
+.terminal-status.manutenção {
+  background: rgba(255, 152, 0, 0.2);
+  color: #ff9800;
+}
+
+.terminal-info {
+  padding: 0 2rem;
+  font-size: 1.2rem;
+  line-height: 1.7;
+}
+
+.terminal-info p {
+  margin: 1rem 0;
+  color: #475569;
+}
+
+/* Estados de animação */
+.card-swap-card.animating {
+  pointer-events: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .card-swap-container {
+    height: 500px;
+    width: 80%;
+    transform: scale(0.75) translate(25%, 25%);
+  }
+  
+  .card-swap-card {
+    width: 400px;
+    height: 280px;
+  }
+}
+
+@media (max-width: 480px) {
+  .card-swap-container {
+    height: 400px;
+    width: 70%;
+    transform: scale(0.55) translate(25%, 25%);
+  }
+  
+  .card-swap-card {
+    width: 350px;
+    height: 240px;
+  }
+  
+  .terminal-header h3 {
+    font-size: 1.4rem;
+  }
+  
+  .terminal-info {
+    font-size: 1rem;
+  }
+}
+
+/* Override existing terminal card styles when in card swap */
+.terminals-section .card-swap-container .terminal-card {
+  display: none;
+}

@@ -1,206 +1,207 @@
-# Sistema Aduaneiro
+# 🚀 Projeto Aduaneiro
 
-Sistema web para gestão de processos aduaneiros desenvolvido em Flask.
+Sistema web para gestão de processos aduaneiros desenvolvido em **Flask** com componentes **React** modernos.
 
-## 🏗️ Estrutura do Projeto
+## 📋 Visão Geral
 
+O Projeto Aduaneiro é uma aplicação web completa para gerenciamento de processos aduaneiros, oferecendo uma interface moderna e intuitiva para usuários do setor aduaneiro.
+
+### ✨ Características Principais
+
+- **Backend**: Flask (Python) com SQLAlchemy
+- **Frontend**: HTML/CSS/JavaScript + React (componentes modernos)
+- **Banco de Dados**: SQLite (desenvolvimento) / PostgreSQL (produção)
+- **Autenticação**: Flask-Login
+- **Animações**: GSAP + React
+- **Responsivo**: Bootstrap 5 + CSS customizado
+
+## 🏗️ Arquitetura
+
+### Backend (Flask)
 ```
-ProjetoAduaneiro/
-├── app/                    # Aplicação principal
-│   ├── __init__.py        # Factory da aplicação
-│   ├── models/            # Modelos do banco de dados
-│   │   ├── __init__.py
-│   │   ├── user.py        # Modelo de usuário
-│   │   ├── veiculo.py     # Modelo de veículo
-│   │   └── entidade.py    # Modelo de entidade
-│   ├── routes/            # Rotas da aplicação
-│   │   ├── __init__.py
-│   │   ├── auth.py        # Autenticação
-│   │   ├── main.py        # Rotas principais
-│   │   └── cadastros.py   # Cadastros
-│   ├── api/               # APIs REST
-│   │   ├── __init__.py
-│   │   ├── users.py       # API de usuários
-│   │   ├── veiculos.py    # API de veículos
-│   │   └── entidades.py   # API de entidades
-│   └── utils/             # Utilitários
-│       ├── __init__.py
-│       └── database.py    # Inicialização do banco
-├── templates/             # Templates HTML
-├── static/               # Arquivos estáticos (CSS, JS, imagens)
-├── instance/             # Banco de dados SQLite
-├── main.py              # Arquivo principal
-├── config.py            # Configurações
-└── requirements.txt     # Dependências Python
+app/
+├── routes/          # Rotas da aplicação
+├── models/          # Modelos de dados
+├── api/            # Endpoints da API
+├── services/       # Serviços de negócio
+└── utils/          # Utilitários
 ```
 
-## 🚀 Instalação e Execução
+### Frontend (React + Vanilla JS)
+```
+src/
+├── components/     # Componentes React
+│   ├── Cards/     # CardSwap e similares
+│   ├── Layout/    # Componentes de layout
+│   └── Common/    # Componentes comuns
+├── types/         # Tipos TypeScript
+├── constants/     # Constantes da aplicação
+├── config/        # Configurações
+└── hooks/         # Custom hooks (futuro)
 
-### 1. Instalar dependências
+static/
+├── css/           # Estilos globais
+├── js/            # JavaScript vanilla
+├── img/           # Imagens
+└── dist/          # Build do React
+```
+
+## 🚀 Instalação e Configuração
+
+### Pré-requisitos
+- Python 3.8+
+- Node.js 16+
+- npm ou yarn
+
+### 1. Clone o repositório
 ```bash
+git clone https://github.com/ErickFbort/ProjetoAduaneiro.git
+cd ProjetoAduaneiro
+```
+
+### 2. Configurar Backend (Flask)
+```bash
+# Criar ambiente virtual
+python -m venv venv
+
+# Ativar ambiente virtual
+# Windows:
+venv\Scripts\activate
+# Linux/Mac:
+source venv/bin/activate
+
+# Instalar dependências
 pip install -r requirements.txt
-```
 
-### 2. Executar aplicação
-```bash
+# Executar aplicação
 python main.py
 ```
 
-### 3. Acessar sistema
-- URL: http://localhost:5000
-- Login: admin@teste.com
-- Senha: 1234
+### 3. Configurar Frontend (React)
+```bash
+# Instalar dependências
+npm install
 
-## 📋 Funcionalidades
+# Modo desenvolvimento
+npm run dev
 
-### 🔐 Autenticação
-- Login/logout seguro
-- Gerenciamento de sessões
-- Proteção de rotas
-
-### 👥 Gestão de Usuários
-- Cadastro de usuários
-- Grupos: Paclog Faturamento, Paclog ADM, Paclog Operacional
-- Busca e filtros
-- Edição e exclusão
-
-### 🚛 Gestão de Veículos
-- Cadastro de veículos
-- Dados do motorista responsável
-- Tipos: Reboque, Carreta, Cavalo, Truck, Outros
-- Busca por placa, CPF, motorista
-
-### 🏢 Gestão de Entidades
-- Cadastro de entidades (clientes, fornecedores)
-- Dados fiscais completos
-- Configuração de notificações por email
-- Tipos de entidade configuráveis
-
-### 🎨 Interface
-- Design responsivo com Bootstrap 5
-- Barra lateral dinâmica
-- Navegação intuitiva
-- Formulários validados
-
-## 🛠️ Tecnologias
-
-- **Backend**: Python 3.13, Flask 3.0
-- **Banco de Dados**: SQLite (desenvolvimento)
-- **Frontend**: HTML5, CSS3, JavaScript, Bootstrap 5
-- **Autenticação**: Flask-Login
-- **ORM**: SQLAlchemy
-
-## 📝 APIs Disponíveis
-
-### Usuários
-- `GET /api/users` - Listar usuários
-- `POST /api/users` - Criar usuário
-- `GET /api/users/<id>` - Obter usuário
-- `PUT /api/users/<id>` - Atualizar usuário
-- `DELETE /api/users/<id>` - Excluir usuário
-
-### Veículos
-- `GET /api/veiculos` - Listar veículos
-- `POST /api/veiculos` - Criar veículo
-- `GET /api/veiculos/<id>` - Obter veículo
-- `PUT /api/veiculos/<id>` - Atualizar veículo
-- `DELETE /api/veiculos/<id>` - Excluir veículo
-
-### Entidades
-- `GET /api/entidades` - Listar entidades
-- `POST /api/entidades` - Criar entidade
-- `GET /api/entidades/<id>` - Obter entidade
-- `PUT /api/entidades/<id>` - Atualizar entidade
-- `DELETE /api/entidades/<id>` - Excluir entidade
-
-## 🔧 Desenvolvimento
-
-### Estrutura Modular
-O projeto foi organizado seguindo o padrão de **Blueprints** do Flask, separando:
-- **Models**: Definições do banco de dados
-- **Routes**: Rotas da aplicação web
-- **API**: Endpoints REST
-- **Utils**: Utilitários e helpers
-
-### Banco de Dados
-- SQLite para desenvolvimento
-- Migração automática na inicialização
-- Dados de exemplo incluídos
-
-### Configuração
-- Configurações por ambiente (dev/prod/test)
-- Variáveis de ambiente suportadas
-- Configuração centralizada em `config.py`
-
-## 📚 Histórico de Desenvolvimento
-
-### Conversão para Flask + Bootstrap
-O projeto foi completamente convertido de HTML/CSS/JavaScript estático para uma aplicação web moderna usando Python Flask e Bootstrap.
-
-#### Melhorias Implementadas
-
-**🔧 Backend**
-- **Flask**: Framework web moderno e flexível
-- **SQLAlchemy**: ORM para banco de dados
-- **Flask-Login**: Autenticação e sessões
-- **Werkzeug**: Hash seguro de senhas
-- **Configuração por ambiente**: Dev/Prod/Test
-
-**🎨 Frontend**
-- **Bootstrap 5**: Framework CSS moderno
-- **Font Awesome**: Ícones profissionais
-- **Responsividade**: Mobile-first design
-- **Componentes**: Modais, tabelas, formulários
-- **UX/UI**: Interface intuitiva e moderna
-
-**🛡️ Segurança**
-- **Hash de senhas**: Senhas nunca em texto plano
-- **Sessões seguras**: Flask-Login
-- **Validação**: Dados validados no backend
-- **CSRF Protection**: Proteção contra ataques
-
-**📊 Funcionalidades**
-- **CRUD Completo**: Criar, ler, atualizar, deletar para todos os módulos
-- **Sistema de Permissões**: Controle granular de usuários
-- **Status de Registros**: Ativo/Bloqueado para todos os cadastros
-- **Busca Avançada**: Pesquisa com filtros em todos os módulos
-- **API REST**: Endpoints para integração
-- **Validações Frontend**: CPF, CNPJ, Placa, Email em tempo real
-- **Feedback Visual**: Loading states, alertas contextuais, validação visual
-
-### Estrutura de Arquivos Otimizada
-
-```
-ProjetoAduaneiro/
-├── app/                    # Aplicação principal modularizada
-│   ├── models/            # Modelos do banco de dados
-│   ├── routes/            # Rotas da aplicação web
-│   ├── api/               # APIs REST
-│   └── utils/             # Utilitários centralizados
-├── templates/             # Templates HTML organizados
-│   ├── partials/          # Componentes reutilizáveis
-│   └── [módulos].html     # Templates específicos
-├── static/                # Arquivos estáticos únicos
-│   ├── css/               # Estilos centralizados
-│   ├── js/                # JavaScript modularizado
-│   └── img/               # Imagens do projeto
-├── instance/              # Banco de dados SQLite
-├── main.py               # Arquivo principal
-├── config.py             # Configurações centralizadas
-├── requirements.txt      # Dependências Python
-├── .gitignore           # Controle de versão
-└── README.md            # Documentação consolidada
+# Build para produção
+npm run build
 ```
 
-### Benefícios da Reorganização
+## 🎯 Funcionalidades
 
-1. **Manutenibilidade**: Código centralizado e reutilizável
-2. **Consistência**: Comportamento uniforme em toda a aplicação
-3. **UX Melhorada**: Validações em tempo real e feedback visual
-4. **Performance**: Eliminação de código duplicado
-5. **Escalabilidade**: Estrutura preparada para futuras funcionalidades
-6. **Debugging**: Código mais organizado e fácil de debugar
+### Módulos Principais
+- **Dashboard**: Visão geral com favoritos personalizáveis
+- **Cadastros**: Gestão de usuários, veículos e entidades
+- **Relatórios**: Sistema completo de relatórios
+- **Web Clientes**: Módulo para clientes externos
+
+### Componentes React
+- **CardSwap**: Animação 3D de cards de terminais
+- **NewsTabs**: Sistema de notícias com abas e rotação automática
+- **ScrollFloat**: Animação de texto baseada em scroll
+- **FloatingDock**: Dock flutuante para favoritos
+
+### Recursos Avançados
+- **Favoritos Personalizáveis**: Sistema de favoritos com layouts
+- **Animações GSAP**: Animações suaves e profissionais
+- **Responsividade**: Adaptação para mobile e tablet
+- **Temas**: Suporte a temas claro/escuro
+
+## 🛠️ Desenvolvimento
+
+### Scripts Disponíveis
+
+#### Backend
+```bash
+python main.py              # Executar servidor Flask
+python -m pytest           # Executar testes
+```
+
+#### Frontend
+```bash
+npm run dev                # Servidor de desenvolvimento
+npm run build              # Build para produção
+npm run preview            # Preview do build
+```
+
+### Estrutura de Desenvolvimento
+
+1. **Backend**: Desenvolvimento em Flask com hot reload
+2. **Frontend**: Desenvolvimento em React com Vite
+3. **Integração**: React é compilado e integrado ao Flask
+
+### Migração para React
+
+O projeto está em processo de migração gradual para React:
+
+- ✅ **CardSwap**: Migrado com sucesso
+- ✅ **NewsTabs**: Migrado com sucesso
+- 🔄 **ScrollFloat**: Em desenvolvimento
+- 🔄 **FloatingDock**: Planejado
+- 🔄 **Dashboard**: Planejado
+
+## 📚 Documentação
+
+- [Migração CardSwap](docs/CARD_SWAP_MIGRATION.md) - Detalhes da migração
+- [Migração NewsTabs](docs/NEWS_TABS_MIGRATION.md) - Detalhes da migração
+- [API Documentation](API.md) - Documentação da API
+- [Configuração](config.py) - Configurações do sistema
+
+## 🧪 Testes
+
+```bash
+# Testes do backend
+python -m pytest
+
+# Testes do frontend (futuro)
+npm test
+```
+
+## 🚀 Deploy
+
+### Desenvolvimento
+```bash
+# Backend
+python main.py
+
+# Frontend
+npm run dev
+```
+
+### Produção
+```bash
+# Build do React
+npm run build
+
+# Executar Flask
+python main.py
+```
+
+## 🤝 Contribuição
+
+1. Fork o projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
 
 ## 📄 Licença
 
-Este projeto é de uso interno da empresa.
+Este projeto está sob a licença ISC. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+
+## 👥 Autores
+
+- **Erick Bortoloti** - *Desenvolvimento inicial* - [ErickFbort](https://github.com/ErickFbort)
+
+## 🙏 Agradecimentos
+
+- Flask Community
+- React Community
+- GSAP por suas incríveis animações
+- Bootstrap por seu sistema de design
+
+---
+
+**Desenvolvido com ❤️ para o setor aduaneiro brasileiro**

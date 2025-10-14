@@ -8,15 +8,16 @@
         
         <!-- Seção do Colaborador - Apenas na Home -->
         <div class="user-profile-section" id="user-profile-section" style="display: none;">
-            <div class="user-profile-card">
+            <!-- Container para o componente React -->
+            <div id="react-user-profile-container"></div>
+            
+            <!-- Fallback para quando React não estiver carregado -->
+            <div class="user-profile-card" id="user-profile-fallback" onclick="openUserProfileModal()">
                 <div class="user-profile-avatar">
                     <img src="{{ url_for('static', filename='img/user-avatar-placeholder.svg') }}" 
                          alt="Foto do usuário" 
                          class="profile-avatar"
                          id="user-avatar">
-                    <div class="avatar-upload-overlay" onclick="openAvatarUpload()">
-                        <i class="fas fa-camera"></i>
-                    </div>
                 </div>
                 <div class="user-profile-info">
                     <h4 class="user-name">{{ user.name }}</h4>

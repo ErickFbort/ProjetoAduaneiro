@@ -106,34 +106,10 @@
 
         <!-- Grid Principal -->
         <div class="home-grid">
-            <!-- Seção de Novidades e Comunicados -->
+            <!-- Seção de Novidades e Comunicados - React Component -->
             <div class="news-section animate-on-scroll slide-in-bottom delay-2">
-                <div class="section-header">
-                    <h2><i class="fas fa-newspaper"></i> Novidades e Comunicados</h2>
-                    <div class="section-actions">
-                        <button class="btn btn-outline-primary btn-sm scale-in delay-3" onclick="refreshNews()">
-                            <i class="fas fa-sync-alt"></i> Atualizar
-                        </button>
-                        <button class="btn btn-outline-warning btn-sm scale-in delay-4" onclick="forceRefreshLinkedIn()" title="Forçar atualização do LinkedIn (limpar cache)">
-                            <i class="fas fa-refresh"></i> Forçar LinkedIn
-                        </button>
-                    </div>
-                </div>
-                <div class="news-content">
-                    <div class="news-tabs">
-                        <button class="tab-btn" onclick="switchNewsTab('paclog')">
-                            <i class="fas fa-globe"></i> Pac Log
-                        </button>
-                        <button class="tab-btn active" onclick="switchNewsTab('linkedin')">
-                            <i class="fab fa-linkedin"></i> LinkedIn
-                        </button>
-                        <button class="tab-btn" onclick="switchNewsTab('sistema')">
-                            <i class="fas fa-cog"></i> Atualizações do Sistema
-                        </button>
-                    </div>
-                    <div class="news-list" id="news-content">
-                        <!-- Conteúdo será carregado via JavaScript -->
-                    </div>
+                <div id="react-news-container">
+                    <!-- React NewsTabs será renderizado aqui -->
                 </div>
             </div>
 
@@ -145,73 +121,15 @@
                         <h2 class="terminals-title">Operações por Terminal Aéreo</h2>
                         <p class="terminals-subtitle">Conheça nossos TECAs.</p>
                     </div>
-                    
-                    <!-- Cards animados à direita -->
+
+                    <!-- Cards animados à direita - React Component -->
                     <div class="terminals-cards-container">
-                        <div class="terminals-grid">
-                    <div class="terminal-card animate-on-scroll fade-in-up delay-1">
-                        <div class="terminal-header">
-                            <h3><i class="fas fa-map-marker-alt pulse"></i> CWB - Curitiba</h3>
-                            <span class="terminal-status active">Ativo</span>
+                        <div id="react-card-swap-container" style="position: relative; height: 600px;">
+                            <!-- React CardSwap será renderizado aqui -->
                         </div>
-                        <div class="terminal-info">
-                            <p><strong>Telefone:</strong> +55 47 3515.0802</p>
-                            <p><strong>Operações:</strong> Import/Export</p>
-                            <p><strong>Status:</strong> <span class="status-badge success">Operacional</span></p>
+                        </div>
                         </div>
                     </div>
-
-                    <div class="terminal-card animate-on-scroll fade-in-up delay-2">
-                        <div class="terminal-header">
-                            <h3><i class="fas fa-map-marker-alt pulse"></i> GYN - Goiânia</h3>
-                            <span class="terminal-status active">Ativo</span>
-                        </div>
-                        <div class="terminal-info">
-                            <p><strong>Telefone:</strong> +55 47 3515.0801</p>
-                            <p><strong>Operações:</strong> Import/Export</p>
-                            <p><strong>Status:</strong> <span class="status-badge success">Operacional</span></p>
-                        </div>
-                    </div>
-
-                    <div class="terminal-card animate-on-scroll fade-in-up delay-3">
-                        <div class="terminal-header">
-                            <h3><i class="fas fa-map-marker-alt pulse"></i> REC - Recife</h3>
-                            <span class="terminal-status active">Ativo</span>
-                        </div>
-                        <div class="terminal-info">
-                            <p><strong>Telefone:</strong> +55 47 3515-0803</p>
-                            <p><strong>Operações:</strong> Import/Export</p>
-                            <p><strong>Status:</strong> <span class="status-badge success">Operacional</span></p>
-                        </div>
-                    </div>
-
-                    <div class="terminal-card animate-on-scroll fade-in-up delay-4">
-                        <div class="terminal-header">
-                            <h3><i class="fas fa-map-marker-alt pulse"></i> VIX - Vitória</h3>
-                            <span class="terminal-status active">Ativo</span>
-                        </div>
-                        <div class="terminal-info">
-                            <p><strong>Telefone:</strong> +55 47 3515.0805</p>
-                            <p><strong>Operações:</strong> Import/Export</p>
-                            <p><strong>Status:</strong> <span class="status-badge success">Operacional</span></p>
-                        </div>
-                    </div>
-
-                    <div class="terminal-card animate-on-scroll fade-in-up delay-5">
-                        <div class="terminal-header">
-                            <h3><i class="fas fa-map-marker-alt pulse"></i> NVT - Navegantes</h3>
-                            <span class="terminal-status active">Ativo</span>
-                        </div>
-                        <div class="terminal-info">
-                            <p><strong>Telefone:</strong> +55 47 3515.0804</p>
-                            <p><strong>Operações:</strong> Import/Export</p>
-                            <p><strong>Status:</strong> <span class="status-badge success">Operacional</span></p>
-                        </div>
-                    </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
         </div>
     </div>
@@ -547,6 +465,87 @@
         </div>
     </div>
 </div>
+
+<!-- Modal para Edição de Perfil do Usuário -->
+<div class="modal fade user-profile-modal" id="userProfileModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-user-edit"></i> Editar Perfil
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <!-- Coluna da Foto -->
+                    <div class="col-md-4 text-center">
+                        <div class="profile-photo-section">
+                            <div class="avatar-preview-container">
+                                <img src="{{ url_for('static', filename='img/user-avatar-placeholder.svg') }}" 
+                                     alt="Preview do avatar" 
+                                     class="avatar-preview-large" 
+                                     id="avatar-preview-large">
+                                <div class="avatar-edit-overlay" onclick="document.getElementById('avatar-file-input').click()">
+                                    <i class="fas fa-camera"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="avatar-upload-area" id="avatar-upload-area">
+                                <i class="fas fa-cloud-upload-alt fa-2x text-muted mb-2"></i>
+                                <h6 class="mb-1">Arraste uma imagem aqui</h6>
+                                <p class="text-muted small mb-0">ou clique para selecionar</p>
+                                <p class="text-muted small">JPG, PNG, GIF (máx. 2MB)</p>
+                                <input type="file" id="avatar-file-input" accept="image/*" style="display: none;">
+                            </div>
+                            
+                            <button class="btn btn-outline-primary btn-sm mt-2" onclick="document.getElementById('avatar-file-input').click()">
+                                <i class="fas fa-folder-open"></i> Escolher Arquivo
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Coluna das Informações -->
+                    <div class="col-md-8">
+                        <div class="profile-info-section">
+                            <div class="mb-3">
+                                <label for="user-name-input" class="form-label">Nome Completo</label>
+                                <input type="text" class="form-control" id="user-name-input" value="{{ user.name }}" readonly>
+                                <div class="form-text">Nome não pode ser alterado</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="job-title-input" class="form-label">Cargo Exercido *</label>
+                                <input type="text" class="form-control" id="job-title-input" placeholder="Digite seu cargo">
+                                <div class="form-text">Ex: Analista de Sistemas, Gerente, etc.</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="department-input" class="form-label">Departamento</label>
+                                <input type="text" class="form-control" id="department-input" placeholder="Digite seu departamento">
+                                <div class="form-text">Ex: TI, Financeiro, Operacional, etc.</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="email-input" class="form-label">E-mail</label>
+                                <input type="email" class="form-control" id="email-input" value="{{ user.email }}" readonly>
+                                <div class="form-text">E-mail não pode ser alterado</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
+                <button type="button" class="btn btn-primary" id="save-profile-btn" onclick="saveUserProfile()">
+                    <i class="fas fa-save"></i> Salvar Alterações
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block extra_js %}
@@ -723,6 +722,13 @@ async function loadLinkedInPosts() {
 // Carregar notícias
 function loadNews(tab = 'linkedin') {
     const newsContent = document.getElementById('news-content');
+    
+    // Verificar se o elemento existe (pode não existir se estiver usando React)
+    if (!newsContent) {
+        console.log('Elemento news-content não encontrado - usando React para notícias');
+        return;
+    }
+    
     const news = newsData[tab] || [];
     
     if (news.length === 0) {
@@ -905,7 +911,13 @@ async function refreshNews() {
     }
     // Para Pac Log, os dados são estáticos, então apenas recarregamos
     loadNews(currentNewsTab);
-    FeedbackManager.showSuccess('Notícias atualizadas!');
+    
+    // Verificar se FeedbackManager existe antes de usar
+    if (typeof FeedbackManager !== 'undefined' && FeedbackManager.showSuccess) {
+        FeedbackManager.showSuccess('Notícias atualizadas!');
+    } else {
+        console.log('Notícias atualizadas!');
+    }
 }
 
 // Forçar atualização do LinkedIn (limpar cache)
@@ -918,7 +930,11 @@ async function forceRefreshLinkedIn() {
         if (data.success) {
             newsData.linkedin = data.data;
             loadNews('linkedin');
-            FeedbackManager.showSuccess(`LinkedIn atualizado! ${data.count} posts carregados (${data.source})`);
+            if (typeof FeedbackManager !== 'undefined' && FeedbackManager.showSuccess) {
+                FeedbackManager.showSuccess(`LinkedIn atualizado! ${data.count} posts carregados (${data.source})`);
+            } else {
+                console.log(`LinkedIn atualizado! ${data.count} posts carregados (${data.source})`);
+            }
         } else {
             // Se falhar, usar dados simulados
             const simulatedResponse = await fetch('/api/linkedin/posts?limit=5&force_simulated=true');
@@ -927,20 +943,36 @@ async function forceRefreshLinkedIn() {
             if (simulatedData.success) {
                 newsData.linkedin = simulatedData.data;
                 loadNews('linkedin');
-                FeedbackManager.showInfo('Usando dados simulados do LinkedIn');
+                if (typeof FeedbackManager !== 'undefined' && FeedbackManager.showInfo) {
+                    FeedbackManager.showInfo('Usando dados simulados do LinkedIn');
+                } else {
+                    console.log('Usando dados simulados do LinkedIn');
+                }
             } else {
-                FeedbackManager.showError('Erro ao atualizar LinkedIn');
+                if (typeof FeedbackManager !== 'undefined' && FeedbackManager.showError) {
+                    FeedbackManager.showError('Erro ao atualizar LinkedIn');
+                } else {
+                    console.error('Erro ao atualizar LinkedIn');
+                }
             }
         }
     } catch (error) {
         console.error('Erro ao forçar atualização:', error);
-        FeedbackManager.showError('Erro ao atualizar LinkedIn');
+        if (typeof FeedbackManager !== 'undefined' && FeedbackManager.showError) {
+            FeedbackManager.showError('Erro ao atualizar LinkedIn');
+        } else {
+            console.error('Erro ao atualizar LinkedIn');
+        }
     }
 }
 
 // Atualizar terminais
 function refreshTerminals() {
-    FeedbackManager.showSuccess('Informações dos terminais atualizadas!');
+    if (typeof FeedbackManager !== 'undefined' && FeedbackManager.showSuccess) {
+        FeedbackManager.showSuccess('Informações dos terminais atualizadas!');
+    } else {
+        console.log('Informações dos terminais atualizadas!');
+    }
 }
 
 // Ver detalhes do terminal
@@ -1410,13 +1442,24 @@ function saveFavorites() {
         }
     }
     
-    FeedbackManager.showSuccess('Favoritos atualizados com sucesso!');
+    if (typeof FeedbackManager !== 'undefined' && FeedbackManager.showSuccess) {
+        FeedbackManager.showSuccess('Favoritos atualizados com sucesso!');
+    } else {
+        console.log('Favoritos atualizados com sucesso!');
+    }
 }
 
 // Renderizar favoritos na tela principal
 function renderFavorites() {
     const savedLayout = localStorage.getItem('dashboard_layout');
     console.log('renderFavorites chamado com layout:', savedLayout);
+    console.log('currentFavorites:', currentFavorites);
+    
+    // Verificar se currentFavorites está vazio e recarregar se necessário
+    if (!currentFavorites || currentFavorites.length === 0) {
+        console.log('currentFavorites vazio, recarregando...');
+        loadFavorites();
+    }
     
     // Sempre garantir que as abas estejam ocultas por padrão
     const tabsContainer = document.getElementById('favorites-tabs-container');
@@ -2727,18 +2770,55 @@ async function updateUserJobTitle(jobTitle) {
 
 // Mostrar seção do colaborador apenas na home
 function showUserProfileSection() {
+    console.log('showUserProfileSection chamada');
     const userProfileSection = document.getElementById('user-profile-section');
     if (userProfileSection) {
+        console.log('Seção de perfil encontrada, exibindo...');
         userProfileSection.style.display = 'block';
         
-        // Carregar cargo salvo do localStorage
-        const savedJobTitle = localStorage.getItem('user_job_title');
-        if (savedJobTitle) {
-            const jobTitleElement = document.getElementById('user-job-title');
-            if (jobTitleElement) {
-                jobTitleElement.textContent = savedJobTitle;
+        // Verificar se o React foi carregado
+        const reactContainer = document.getElementById('react-user-profile-container');
+        const fallbackContainer = document.getElementById('user-profile-fallback');
+        
+        console.log('React container:', reactContainer);
+        console.log('Fallback container:', fallbackContainer);
+        
+        // Verificar se React já está carregado
+        if (reactContainer && reactContainer.children.length > 0) {
+            console.log('React já carregado, ocultando fallback...');
+            if (fallbackContainer) {
+                fallbackContainer.classList.remove('show-fallback');
             }
+        } else {
+            // Mostrar fallback apenas se React não estiver carregado
+            if (fallbackContainer) {
+                console.log('React não carregado, mostrando fallback...');
+                fallbackContainer.classList.add('show-fallback');
+                
+                // Carregar cargo salvo do localStorage
+                const savedJobTitle = localStorage.getItem('user_job_title');
+                if (savedJobTitle) {
+                    const jobTitleElement = document.getElementById('user-job-title');
+                    if (jobTitleElement) {
+                        jobTitleElement.textContent = savedJobTitle;
+                    }
+                }
+            }
+            
+            // Verificar se React carregou após um delay
+            setTimeout(() => {
+                if (reactContainer && reactContainer.children.length > 0) {
+                    console.log('React carregado, ocultando fallback...');
+                    if (fallbackContainer) {
+                        fallbackContainer.classList.remove('show-fallback');
+                    }
+                } else {
+                    console.log('React não carregou, mantendo fallback...');
+                }
+            }, 2000);
         }
+    } else {
+        console.error('Seção de perfil não encontrada!');
     }
 }
 
@@ -2748,6 +2828,246 @@ function hideUserProfileSection() {
     if (userProfileSection) {
         userProfileSection.style.display = 'none';
     }
+}
+
+// Função global para ocultar fallback quando React carregar
+function hideUserProfileFallback() {
+    console.log('hideUserProfileFallback chamada');
+    const fallbackContainer = document.getElementById('user-profile-fallback');
+    if (fallbackContainer) {
+        console.log('Ocultando fallback...');
+        fallbackContainer.classList.remove('show-fallback');
+    }
+}
+
+// Expor função globalmente
+window.hideUserProfileFallback = hideUserProfileFallback;
+
+// Função de debug para forçar exibição da seção de perfil
+function forceShowUserProfile() {
+    console.log('=== DEBUG: Forçando exibição da seção de perfil ===');
+    
+    const userProfileSection = document.getElementById('user-profile-section');
+    console.log('Seção encontrada:', userProfileSection);
+    
+    if (userProfileSection) {
+        userProfileSection.style.display = 'block';
+        userProfileSection.style.visibility = 'visible';
+        userProfileSection.style.opacity = '1';
+        console.log('Seção forçada a ser exibida');
+        
+        // Verificar containers
+        const reactContainer = document.getElementById('react-user-profile-container');
+        const fallbackContainer = document.getElementById('user-profile-fallback');
+        
+        console.log('React container:', reactContainer);
+        console.log('Fallback container:', fallbackContainer);
+        
+        if (fallbackContainer) {
+            fallbackContainer.style.display = 'block';
+            console.log('Fallback exibido');
+        }
+    } else {
+        console.error('Seção de perfil não encontrada!');
+    }
+}
+
+// Expor função globalmente para debug
+window.forceShowUserProfile = forceShowUserProfile;
+
+// Abrir modal de edição de perfil
+function openUserProfileModal() {
+    console.log('Abrindo modal de perfil do usuário...');
+    
+    const modal = new bootstrap.Modal(document.getElementById('userProfileModal'));
+    
+    // Carregar dados salvos do localStorage
+    const savedJobTitle = localStorage.getItem('user_job_title');
+    const savedDepartment = localStorage.getItem('user_department');
+    const savedAvatar = localStorage.getItem('user_avatar');
+    
+    // Preencher campos
+    const jobTitleInput = document.getElementById('job-title-input');
+    const departmentInput = document.getElementById('department-input');
+    const avatarPreview = document.getElementById('avatar-preview-large');
+    
+    if (jobTitleInput && savedJobTitle) {
+        jobTitleInput.value = savedJobTitle;
+    }
+    
+    if (departmentInput && savedDepartment) {
+        departmentInput.value = savedDepartment;
+    }
+    
+    if (avatarPreview && savedAvatar) {
+        avatarPreview.src = savedAvatar;
+    }
+    
+    // Configurar drag & drop
+    setupProfileModalDragDrop();
+    
+    modal.show();
+}
+
+// Configurar drag & drop para o modal de perfil
+function setupProfileModalDragDrop() {
+    const uploadArea = document.getElementById('avatar-upload-area');
+    const fileInput = document.getElementById('avatar-file-input');
+    const preview = document.getElementById('avatar-preview-large');
+    
+    if (!uploadArea || !fileInput || !preview) return;
+    
+    // Click na área de upload
+    uploadArea.addEventListener('click', () => {
+        fileInput.click();
+    });
+    
+    // Drag and drop
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('dragover');
+    });
+    
+    uploadArea.addEventListener('dragleave', () => {
+        uploadArea.classList.remove('dragover');
+    });
+    
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('dragover');
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            handleProfileFileSelect(files[0]);
+        }
+    });
+    
+    // Seleção de arquivo
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+            handleProfileFileSelect(e.target.files[0]);
+        }
+    });
+}
+
+// Lidar com seleção de arquivo no modal de perfil
+function handleProfileFileSelect(file) {
+    console.log('Arquivo selecionado:', file.name);
+    
+    // Validar tipo de arquivo
+    if (!file.type.startsWith('image/')) {
+        alert('Por favor, selecione apenas arquivos de imagem.');
+        return;
+    }
+    
+    // Validar tamanho (2MB)
+    if (file.size > 2 * 1024 * 1024) {
+        alert('O arquivo deve ter no máximo 2MB.');
+        return;
+    }
+    
+    // Mostrar preview
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        const preview = document.getElementById('avatar-preview-large');
+        if (preview) {
+            preview.src = e.target.result;
+        }
+    };
+    reader.readAsDataURL(file);
+    
+    // Armazenar arquivo para upload
+    window.selectedProfileFile = file;
+}
+
+// Salvar perfil do usuário
+function saveUserProfile() {
+    console.log('Salvando perfil do usuário...');
+    
+    const jobTitle = document.getElementById('job-title-input').value.trim();
+    const department = document.getElementById('department-input').value.trim();
+    const selectedFile = window.selectedProfileFile;
+    
+    // Validar cargo obrigatório
+    if (!jobTitle) {
+        alert('Por favor, informe seu cargo.');
+        return;
+    }
+    
+    // Atualizar perfil usando função global do React
+    if (window.updateGlobalUserProfile) {
+        const updates = {
+            jobTitle: jobTitle,
+            department: department
+        };
+        window.updateGlobalUserProfile(updates);
+    } else {
+        // Fallback para localStorage se React não estiver disponível
+        localStorage.setItem('user_job_title', jobTitle);
+        if (department) {
+            localStorage.setItem('user_department', department);
+        }
+        
+        // Atualizar elementos na sidebar
+        const sidebarJobTitle = document.getElementById('user-job-title');
+        if (sidebarJobTitle) {
+            sidebarJobTitle.textContent = jobTitle;
+        }
+    }
+    
+    // Processar upload de avatar se houver arquivo
+    if (selectedFile) {
+        if (window.uploadGlobalAvatar) {
+            // Usar função global do React para upload
+            window.uploadGlobalAvatar(selectedFile).then(() => {
+                // Fechar modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('userProfileModal'));
+                if (modal) {
+                    modal.hide();
+                }
+                
+                // Mostrar feedback
+                showNotification('Perfil atualizado com sucesso!', 'success');
+            }).catch((error) => {
+                console.error('Erro ao fazer upload do avatar:', error);
+                showNotification('Erro ao atualizar avatar', 'error');
+            });
+        } else {
+            // Fallback para método antigo
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const avatarData = e.target.result;
+                localStorage.setItem('user_avatar', avatarData);
+                
+                // Atualizar avatar na sidebar
+                const sidebarAvatar = document.getElementById('user-avatar');
+                if (sidebarAvatar) {
+                    sidebarAvatar.src = avatarData;
+                }
+                
+                // Fechar modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('userProfileModal'));
+                if (modal) {
+                    modal.hide();
+                }
+                
+                // Mostrar feedback
+                showNotification('Perfil atualizado com sucesso!', 'success');
+            };
+            reader.readAsDataURL(selectedFile);
+        }
+    } else {
+        // Fechar modal sem upload
+        const modal = bootstrap.Modal.getInstance(document.getElementById('userProfileModal'));
+        if (modal) {
+            modal.hide();
+        }
+        
+        // Mostrar feedback
+        showNotification('Perfil atualizado com sucesso!', 'success');
+    }
+    
+    // Limpar arquivo selecionado
+    window.selectedProfileFile = null;
 }
 
 // Abrir modal de upload de avatar
@@ -2852,7 +3172,11 @@ function uploadAvatar() {
             modal.hide();
         }
         
-        FeedbackManager.showSuccess('Informações do perfil atualizadas com sucesso!');
+        if (typeof FeedbackManager !== 'undefined' && FeedbackManager.showSuccess) {
+            FeedbackManager.showSuccess('Informações do perfil atualizadas com sucesso!');
+        } else {
+            console.log('Informações do perfil atualizadas com sucesso!');
+        }
         return;
     }
     
@@ -2887,7 +3211,11 @@ function uploadAvatar() {
         uploadBtn.disabled = false;
         
         // Mostrar sucesso
-        FeedbackManager.showSuccess('Foto de perfil e informações atualizadas com sucesso!');
+        if (typeof FeedbackManager !== 'undefined' && FeedbackManager.showSuccess) {
+            FeedbackManager.showSuccess('Foto de perfil e informações atualizadas com sucesso!');
+        } else {
+            console.log('Foto de perfil e informações atualizadas com sucesso!');
+        }
         
         // Limpar seleção
         selectedAvatarFile = null;
@@ -2960,6 +3288,41 @@ function testLayoutPersistence() {
     }
 }
 
+// Função de inicialização robusta para favoritos
+function initializeFavorites() {
+    console.log('Inicializando favoritos...');
+    
+    // Verificar se os elementos necessários existem
+    const favoriteContainer = document.getElementById('favorite-actions');
+    if (!favoriteContainer) {
+        console.error('Container favorite-actions não encontrado!');
+        return;
+    }
+    
+    // Carregar favoritos do localStorage
+    loadFavorites();
+    
+    // Verificar se currentFavorites foi carregado corretamente
+    if (!currentFavorites || currentFavorites.length === 0) {
+        console.log('currentFavorites vazio após loadFavorites, usando valores padrão');
+        currentFavorites = ['cadastro', 'relatorios', 'web_cliente'];
+        localStorage.setItem('dashboard_favorites', JSON.stringify(currentFavorites));
+    }
+    
+    // Renderizar favoritos
+    renderFavorites();
+    
+    // Verificar se a renderização foi bem-sucedida
+    setTimeout(() => {
+        if (favoriteContainer.children.length === 0) {
+            console.log('Falha na renderização inicial, tentando novamente...');
+            renderFavorites();
+        } else {
+            console.log('Favoritos inicializados com sucesso!');
+        }
+    }, 500);
+}
+
 // Inicializar página
 document.addEventListener('DOMContentLoaded', async function() {
     updateCurrentTime();
@@ -2976,8 +3339,39 @@ document.addEventListener('DOMContentLoaded', async function() {
         renderFavorites();
     }, 100);
     
+    // Garantir que os favoritos sejam renderizados após o React carregar
+    setTimeout(() => {
+        console.log('Verificando se favoritos foram renderizados...');
+        const favoriteContainer = document.getElementById('favorite-actions');
+        if (favoriteContainer && favoriteContainer.children.length === 0) {
+            console.log('Favoritos não renderizados, forçando renderização...');
+            renderFavorites();
+        }
+    }, 2000);
+    
+    // Função de inicialização robusta para favoritos
+    initializeFavorites();
+    
     // Mostrar seção do colaborador (apenas na home)
     showUserProfileSection();
+    
+    // Garantir que a seção seja exibida após um delay
+    setTimeout(() => {
+        console.log('Verificando seção de perfil após delay...');
+        showUserProfileSection();
+    }, 1000);
+    
+    // Forçar exibição da seção de perfil
+    setTimeout(() => {
+        console.log('Forçando exibição da seção de perfil...');
+        forceShowUserProfile();
+    }, 2000);
+    
+    // Debug adicional após mais tempo
+    setTimeout(() => {
+        console.log('Debug final da seção de perfil...');
+        forceShowUserProfile();
+    }, 5000);
     
     // Configurar upload de avatar
     setupAvatarUpload();
@@ -2997,6 +3391,40 @@ document.addEventListener('DOMContentLoaded', async function() {
     
     // Iniciar rotação automática das notícias
     startNewsRotation();
+});
+
+// Listener para quando a página for recarregada (F5)
+window.addEventListener('load', function() {
+    console.log('Página carregada completamente, verificando favoritos...');
+    
+    // Aguardar um pouco para garantir que todos os scripts carregaram
+    setTimeout(() => {
+        const favoriteContainer = document.getElementById('favorite-actions');
+        if (favoriteContainer && favoriteContainer.children.length === 0) {
+            console.log('Favoritos não encontrados após carregamento, inicializando...');
+            initializeFavorites();
+        }
+    }, 1000);
+});
+
+// Listener para quando a página for focada novamente (voltar da aba)
+window.addEventListener('focus', function() {
+    console.log('Página focada, verificando favoritos...');
+    
+    setTimeout(() => {
+        const favoriteContainer = document.getElementById('favorite-actions');
+        if (favoriteContainer && favoriteContainer.children.length === 0) {
+            console.log('Favoritos não encontrados após foco, inicializando...');
+            initializeFavorites();
+        }
+        
+        // Verificar seção de perfil também
+        const userProfileSection = document.getElementById('user-profile-section');
+        if (userProfileSection && userProfileSection.style.display === 'none') {
+            console.log('Seção de perfil oculta, exibindo...');
+            showUserProfileSection();
+        }
+    }, 500);
 });
 
 // ========================================
@@ -3196,6 +3624,10 @@ document.addEventListener('click', (e) => {
         </button>
     </div>
 </div>
+
+    <!-- React Components Integration -->
+    <script type="module" src="{{ url_for('static', filename='dist/assets/main-kNIiLTyy.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='dist/assets/main-CMUhtubJ.css') }}">
 
 {% endblock %}
 
