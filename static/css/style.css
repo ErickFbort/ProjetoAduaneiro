@@ -40,16 +40,16 @@ body {
 }
 
 .login-container {
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 2rem;
-  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 2.5rem;
+  border-radius: 24px;
   box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  max-width: 400px;
+    0 12px 40px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  max-width: 420px;
   width: 100%;
   margin: 1rem;
   position: relative;
@@ -83,14 +83,19 @@ body {
 
 .login-box .logo {
   display: block;
-  margin: 0 auto 1.5rem auto;
-  max-width: 180px;
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
-  transition: transform 0.3s ease;
+  margin: 0 auto 2rem auto;
+  max-width: 200px;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.3));
+  transition: all 0.3s ease;
+  opacity: 0.95;
 }
 
 .login-box .logo:hover {
   transform: scale(1.05);
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.4));
+  opacity: 1;
 }
 
 .login-form {
@@ -2564,10 +2569,70 @@ td:last-child {
     grid-column: 1 / -1;
 }
 
+/* Layout lado a lado para terminais */
+.terminals-layout {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    min-height: 500px;
+    background: linear-gradient(135deg, #0f3460 0%, #1e3a8a 50%, #3b82f6 100%);
+    border-radius: 20px;
+    padding: 3rem;
+    margin: 2rem 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.terminals-layout::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 30% 20%, rgba(59, 130, 246, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(147, 197, 253, 0.2) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.terminals-text {
+    flex: 1;
+    z-index: 2;
+    position: relative;
+}
+
+.terminals-title {
+    font-size: 3rem;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 1rem;
+    line-height: 1.1;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.terminals-subtitle {
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 2rem;
+    font-weight: 300;
+}
+
+.terminals-actions {
+    margin-top: 2rem;
+}
+
+.terminals-cards-container {
+    flex: 1;
+    position: relative;
+    height: 500px;
+    z-index: 2;
+    overflow: visible;
+}
+
 .terminals-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
+    display: block;
+    position: relative;
+    height: 100%;
 }
 
 .terminal-card {
@@ -4022,6 +4087,22 @@ td:last-child {
     font-weight: 500 !important;
 }
 
+/* Garantir que alertas na página de login sigam o padrão global */
+.login-body .alert {
+    position: fixed !important;
+    top: 10px !important;
+    right: 10px !important;
+    left: auto !important;
+    z-index: 99999 !important;
+    width: 33vw !important;
+    max-width: 400px !important;
+    min-width: 300px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
+    border: none !important;
+    border-radius: 8px !important;
+    font-weight: 500 !important;
+}
+
 .alert-success {
     background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
     color: #155724;
@@ -4071,6 +4152,75 @@ td:last-child {
     to {
         transform: translateX(0);
         opacity: 1;
+    }
+}
+
+/* Responsive adjustments para layout de terminais */
+@media (max-width: 1024px) {
+    .terminals-layout {
+        flex-direction: column;
+        text-align: center;
+        gap: 2rem;
+        padding: 2rem;
+    }
+    
+    .terminals-title {
+        font-size: 2.5rem;
+    }
+    
+    .terminals-cards-container {
+        height: 400px;
+    }
+}
+
+@media (max-width: 768px) {
+    .terminals-layout {
+        padding: 1.5rem;
+        margin: 1rem 0;
+    }
+    
+    .terminals-title {
+        font-size: 2rem;
+    }
+    
+    .terminals-subtitle {
+        font-size: 1rem;
+    }
+    
+    .terminals-cards-container {
+        height: 350px;
+    }
+    
+    .card-swap-card {
+        width: 280px;
+        height: 180px;
+    }
+}
+
+@media (max-width: 480px) {
+    .terminals-layout {
+        padding: 1rem;
+    }
+    
+    .terminals-title {
+        font-size: 1.8rem;
+    }
+    
+    .terminals-cards-container {
+        height: 300px;
+    }
+    
+    .card-swap-card {
+        width: 260px;
+        height: 160px;
+    }
+    
+    .card-swap-card .terminal-header h3 {
+        font-size: 1rem;
+    }
+    
+    .card-swap-card .terminal-info {
+        font-size: 0.8rem;
     }
 }
 

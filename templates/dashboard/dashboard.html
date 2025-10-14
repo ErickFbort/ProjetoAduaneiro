@@ -139,15 +139,16 @@
 
             <!-- Seção de Terminais Aéreos (TECA) -->
             <div class="terminals-section animate-on-scroll fade-in-right delay-3">
-                <div class="section-header">
-                    <h2><i class="fas fa-plane"></i> Operações por Terminal Aéreo</h2>
-                    <div class="section-actions">
-                        <button class="btn btn-outline-primary btn-sm scale-in delay-4" onclick="refreshTerminals()">
-                            <i class="fas fa-sync-alt"></i> Atualizar
-                        </button>
+                <div class="terminals-layout">
+                    <!-- Texto à esquerda -->
+                    <div class="terminals-text">
+                        <h2 class="terminals-title">Operações por Terminal Aéreo</h2>
+                        <p class="terminals-subtitle">Conheça nossos TECAs.</p>
                     </div>
-                </div>
-                <div class="terminals-grid">
+                    
+                    <!-- Cards animados à direita -->
+                    <div class="terminals-cards-container">
+                        <div class="terminals-grid">
                     <div class="terminal-card animate-on-scroll fade-in-up delay-1">
                         <div class="terminal-header">
                             <h3><i class="fas fa-map-marker-alt pulse"></i> CWB - Curitiba</h3>
@@ -157,11 +158,6 @@
                             <p><strong>Telefone:</strong> +55 47 3515.0802</p>
                             <p><strong>Operações:</strong> Import/Export</p>
                             <p><strong>Status:</strong> <span class="status-badge success">Operacional</span></p>
-                        </div>
-                        <div class="terminal-actions">
-                            <button class="btn btn-sm btn-outline-primary scale-in delay-2" onclick="viewTerminalDetails('CWB')">
-                                <i class="fas fa-eye"></i> Detalhes
-                            </button>
                         </div>
                     </div>
 
@@ -175,11 +171,6 @@
                             <p><strong>Operações:</strong> Import/Export</p>
                             <p><strong>Status:</strong> <span class="status-badge success">Operacional</span></p>
                         </div>
-                        <div class="terminal-actions">
-                            <button class="btn btn-sm btn-outline-primary scale-in delay-3" onclick="viewTerminalDetails('GYN')">
-                                <i class="fas fa-eye"></i> Detalhes
-                            </button>
-                        </div>
                     </div>
 
                     <div class="terminal-card animate-on-scroll fade-in-up delay-3">
@@ -191,11 +182,6 @@
                             <p><strong>Telefone:</strong> +55 47 3515-0803</p>
                             <p><strong>Operações:</strong> Import/Export</p>
                             <p><strong>Status:</strong> <span class="status-badge success">Operacional</span></p>
-                        </div>
-                        <div class="terminal-actions">
-                            <button class="btn btn-sm btn-outline-primary scale-in delay-4" onclick="viewTerminalDetails('REC')">
-                                <i class="fas fa-eye"></i> Detalhes
-                            </button>
                         </div>
                     </div>
 
@@ -209,11 +195,6 @@
                             <p><strong>Operações:</strong> Import/Export</p>
                             <p><strong>Status:</strong> <span class="status-badge success">Operacional</span></p>
                         </div>
-                        <div class="terminal-actions">
-                            <button class="btn btn-sm btn-outline-primary scale-in delay-5" onclick="viewTerminalDetails('VIX')">
-                                <i class="fas fa-eye"></i> Detalhes
-                            </button>
-                        </div>
                     </div>
 
                     <div class="terminal-card animate-on-scroll fade-in-up delay-5">
@@ -226,10 +207,7 @@
                             <p><strong>Operações:</strong> Import/Export</p>
                             <p><strong>Status:</strong> <span class="status-badge success">Operacional</span></p>
                         </div>
-                        <div class="terminal-actions">
-                            <button class="btn btn-sm btn-outline-primary scale-in delay-6" onclick="viewTerminalDetails('NVT')">
-                                <i class="fas fa-eye"></i> Detalhes
-                            </button>
+                    </div>
                         </div>
                     </div>
                 </div>

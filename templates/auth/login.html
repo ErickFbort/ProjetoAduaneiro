@@ -5,22 +5,23 @@
 {% block body_class %}login-body{% endblock %}
 
 {% block content %}
+<!-- Mensagens Flash - Posicionadas no canto superior direito -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
 <main class="login-container">
     <section class="login-box">
         <a href="{{ url_for('auth.login') }}">
             <img src="{{ url_for('static', filename='img/logo_paclog_escuro_login.png') }}" alt="Logo Paclog" class="logo">
         </a>
-        
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
         
         <form method="POST" class="login-form">
             <div class="mb-3">
