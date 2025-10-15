@@ -157,11 +157,15 @@ export const initCardSwapReact = (containerId: string) => {
 
 // Função para inicializar o NewsTabs React
 export const initNewsTabsReact = (containerId: string) => {
+  console.log('Tentando inicializar NewsTabs React...');
   const container = document.getElementById(containerId);
   if (!container) {
     console.error(`Container com ID '${containerId}' não encontrado`);
     return;
   }
+
+  console.log('Container encontrado:', container);
+  console.log('Dados NEWS_DATA:', NEWS_DATA);
 
   const root = createRoot(container);
   
@@ -191,13 +195,17 @@ export const initUserProfileReact = (containerId: string, userData: UserProfile)
     <UserProfileRoot initialUser={userData} />
   );
 
-  // Ocultar fallback após renderizar
+  // Ocultar fallback e mostrar React imediatamente
   setTimeout(() => {
-    if (typeof window !== 'undefined' && (window as any).hideUserProfileFallback) {
-      console.log('React renderizado, ocultando fallback...');
-      (window as any).hideUserProfileFallback();
+    // Ocultar fallback
+    const fallbackContainer = document.getElementById('user-profile-fallback');
+    if (fallbackContainer) {
+      fallbackContainer.classList.remove('show-fallback');
     }
-  }, 100);
+    
+    // Mostrar React
+    container.classList.add('react-loaded');
+  }, 50);
 
   console.log('UserProfileCard React inicializado com sucesso!');
 };
@@ -213,11 +221,35 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   
   // Verificar se estamos na página do dashboard para notícias
-  if (document.querySelector('.news-section')) {
+  const newsSection = document.querySelector('.news-section');
+  const newsContainer = document.getElementById('react-news-container');
+  
+  console.log('Verificando seção de notícias...');
+  console.log('newsSection encontrado:', !!newsSection);
+  console.log('newsContainer encontrado:', !!newsContainer);
+  
+  if (newsSection && newsContainer) {
+    console.log('Seção de notícias encontrada, inicializando React...');
     // Aguardar um pouco para garantir que o DOM está pronto
     setTimeout(() => {
-      initNewsTabsReact('react-news-container');
-    }, 1500);
+      try {
+        initNewsTabsReact('react-news-container');
+        console.log('NewsTabs React inicializado com sucesso!');
+      } catch (error) {
+        console.error('Erro ao inicializar NewsTabs React:', error);
+        // Tentar novamente após um delay
+        setTimeout(() => {
+          try {
+            initNewsTabsReact('react-news-container');
+            console.log('NewsTabs React inicializado na segunda tentativa!');
+          } catch (retryError) {
+            console.error('Erro na segunda tentativa:', retryError);
+          }
+        }, 2000);
+      }
+    }, 500);
+  } else {
+    console.log('Seção de notícias ou container não encontrado');
   }
   
   // Verificar se estamos na página do dashboard para perfil do usuário
@@ -236,7 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
       };
       
       initUserProfileReact('react-user-profile-container', userData);
-    }, 2000);
+    }, 1000);
   }
 });
 

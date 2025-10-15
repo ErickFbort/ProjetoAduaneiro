@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { NewsTabsProps, NewsItem } from '../../types/news';
 import { NEWS_TABS, UPDATE_ICONS, UPDATE_BADGE_CLASSES } from '../../constants/news';
 import './NewsTabs.css';
@@ -13,6 +14,11 @@ export const NewsTabs: React.FC<NewsTabsProps> = ({
   const [activeTab, setActiveTab] = useState<'paclog' | 'linkedin' | 'sistema'>('linkedin');
   const [isHovering, setIsHovering] = useState(false);
   const [isRotating, setIsRotating] = useState(true);
+
+  console.log('NewsTabs renderizado com activeTab:', activeTab);
+  console.log('Dados disponíveis:', data);
+  console.log('NEWS_TABS:', NEWS_TABS);
+  console.log('Props recebidas:', { onRefresh, onForceRefreshLinkedIn, autoRotateInterval, className });
 
   // Função para formatar data
   const formatDate = useCallback((dateString: string) => {
@@ -38,6 +44,8 @@ export const NewsTabs: React.FC<NewsTabsProps> = ({
 
   // Função para alternar aba
   const switchTab = useCallback((tabId: 'paclog' | 'linkedin' | 'sistema') => {
+    console.log('Alternando para aba:', tabId);
+    console.log('Dados disponíveis para nova aba:', data?.[tabId]);
     setActiveTab(tabId);
     setIsRotating(false);
     
@@ -45,7 +53,7 @@ export const NewsTabs: React.FC<NewsTabsProps> = ({
     setTimeout(() => {
       setIsRotating(true);
     }, 2000);
-  }, []);
+  }, [data]);
 
   // Função para pausar rotação
   const pauseRotation = useCallback(() => {
@@ -78,11 +86,27 @@ export const NewsTabs: React.FC<NewsTabsProps> = ({
   const renderNewsItem = useCallback((item: NewsItem) => {
     if (activeTab === 'sistema') {
       return (
-        <div 
+        <motion.div 
           key={item.id} 
           className="system-update-item"
           onMouseEnter={pauseRotation}
           onMouseLeave={resumeRotation}
+          whileHover={{ 
+            scale: 1.02, 
+            y: -2,
+            transition: { 
+              duration: 0.15,
+              type: "tween",
+              ease: "easeOut"
+            }
+          }}
+          whileTap={{ 
+            scale: 0.98,
+            transition: { 
+              duration: 0.1,
+              type: "tween"
+            }
+          }}
         >
           <div className="update-header">
             <div className="update-icon">
@@ -107,16 +131,32 @@ export const NewsTabs: React.FC<NewsTabsProps> = ({
           <div className="update-footer">
             <span className="update-source">{item.source}</span>
           </div>
-        </div>
+        </motion.div>
       );
     }
 
     return (
-      <div 
+      <motion.div 
         key={item.id} 
         className="news-item"
         onMouseEnter={pauseRotation}
         onMouseLeave={resumeRotation}
+        whileHover={{ 
+          scale: 1.02, 
+          y: -3,
+          transition: { 
+            duration: 0.15,
+            type: "tween",
+            ease: "easeOut"
+          }
+        }}
+        whileTap={{ 
+          scale: 0.98,
+          transition: { 
+            duration: 0.1,
+            type: "tween"
+          }
+        }}
       >
         <div className="news-header">
           <h4>{item.title}</h4>
@@ -129,7 +169,7 @@ export const NewsTabs: React.FC<NewsTabsProps> = ({
         <div className="news-content">
           <p>{item.content}</p>
         </div>
-      </div>
+      </motion.div>
     );
   }, [activeTab, formatDate, getUpdateIcon, getUpdateBadgeClass, pauseRotation, resumeRotation]);
 
@@ -142,14 +182,50 @@ export const NewsTabs: React.FC<NewsTabsProps> = ({
     };
 
     return (
-      <div className="empty-news-state">
-        <i className="fas fa-newspaper"></i>
-        <p>{messages[activeTab]}</p>
-      </div>
+      <motion.div 
+        className="empty-news-state"
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ 
+          duration: 0.25,
+          type: "tween",
+          ease: "easeOut"
+        }}
+      >
+        <motion.i 
+          className="fas fa-newspaper"
+          animate={{ 
+            rotate: [0, 8, -8, 0],
+            scale: [1, 1.05, 1]
+          }}
+          transition={{ 
+            duration: 1.5,
+            repeat: Infinity,
+            repeatDelay: 4,
+            type: "tween",
+            ease: "easeInOut"
+          }}
+        ></motion.i>
+        <motion.p
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ 
+            delay: 0.15, 
+            duration: 0.25,
+            type: "tween",
+            ease: "easeOut"
+          }}
+        >
+          {messages[activeTab]}
+        </motion.p>
+      </motion.div>
     );
   }, [activeTab]);
 
-  const currentData = data[activeTab] || [];
+  const currentData = data?.[activeTab] || [];
+  console.log('Dados atuais para aba', activeTab, ':', currentData);
+  console.log('Tipo de dados:', typeof data);
+  console.log('Chaves de dados:', data ? Object.keys(data) : 'data é undefined');
 
   return (
     <div className={`news-section ${className}`}>
@@ -177,27 +253,138 @@ export const NewsTabs: React.FC<NewsTabsProps> = ({
       </div>
       
       <div className="news-content">
-        <div className="news-tabs">
-          {NEWS_TABS.map((tab) => (
-            <button
-              key={tab.id}
-              className={`tab-btn ${activeTab === tab.id ? 'active' : ''}`}
-              onClick={() => switchTab(tab.id)}
-              style={{ '--tab-color': tab.color } as React.CSSProperties}
-            >
-              <i className={tab.icon}></i>
-              {tab.label}
-            </button>
-          ))}
-        </div>
+        <motion.div 
+          className="news-tabs"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ 
+            duration: 0.4, 
+            ease: [0.4, 0, 0.2, 1],
+            type: "tween"
+          }}
+        >
+          {NEWS_TABS.map((tab) => {
+            console.log('Renderizando aba:', tab);
+            return (
+              <motion.button
+                key={tab.id}
+                className={`tab-btn ${activeTab === tab.id ? 'active' : ''}`}
+                onClick={() => switchTab(tab.id)}
+                style={{ '--tab-color': tab.color } as React.CSSProperties}
+                whileHover={{ 
+                  scale: 1.02, 
+                  y: -2,
+                  transition: { 
+                    duration: 0.2,
+                    type: "tween",
+                    ease: "easeOut"
+                  }
+                }}
+                whileTap={{ 
+                  scale: 0.98,
+                  transition: { 
+                    duration: 0.1,
+                    type: "tween"
+                  }
+                }}
+                animate={{
+                  scale: activeTab === tab.id ? 1.05 : 1,
+                  y: activeTab === tab.id ? -3 : 0,
+                  boxShadow: activeTab === tab.id 
+                    ? "0 6px 20px rgba(0, 123, 255, 0.4)" 
+                    : "0 4px 15px rgba(0, 0, 0, 0.1)"
+                }}
+                transition={{
+                  duration: 0.25,
+                  ease: [0.4, 0, 0.2, 1],
+                  type: "tween"
+                }}
+              >
+                <motion.i 
+                  className={tab.icon}
+                  animate={{
+                    scale: activeTab === tab.id ? 1.1 : 1
+                  }}
+                  transition={{ 
+                    duration: 0.25,
+                    type: "tween",
+                    ease: "easeInOut"
+                  }}
+                ></motion.i>
+                <motion.span
+                  animate={{
+                    fontWeight: activeTab === tab.id ? 700 : 600
+                  }}
+                  transition={{ 
+                    duration: 0.15,
+                    type: "tween",
+                    ease: "easeOut"
+                  }}
+                >
+                  {tab.label}
+                </motion.span>
+              </motion.button>
+            );
+          })}
+        </motion.div>
         
-        <div className="news-list">
-          {currentData.length > 0 ? (
-            currentData.map(renderNewsItem)
-          ) : (
-            renderEmptyState()
-          )}
-        </div>
+        <motion.div 
+          className="news-list"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ 
+            duration: 0.25,
+            type: "tween",
+            ease: "easeOut"
+          }}
+        >
+          <AnimatePresence mode="wait">
+            {currentData && currentData.length > 0 ? (
+              <motion.div
+                key={activeTab}
+                initial={{ opacity: 0, x: 50, scale: 0.95 }}
+                animate={{ opacity: 1, x: 0, scale: 1 }}
+                exit={{ opacity: 0, x: -50, scale: 0.95 }}
+                transition={{ 
+                  duration: 0.4, 
+                  ease: [0.4, 0, 0.2, 1],
+                  type: "tween"
+                }}
+                className="news-content-slide"
+              >
+                {currentData.map((item, index) => (
+                  <motion.div
+                    key={`${activeTab}-${item.id}`}
+                    initial={{ opacity: 0, x: -30, y: 20 }}
+                    animate={{ opacity: 1, x: 0, y: 0 }}
+                    transition={{ 
+                      duration: 0.3, 
+                      delay: index * 0.1,
+                      type: "tween",
+                      ease: "easeOut"
+                    }}
+                  >
+                    {renderNewsItem(item)}
+                  </motion.div>
+                ))}
+              </motion.div>
+            ) : (
+              <motion.div
+                key="empty"
+                initial={{ opacity: 0, x: 50, scale: 0.9 }}
+                animate={{ opacity: 1, x: 0, scale: 1 }}
+                exit={{ opacity: 0, x: -50, scale: 0.9 }}
+                transition={{ 
+                  duration: 0.3,
+                  type: "tween",
+                  ease: "easeOut"
+                }}
+              >
+                {renderEmptyState()}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
       </div>
     </div>
   );

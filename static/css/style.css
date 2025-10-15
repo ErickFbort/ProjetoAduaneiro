@@ -2405,100 +2405,7 @@ td:last-child {
     gap: 0.5rem;
 }
 
-.news-tabs {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 1.5rem;
-    position: relative;
-    padding-bottom: 0.5rem;
-}
-
-.news-tabs::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, #e9ecef, transparent);
-}
-
-.tab-btn {
-    padding: 0.75rem 1.5rem;
-    border: 2px solid #e9ecef;
-    background: #f8f9fa;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    position: relative;
-    color: #6c757d;
-}
-
-.tab-btn:hover {
-    border-color: var(--secondary-color);
-    color: var(--secondary-color);
-    background: #e3f2fd;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.tab-btn.active {
-    background: var(--secondary-color);
-    border-color: var(--secondary-color);
-    color: white;
-    font-weight: 600;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
-    z-index: 2;
-}
-
-.tab-btn.active::before {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: white;
-    border-radius: 0 0 8px 8px;
-}
-
-.tab-btn.active::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 8px;
-    transform: translateY(-50%);
-    width: 4px;
-    height: 4px;
-    background: white;
-    border-radius: 50%;
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0% {
-        opacity: 1;
-        transform: translateY(-50%) scale(1);
-    }
-    50% {
-        opacity: 0.7;
-        transform: translateY(-50%) scale(1.2);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(-50%) scale(1);
-    }
-}
-
-.news-list {
-    max-height: 400px;
-    overflow-y: auto;
-}
+/* Estilos de notícias removidos - agora usando React NewsTabs com CSS próprio */
 
 .news-item {
     padding: 1rem;
@@ -3348,50 +3255,116 @@ td:last-child {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     display: block !important; /* Forçar exibição */
     z-index: 1000; /* Garantir que apareça na frente */
+    min-height: 70px; /* Altura mínima para evitar layout quebrado */
 }
 
-/* Garantir que apenas uma área de usuário seja visível */
+/* Container React com transição suave */
+#react-user-profile-container {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    position: relative;
+    z-index: 1;
+}
+
+#react-user-profile-container.react-loaded {
+    opacity: 1;
+}
+
+/* Fallback - estilos unificados com React */
 #user-profile-fallback {
     display: none !important; /* Ocultar fallback por padrão */
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }
 
 #user-profile-fallback.show-fallback {
     display: block !important; /* Mostrar apenas quando necessário */
+    opacity: 1;
 }
 
+/* Estado de carregamento - evitar mudança visual */
+.user-profile-section.loading {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+}
+
+.user-profile-section.loading #user-profile-fallback {
+    display: block !important;
+    opacity: 1;
+}
+
+.user-profile-section.loading #react-user-profile-container {
+    opacity: 0;
+}
+
+/* Transição suave entre estados */
+.user-profile-section:not(.loading) #user-profile-fallback {
+    transition: opacity 0.3s ease;
+}
+
+.user-profile-section:not(.loading) #react-user-profile-container {
+    transition: opacity 0.3s ease;
+}
+
+/* Estilos unificados para fallback e React */
 .user-profile-card {
+    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+    border-radius: 6px;
+    padding: 0.4rem;
+    margin: 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
     display: flex;
     align-items: center;
     gap: 0.4rem;
-    padding: 0.4rem;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 6px;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    transition: all 0.3s ease;
-    cursor: pointer;
     min-height: 50px;
+    cursor: pointer;
+}
+
+.user-profile-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+    pointer-events: none;
 }
 
 .user-profile-card:hover {
-    background: rgba(255, 255, 255, 0.15);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
 }
 
 .user-profile-avatar {
     position: relative;
+    width: 32px;
+    height: 32px;
+    margin: 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
     flex-shrink: 0;
 }
 
+.user-profile-avatar:hover {
+    transform: scale(1.05);
+}
+
 .profile-avatar {
-    width: 32px;
-    height: 32px;
+    width: 100%;
+    height: 100%;
     border-radius: 50%;
     object-fit: cover;
     border: 1px solid rgba(255, 255, 255, 0.3);
     transition: all 0.3s ease;
-    flex-shrink: 0;
 }
 
 .avatar-upload-overlay {
@@ -3404,6 +3377,8 @@ td:last-child {
     display: flex;
     flex-direction: column;
     gap: 0.1rem;
+    position: relative;
+    z-index: 1;
 }
 
 .user-name {
@@ -3418,13 +3393,14 @@ td:last-child {
 }
 
 .user-role {
-    color: rgba(255, 255, 255, 0.8);
     font-size: 0.65rem;
+    font-weight: 500;
     margin: 0;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.2;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    line-height: 1.2;
 }
 
 .user-profile-actions {
@@ -5741,44 +5717,7 @@ td:last-child {
   margin-bottom: 1rem;
 }
 
-.tab-buttons {
-  display: flex;
-  background: #f8f9fa;
-  border-radius: 6px;
-  padding: 2px;
-  margin-bottom: 0.75rem;
-}
-
-.tab-btn {
-  flex: 1;
-  background: none;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 4px;
-  font-weight: 500;
-  color: #6c757d;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  font-size: 0.9rem;
-}
-
-.tab-btn:hover {
-  background: #e9ecef;
-  color: #495057;
-}
-
-.tab-btn.active {
-  background: #fff;
-  color: var(--primary-color);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.tab-btn i {
-  font-size: 1rem;
-}
+/* Estilos de tab-buttons removidos - agora usando React NewsTabs */
 
 .tab-content {
   min-height: auto;
@@ -6157,9 +6096,7 @@ td:last-child {
     flex-direction: column;
   }
   
-  .tab-btn {
-    margin-bottom: 4px;
-  }
+  /* Estilos de tab-btn removidos - agora usando React NewsTabs */
   
   .form-section {
     padding: 1rem;

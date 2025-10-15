@@ -667,10 +667,7 @@ let newsData = {
     ]
 };
 
-let currentNewsTab = 'linkedin';
-let newsTimer = null;
-let isHovering = false;
-let autoRotateInterval = 8000; // 8 segundos entre trocas
+// Variáveis de notícias removidas - agora usando React NewsTabs
 
 // Carregar estatísticas
 async function loadStats() {
@@ -719,111 +716,7 @@ async function loadLinkedInPosts() {
     }
 }
 
-// Carregar notícias
-function loadNews(tab = 'linkedin') {
-    const newsContent = document.getElementById('news-content');
-    
-    // Verificar se o elemento existe (pode não existir se estiver usando React)
-    if (!newsContent) {
-        console.log('Elemento news-content não encontrado - usando React para notícias');
-        return;
-    }
-    
-    const news = newsData[tab] || [];
-    
-    if (news.length === 0) {
-        newsContent.innerHTML = `
-            <div class="empty-state">
-                <i class="fas fa-newspaper fa-2x text-muted"></i>
-                <p>Nenhuma notícia disponível no momento.</p>
-            </div>
-        `;
-        return;
-    }
-    
-    if (tab === 'linkedin') {
-        newsContent.innerHTML = news.map(item => `
-            <div class="linkedin-post" onclick="openLinkedInPost('${item.url}')">
-                <div class="post-header">
-                    <div class="author-info">
-                        <img src="${item.author_image || item.authorImage}" alt="${item.author}" class="author-avatar">
-                        <div class="author-details">
-                            <h4 class="author-name">${item.author}</h4>
-                            <span class="post-date">${formatDate(item.date)}</span>
-                        </div>
-                    </div>
-                    <div class="post-category">
-                        <span class="category-badge">${item.category}</span>
-                    </div>
-                </div>
-                
-                <div class="post-content">
-                    <h3 class="post-title">${item.title}</h3>
-                    <p class="post-subtitle">${item.subtitle}</p>
-                </div>
-                
-                <div class="post-image-container">
-                    <img src="${item.image}" alt="${item.title}" class="post-image">
-                    <div class="image-overlay">
-                        <div class="overlay-content">
-                            <i class="fab fa-linkedin"></i>
-                            <span>Ver mais</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="post-engagement">
-                    <div class="engagement-stats">
-                        <span class="likes-count">${item.likes} curtidas</span>
-                        <span class="comments-shares">${item.comments} comentários • ${item.shares} compartilhamentos</span>
-                    </div>
-                </div>
-            </div>
-        `).join('');
-    } else if (tab === 'sistema') {
-        newsContent.innerHTML = news.map(item => `
-            <div class="system-update-item" onmouseenter="pauseNewsRotation()" onmouseleave="resumeNewsRotation()">
-                <div class="update-header">
-                    <div class="update-icon">
-                        <i class="fas fa-${getUpdateIcon(item.type)}"></i>
-                    </div>
-                    <div class="update-info">
-                        <h4 class="update-title">${item.title}</h4>
-                        <div class="update-meta">
-                            <span class="update-version">v${item.version}</span>
-                            <span class="update-date">${formatDate(item.date)}</span>
-                        </div>
-                    </div>
-                    <div class="update-badge">
-                        <span class="badge badge-${getUpdateBadgeClass(item.type)}">${item.category}</span>
-                    </div>
-                </div>
-                <div class="update-content">
-                    <p>${item.content}</p>
-                </div>
-                <div class="update-footer">
-                    <span class="update-source">${item.source}</span>
-                </div>
-            </div>
-        `).join('');
-    } else {
-        newsContent.innerHTML = news.map(item => `
-            <div class="news-item" onmouseenter="pauseNewsRotation()" onmouseleave="resumeNewsRotation()">
-                <div class="news-header">
-                    <h4>${item.title}</h4>
-                    <span class="news-date">${formatDate(item.date)}</span>
-                </div>
-                <div class="news-meta">
-                    <span class="news-category">${item.category}</span>
-                    <span class="news-source">${item.source}</span>
-                </div>
-                <div class="news-content">
-                    <p>${item.content}</p>
-                </div>
-            </div>
-        `).join('');
-    }
-}
+// Função loadNews removida - agora usando React NewsTabs
 
 // Funções auxiliares para atualizações do sistema
 function getUpdateIcon(type) {
@@ -848,123 +741,13 @@ function getUpdateBadgeClass(type) {
     return classes[type] || 'primary';
 }
 
-// Alternar aba de notícias
-function switchNewsTab(tab) {
-    currentNewsTab = tab;
-    
-    // Atualizar botões
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-    event.target.classList.add('active');
-    
-    // Carregar conteúdo
-    loadNews(tab);
-    
-    // Reiniciar timer se estiver ativo
-    if (newsTimer) {
-        clearInterval(newsTimer);
-        startNewsRotation();
-    }
-}
+// Função switchNewsTab removida - agora usando React NewsTabs
 
-// Sistema de rotação automática
-function startNewsRotation() {
-    if (newsTimer) {
-        clearInterval(newsTimer);
-    }
-    
-    const tabs = ['paclog', 'linkedin', 'sistema'];
-    let currentIndex = tabs.indexOf(currentNewsTab);
-    
-    newsTimer = setInterval(() => {
-        if (!isHovering) {
-            currentIndex = (currentIndex + 1) % tabs.length;
-            const nextTab = tabs[currentIndex];
-            
-            // Atualizar botões
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            const activeBtn = document.querySelector(`[onclick="switchNewsTab('${nextTab}')"]`);
-            if (activeBtn) {
-                activeBtn.classList.add('active');
-            }
-            
-            // Carregar conteúdo
-            currentNewsTab = nextTab;
-            loadNews(nextTab);
-        }
-    }, autoRotateInterval);
-}
+// Funções de rotação removidas - agora usando React NewsTabs
 
-// Pausar rotação no hover
-function pauseNewsRotation() {
-    isHovering = true;
-}
+// Função refreshNews removida - agora usando React NewsTabs
 
-// Retomar rotação ao sair do hover
-function resumeNewsRotation() {
-    isHovering = false;
-}
-
-// Atualizar notícias
-async function refreshNews() {
-    if (currentNewsTab === 'linkedin') {
-        await loadLinkedInPosts();
-    }
-    // Para Pac Log, os dados são estáticos, então apenas recarregamos
-    loadNews(currentNewsTab);
-    
-    // Verificar se FeedbackManager existe antes de usar
-    if (typeof FeedbackManager !== 'undefined' && FeedbackManager.showSuccess) {
-        FeedbackManager.showSuccess('Notícias atualizadas!');
-    } else {
-        console.log('Notícias atualizadas!');
-    }
-}
-
-// Forçar atualização do LinkedIn (limpar cache)
-async function forceRefreshLinkedIn() {
-    try {
-        // Primeiro tentar scraping real
-        const response = await fetch('/api/linkedin/posts?limit=5&force_simulated=false');
-        const data = await response.json();
-        
-        if (data.success) {
-            newsData.linkedin = data.data;
-            loadNews('linkedin');
-            if (typeof FeedbackManager !== 'undefined' && FeedbackManager.showSuccess) {
-                FeedbackManager.showSuccess(`LinkedIn atualizado! ${data.count} posts carregados (${data.source})`);
-            } else {
-                console.log(`LinkedIn atualizado! ${data.count} posts carregados (${data.source})`);
-            }
-        } else {
-            // Se falhar, usar dados simulados
-            const simulatedResponse = await fetch('/api/linkedin/posts?limit=5&force_simulated=true');
-            const simulatedData = await simulatedResponse.json();
-            
-            if (simulatedData.success) {
-                newsData.linkedin = simulatedData.data;
-                loadNews('linkedin');
-                if (typeof FeedbackManager !== 'undefined' && FeedbackManager.showInfo) {
-                    FeedbackManager.showInfo('Usando dados simulados do LinkedIn');
-                } else {
-                    console.log('Usando dados simulados do LinkedIn');
-                }
-            } else {
-                if (typeof FeedbackManager !== 'undefined' && FeedbackManager.showError) {
-                    FeedbackManager.showError('Erro ao atualizar LinkedIn');
-                } else {
-                    console.error('Erro ao atualizar LinkedIn');
-                }
-            }
-        }
-    } catch (error) {
-        console.error('Erro ao forçar atualização:', error);
-        if (typeof FeedbackManager !== 'undefined' && FeedbackManager.showError) {
-            FeedbackManager.showError('Erro ao atualizar LinkedIn');
-        } else {
-            console.error('Erro ao atualizar LinkedIn');
-        }
-    }
-}
+// Função forceRefreshLinkedIn removida - agora usando React NewsTabs
 
 // Atualizar terminais
 function refreshTerminals() {
@@ -2770,55 +2553,43 @@ async function updateUserJobTitle(jobTitle) {
 
 // Mostrar seção do colaborador apenas na home
 function showUserProfileSection() {
-    console.log('showUserProfileSection chamada');
     const userProfileSection = document.getElementById('user-profile-section');
-    if (userProfileSection) {
-        console.log('Seção de perfil encontrada, exibindo...');
-        userProfileSection.style.display = 'block';
-        
-        // Verificar se o React foi carregado
-        const reactContainer = document.getElementById('react-user-profile-container');
-        const fallbackContainer = document.getElementById('user-profile-fallback');
-        
-        console.log('React container:', reactContainer);
-        console.log('Fallback container:', fallbackContainer);
-        
-        // Verificar se React já está carregado
-        if (reactContainer && reactContainer.children.length > 0) {
-            console.log('React já carregado, ocultando fallback...');
-            if (fallbackContainer) {
-                fallbackContainer.classList.remove('show-fallback');
-            }
-        } else {
-            // Mostrar fallback apenas se React não estiver carregado
-            if (fallbackContainer) {
-                console.log('React não carregado, mostrando fallback...');
-                fallbackContainer.classList.add('show-fallback');
-                
-                // Carregar cargo salvo do localStorage
-                const savedJobTitle = localStorage.getItem('user_job_title');
-                if (savedJobTitle) {
-                    const jobTitleElement = document.getElementById('user-job-title');
-                    if (jobTitleElement) {
-                        jobTitleElement.textContent = savedJobTitle;
-                    }
-                }
-            }
-            
-            // Verificar se React carregou após um delay
-            setTimeout(() => {
-                if (reactContainer && reactContainer.children.length > 0) {
-                    console.log('React carregado, ocultando fallback...');
-                    if (fallbackContainer) {
-                        fallbackContainer.classList.remove('show-fallback');
-                    }
-                } else {
-                    console.log('React não carregou, mantendo fallback...');
-                }
-            }, 2000);
-        }
+    if (!userProfileSection) return;
+    
+    userProfileSection.style.display = 'block';
+    
+    const reactContainer = document.getElementById('react-user-profile-container');
+    const fallbackContainer = document.getElementById('user-profile-fallback');
+    
+    // Verificar se React já está carregado
+    if (reactContainer && reactContainer.children.length > 0) {
+        // React já carregado - mostrar diretamente
+        reactContainer.classList.add('react-loaded');
     } else {
-        console.error('Seção de perfil não encontrada!');
+        // Mostrar fallback imediatamente
+        if (fallbackContainer) {
+            fallbackContainer.classList.add('show-fallback');
+            
+            // Carregar dados salvos
+            const savedJobTitle = localStorage.getItem('user_job_title');
+            if (savedJobTitle) {
+                const jobTitleElement = document.getElementById('user-job-title');
+                if (jobTitleElement) {
+                    jobTitleElement.textContent = savedJobTitle;
+                }
+            }
+        }
+        
+        // Verificar React após delay
+        setTimeout(() => {
+            if (reactContainer && reactContainer.children.length > 0) {
+                // Transição suave para React
+                if (fallbackContainer) {
+                    fallbackContainer.classList.remove('show-fallback');
+                }
+                reactContainer.classList.add('react-loaded');
+            }
+        }, 1500);
     }
 }
 
@@ -2843,37 +2614,7 @@ function hideUserProfileFallback() {
 // Expor função globalmente
 window.hideUserProfileFallback = hideUserProfileFallback;
 
-// Função de debug para forçar exibição da seção de perfil
-function forceShowUserProfile() {
-    console.log('=== DEBUG: Forçando exibição da seção de perfil ===');
-    
-    const userProfileSection = document.getElementById('user-profile-section');
-    console.log('Seção encontrada:', userProfileSection);
-    
-    if (userProfileSection) {
-        userProfileSection.style.display = 'block';
-        userProfileSection.style.visibility = 'visible';
-        userProfileSection.style.opacity = '1';
-        console.log('Seção forçada a ser exibida');
-        
-        // Verificar containers
-        const reactContainer = document.getElementById('react-user-profile-container');
-        const fallbackContainer = document.getElementById('user-profile-fallback');
-        
-        console.log('React container:', reactContainer);
-        console.log('Fallback container:', fallbackContainer);
-        
-        if (fallbackContainer) {
-            fallbackContainer.style.display = 'block';
-            console.log('Fallback exibido');
-        }
-    } else {
-        console.error('Seção de perfil não encontrada!');
-    }
-}
-
-// Expor função globalmente para debug
-window.forceShowUserProfile = forceShowUserProfile;
+// Função de debug removida - não é mais necessária
 
 // Abrir modal de edição de perfil
 function openUserProfileModal() {
@@ -3328,7 +3069,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     updateCurrentTime();
     await loadStats();
     await loadLinkedInPosts();
-    loadNews();
+    // loadNews() removido - agora usando React NewsTabs
     
     // Inicializar favoritos
     loadFavorites();
@@ -3355,24 +3096,6 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Mostrar seção do colaborador (apenas na home)
     showUserProfileSection();
     
-    // Garantir que a seção seja exibida após um delay
-    setTimeout(() => {
-        console.log('Verificando seção de perfil após delay...');
-        showUserProfileSection();
-    }, 1000);
-    
-    // Forçar exibição da seção de perfil
-    setTimeout(() => {
-        console.log('Forçando exibição da seção de perfil...');
-        forceShowUserProfile();
-    }, 2000);
-    
-    // Debug adicional após mais tempo
-    setTimeout(() => {
-        console.log('Debug final da seção de perfil...');
-        forceShowUserProfile();
-    }, 5000);
-    
     // Configurar upload de avatar
     setupAvatarUpload();
     
@@ -3389,8 +3112,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Inicializar notificações
     initNotifications();
     
-    // Iniciar rotação automática das notícias
-    startNewsRotation();
+    // startNewsRotation() removido - agora usando React NewsTabs
 });
 
 // Listener para quando a página for recarregada (F5)
@@ -3626,8 +3348,8 @@ document.addEventListener('click', (e) => {
 </div>
 
     <!-- React Components Integration -->
-    <script type="module" src="{{ url_for('static', filename='dist/assets/main-kNIiLTyy.js') }}"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='dist/assets/main-CMUhtubJ.css') }}">
+    <script type="module" src="{{ url_for('static', filename='dist/assets/main-DL45_aZp.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='dist/assets/main-D2SQZeo0.css') }}">
 
 {% endblock %}
 

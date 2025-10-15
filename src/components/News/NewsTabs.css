@@ -95,13 +95,13 @@
   font-weight: 600;
   color: #6c757d;
   cursor: pointer;
-  transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  transform: translateZ(0);
 }
 
 .tab-btn::before {
@@ -147,6 +147,13 @@
   max-height: 350px;
   overflow-y: auto;
   padding-right: 0.5rem;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.news-content-slide {
+  position: relative;
+  width: 100%;
 }
 
 .news-list::-webkit-scrollbar {
@@ -174,13 +181,8 @@
   padding: 1.5rem;
   margin-bottom: 1rem;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
   border-left: 4px solid #007bff;
-}
-
-.news-item:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  transform: translateZ(0);
 }
 
 .news-header {
@@ -378,6 +380,19 @@
   font-size: 3rem;
   margin-bottom: 1rem;
   opacity: 0.5;
+}
+
+/* Empty State */
+.empty-news-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #6c757d;
+}
+
+.empty-news-state i {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: #dee2e6;
 }
 
 .empty-news-state p {
