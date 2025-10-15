@@ -91,22 +91,6 @@ export const NewsTabs: React.FC<NewsTabsProps> = ({
           className="system-update-item"
           onMouseEnter={pauseRotation}
           onMouseLeave={resumeRotation}
-          whileHover={{ 
-            scale: 1.02, 
-            y: -2,
-            transition: { 
-              duration: 0.15,
-              type: "tween",
-              ease: "easeOut"
-            }
-          }}
-          whileTap={{ 
-            scale: 0.98,
-            transition: { 
-              duration: 0.1,
-              type: "tween"
-            }
-          }}
         >
           <div className="update-header">
             <div className="update-icon">
@@ -141,22 +125,6 @@ export const NewsTabs: React.FC<NewsTabsProps> = ({
         className="news-item"
         onMouseEnter={pauseRotation}
         onMouseLeave={resumeRotation}
-        whileHover={{ 
-          scale: 1.02, 
-          y: -3,
-          transition: { 
-            duration: 0.15,
-            type: "tween",
-            ease: "easeOut"
-          }
-        }}
-        whileTap={{ 
-          scale: 0.98,
-          transition: { 
-            duration: 0.1,
-            type: "tween"
-          }
-        }}
       >
         <div className="news-header">
           <h4>{item.title}</h4>
@@ -271,58 +239,18 @@ export const NewsTabs: React.FC<NewsTabsProps> = ({
                 className={`tab-btn ${activeTab === tab.id ? 'active' : ''}`}
                 onClick={() => switchTab(tab.id)}
                 style={{ '--tab-color': tab.color } as React.CSSProperties}
-                whileHover={{ 
-                  scale: 1.02, 
-                  y: -2,
-                  transition: { 
-                    duration: 0.2,
-                    type: "tween",
-                    ease: "easeOut"
-                  }
-                }}
-                whileTap={{ 
-                  scale: 0.98,
-                  transition: { 
-                    duration: 0.1,
-                    type: "tween"
-                  }
-                }}
-                animate={{
-                  scale: activeTab === tab.id ? 1.05 : 1,
-                  y: activeTab === tab.id ? -3 : 0,
-                  boxShadow: activeTab === tab.id 
-                    ? "0 6px 20px rgba(0, 123, 255, 0.4)" 
-                    : "0 4px 15px rgba(0, 0, 0, 0.1)"
-                }}
+                /* Removidas animações de hover dos botões das abas */
+                /* Removidas animações de escala e movimento dos botões */
                 transition={{
                   duration: 0.25,
                   ease: [0.4, 0, 0.2, 1],
                   type: "tween"
                 }}
               >
-                <motion.i 
-                  className={tab.icon}
-                  animate={{
-                    scale: activeTab === tab.id ? 1.1 : 1
-                  }}
-                  transition={{ 
-                    duration: 0.25,
-                    type: "tween",
-                    ease: "easeInOut"
-                  }}
-                ></motion.i>
-                <motion.span
-                  animate={{
-                    fontWeight: activeTab === tab.id ? 700 : 600
-                  }}
-                  transition={{ 
-                    duration: 0.15,
-                    type: "tween",
-                    ease: "easeOut"
-                  }}
-                >
+                <i className={tab.icon}></i>
+                <span>
                   {tab.label}
-                </motion.span>
+                </span>
               </motion.button>
             );
           })}

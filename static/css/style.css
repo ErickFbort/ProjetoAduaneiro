@@ -2416,8 +2416,8 @@ td:last-child {
 }
 
 .news-item:hover {
-    border-color: var(--secondary-color);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    opacity: 0.9;
+    transition: opacity 0.2s ease;
 }
 
 .news-header {
@@ -2949,11 +2949,7 @@ td:last-child {
     transition: all 0.3s ease;
 }
 
-.news-item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-    transition: all 0.3s ease;
-}
+/* Removido efeito de hover dos news-item */
 
 /* Efeito de parallax sutil */
 .parallax-element {
@@ -4362,8 +4358,7 @@ td:last-child {
     .stat-card:hover,
     .terminal-card:hover,
     .quick-action-card:hover,
-    .linkedin-post:hover,
-    .news-item:hover {
+    .linkedin-post:hover {
         transform: none; /* Desabilitar hover effects em mobile */
     }
     
@@ -6572,8 +6567,8 @@ td:last-child {
 }
 
 .system-update-item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    opacity: 0.9;
+    transition: opacity 0.2s ease;
 }
 
 .update-header {
