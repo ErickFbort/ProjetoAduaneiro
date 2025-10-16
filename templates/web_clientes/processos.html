@@ -25,8 +25,8 @@
 
             <!-- Barra de Pesquisa e Filtros -->
             <div class="search-section">
-                <div class="search-input-group">
-                    <form method="GET" class="search-form">
+                <div class="search-input-group d-flex justify-content-between align-items-center">
+                    <form method="GET" class="search-form flex-grow-1 me-3">
                         <div class="input-group">
                             <input type="text" 
                                    name="search" 
@@ -41,12 +41,14 @@
                             </button>
                         </div>
                     </form>
-                    <button class="btn btn-outline-info filter-toggle" onclick="toggleAdvancedFilters()">
-                        <i class="fas fa-filter"></i> Filtros Avançados
-                    </button>
-                    <button class="btn btn-success" id="cadastrarProcesso">
-                        <i class="fas fa-plus"></i> Cadastrar Processo
-                    </button>
+                    <div class="action-buttons d-flex gap-2">
+                        <button class="btn btn-outline-info filter-toggle" onclick="toggleAdvancedFilters()">
+                            <i class="fas fa-filter"></i> Filtros Avançados
+                        </button>
+                        <button class="btn btn-success" id="cadastrarProcesso">
+                            <i class="fas fa-plus"></i> Cadastrar Processo
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Filtros Avançados -->
