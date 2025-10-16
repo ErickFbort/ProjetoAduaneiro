@@ -1241,7 +1241,6 @@ td:last-child {
 .search-input-group {
     display: flex;
     align-items: center;
-    gap: 1rem;
     margin-bottom: 1rem;
     flex-wrap: wrap;
 }
@@ -5351,9 +5350,7 @@ td:last-child {
 /* Layout da barra de pesquisa com botões no extremo direito */
 .search-section .search-input-group {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    gap: 2rem;
     flex-wrap: wrap;
     width: 100%;
     max-width: none;
