@@ -54,19 +54,9 @@
                 </div>
             </div>
 
-            <!-- Navegação por Abas -->
-            <div class="cadastro-tabs">
-                <div class="tab-buttons">
-                    <button class="tab-btn active" data-tab="processo">
-                        <i class="fas fa-clipboard-list"></i> Processo
-                    </button>
-                </div>
-            </div>
 
-            <!-- Conteúdo das Abas -->
-            <div class="tab-content">
-                <!-- Aba Processo (Todas as informações) -->
-                <div class="tab-pane active" id="processo-tab">
+            <!-- Conteúdo do Formulário -->
+            <div class="form-content">
                     <div class="form-section" id="detalhes-section">
                         <h6 class="section-title">Detalhes</h6>
                         <form id="cadastroProcessoForm">
@@ -545,7 +535,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -781,8 +770,7 @@ if (naturezaOperacaoCadastro) {
             const targetElement = document.getElementById(targetId);
             
             if (targetElement) {
-                // Ativar aba de processo
-                document.querySelector('[data-tab="processo"]').click();
+                // Scroll direto para a seção (sem necessidade de abas)
                 
                 // Scroll suave para a seção
                 setTimeout(() => {
