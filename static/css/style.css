@@ -728,7 +728,6 @@ body {
     gap: 0;
     margin-bottom: 1rem;
     position: relative;
-    max-width: 700px;
     align-items: center;
 }
 
@@ -1249,7 +1248,6 @@ td:last-child {
 
 .search-form {
     flex: 1;
-    max-width: 700px;
 }
 
 .search-form .input-group {
@@ -4933,15 +4931,15 @@ td:last-child {
 }
 
 .processos-table thead {
-    background: #000000 !important;
+    background: #6c757d !important;
 }
 
 .processos-table thead tr {
-    background: #000000 !important;
+    background: #6c757d !important;
 }
 
 .processos-table thead th {
-    background: #000000 !important;
+    background: #6c757d !important;
     color: white !important;
     border: none !important;
     font-weight: 600;
@@ -4949,16 +4947,17 @@ td:last-child {
     font-size: 0.8rem;
     text-align: center;
     vertical-align: middle;
-    border-bottom: 2px solid #000000 !important;
 }
 
 .processos-table .table-header {
-    background: #000000 !important;
+    background: #6c757d !important;
     color: white !important;
+    border-bottom: none !important;
+    box-shadow: none !important;
 }
 
 .processos-table .table-header th {
-    background: #000000 !important;
+    background: #6c757d !important;
     color: white !important;
     border: none !important;
     font-weight: 600;
@@ -5349,19 +5348,21 @@ td:last-child {
     text-decoration: none !important;
 }
 
-/* Layout da barra de pesquisa com botões à direita */
+/* Layout da barra de pesquisa com botões no extremo direito */
 .search-section .search-input-group {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 1rem;
+    gap: 2rem;
     flex-wrap: wrap;
+    width: 100%;
+    max-width: none;
 }
 
 .search-section .search-form {
     flex: 1;
     min-width: 300px;
-    margin-right: 1rem;
+    max-width: 600px;
 }
 
 .search-section .action-buttons {
@@ -5369,6 +5370,12 @@ td:last-child {
     gap: 0.5rem;
     align-items: center;
     flex-shrink: 0;
+    margin-left: auto;
+    order: 2;
+}
+
+.search-section .search-form {
+    order: 1;
 }
 
 /* Responsividade para o novo layout */
@@ -5376,16 +5383,19 @@ td:last-child {
     .search-section .search-input-group {
         flex-direction: column;
         align-items: stretch;
+        gap: 1rem;
     }
     
     .search-section .search-form {
         margin-right: 0;
-        margin-bottom: 1rem;
+        margin-bottom: 0;
+        max-width: none;
     }
     
     .search-section .action-buttons {
         justify-content: center;
         flex-wrap: wrap;
+        margin-left: 0;
     }
 }
 
