@@ -419,7 +419,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">
-                    <i class="fas fa-camera"></i> Alterar Foto de Perfil
+                    <i class="fas fa-camera"></i> Upload de Foto de Perfil
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
@@ -431,35 +431,24 @@
                          id="avatar-preview">
                 </div>
                 
-                <div class="avatar-upload-area" id="avatar-upload-area">
+                <div class="avatar-upload-area" id="avatar-upload-area-modal">
                     <i class="fas fa-cloud-upload-alt fa-2x text-muted mb-2"></i>
                     <h6 class="mb-1">Arraste uma imagem aqui ou clique para selecionar</h6>
                     <p class="text-muted small mb-0">Formatos aceitos: JPG, PNG, GIF (máx. 2MB)</p>
-                    <input type="file" id="avatar-file-input" accept="image/*" style="display: none;">
+                    <input type="file" id="avatar-file-input-modal" accept="image/*" style="display: none;">
                 </div>
                 
                 <div class="d-grid gap-2 mb-3">
-                    <button class="btn btn-outline-primary" onclick="document.getElementById('avatar-file-input').click()">
+                    <button class="btn btn-outline-primary" onclick="document.getElementById('avatar-file-input-modal').click()">
                         <i class="fas fa-folder-open"></i> Escolher Arquivo
                     </button>
                 </div>
                 
-                <div class="mb-3">
-                    <label for="job-title-input" class="form-label">
-                        <i class="fas fa-briefcase"></i> Cargo/Função
-                    </label>
-                    <input type="text" 
-                           class="form-control" 
-                           id="job-title-input" 
-                           placeholder="Ex: Analista de Sistemas, Gerente, etc."
-                           value="{{ user.job_title or '' }}">
-                    <div class="form-text">Informe seu cargo ou função na empresa (opcional)</div>
-                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                 <button type="button" class="btn btn-primary" onclick="uploadAvatar()" id="upload-avatar-btn">
-                    <i class="fas fa-save"></i> Salvar Informações
+                    <i class="fas fa-upload"></i> Fazer Upload
                 </button>
             </div>
         </div>
@@ -509,12 +498,6 @@
                     <div class="col-md-8">
                         <div class="profile-info-section">
                             <div class="mb-3">
-                                <label for="user-name-input" class="form-label">Nome Completo</label>
-                                <input type="text" class="form-control" id="user-name-input" value="{{ user.name }}" readonly>
-                                <div class="form-text">Nome não pode ser alterado</div>
-                            </div>
-                            
-                            <div class="mb-3">
                                 <label for="job-title-input" class="form-label">Cargo Exercido *</label>
                                 <input type="text" class="form-control" id="job-title-input" placeholder="Digite seu cargo">
                                 <div class="form-text">Ex: Analista de Sistemas, Gerente, etc.</div>
@@ -524,12 +507,6 @@
                                 <label for="department-input" class="form-label">Departamento</label>
                                 <input type="text" class="form-control" id="department-input" placeholder="Digite seu departamento">
                                 <div class="form-text">Ex: TI, Financeiro, Operacional, etc.</div>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="email-input" class="form-label">E-mail</label>
-                                <input type="email" class="form-control" id="email-input" value="{{ user.email }}" readonly>
-                                <div class="form-text">E-mail não pode ser alterado</div>
                             </div>
                         </div>
                     </div>
@@ -2645,6 +2622,23 @@ window.hideUserProfileFallback = hideUserProfileFallback;
 
 // Função de debug removida - não é mais necessária
 
+// Função auxiliar para fechar modal de forma segura (evita conflitos de acessibilidade)
+function closeUserProfileModalSafely() {
+    // Remover foco do botão antes de fechar o modal
+    const saveBtn = document.getElementById('save-profile-btn');
+    if (saveBtn) {
+        saveBtn.blur();
+    }
+    
+    // Aguardar um frame antes de fechar o modal para evitar conflito de acessibilidade
+    setTimeout(() => {
+        const modal = bootstrap.Modal.getInstance(document.getElementById('userProfileModal'));
+        if (modal) {
+            modal.hide();
+        }
+    }, 10);
+}
+
 // Abrir modal de edição de perfil
 function openUserProfileModal() {
     console.log('Abrindo modal de perfil do usuário...');
@@ -2687,23 +2681,41 @@ function setupProfileModalDragDrop() {
     
     if (!uploadArea || !fileInput || !preview) return;
     
+    // Função para prevenir comportamento padrão do navegador
+    const preventDefaultDrag = (e) => {
+        e.preventDefault();
+    };
+    
+    const preventDefaultDrop = (e) => {
+        e.preventDefault();
+    };
+    
+    // Prevenir comportamento padrão do navegador para drag and drop global
+    document.addEventListener('dragover', preventDefaultDrag);
+    document.addEventListener('drop', preventDefaultDrop);
+    
     // Click na área de upload
-    uploadArea.addEventListener('click', () => {
+    uploadArea.addEventListener('click', (e) => {
+        e.preventDefault();
         fileInput.click();
     });
     
     // Drag and drop
     uploadArea.addEventListener('dragover', (e) => {
         e.preventDefault();
+        e.stopPropagation();
         uploadArea.classList.add('dragover');
     });
     
-    uploadArea.addEventListener('dragleave', () => {
+    uploadArea.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
         uploadArea.classList.remove('dragover');
     });
     
     uploadArea.addEventListener('drop', (e) => {
         e.preventDefault();
+        e.stopPropagation();
         uploadArea.classList.remove('dragover');
         const files = e.dataTransfer.files;
         if (files.length > 0) {
@@ -2717,6 +2729,15 @@ function setupProfileModalDragDrop() {
             handleProfileFileSelect(e.target.files[0]);
         }
     });
+    
+    // Limpar event listeners quando o modal for fechado
+    const modal = document.getElementById('userProfileModal');
+    if (modal) {
+        modal.addEventListener('hidden.bs.modal', () => {
+            document.removeEventListener('dragover', preventDefaultDrag);
+            document.removeEventListener('drop', preventDefaultDrop);
+        });
+    }
 }
 
 // Lidar com seleção de arquivo no modal de perfil
@@ -2789,11 +2810,8 @@ function saveUserProfile() {
         if (window.uploadGlobalAvatar) {
             // Usar função global do React para upload
             window.uploadGlobalAvatar(selectedFile).then(() => {
-                // Fechar modal
-                const modal = bootstrap.Modal.getInstance(document.getElementById('userProfileModal'));
-                if (modal) {
-                    modal.hide();
-                }
+                // Fechar modal de forma segura
+                closeUserProfileModalSafely();
                 
                 // Mostrar feedback
                 showNotification('Perfil atualizado com sucesso!', 'success');
@@ -2814,11 +2832,8 @@ function saveUserProfile() {
                     sidebarAvatar.src = avatarData;
                 }
                 
-                // Fechar modal
-                const modal = bootstrap.Modal.getInstance(document.getElementById('userProfileModal'));
-                if (modal) {
-                    modal.hide();
-                }
+                // Fechar modal de forma segura
+                closeUserProfileModalSafely();
                 
                 // Mostrar feedback
                 showNotification('Perfil atualizado com sucesso!', 'success');
@@ -2826,11 +2841,8 @@ function saveUserProfile() {
             reader.readAsDataURL(selectedFile);
         }
     } else {
-        // Fechar modal sem upload
-        const modal = bootstrap.Modal.getInstance(document.getElementById('userProfileModal'));
-        if (modal) {
-            modal.hide();
-        }
+        // Fechar modal de forma segura
+        closeUserProfileModalSafely();
         
         // Mostrar feedback
         showNotification('Perfil atualizado com sucesso!', 'success');
@@ -2844,12 +2856,8 @@ function saveUserProfile() {
 function openAvatarUpload() {
     const modal = new bootstrap.Modal(document.getElementById('avatarUploadModal'));
     
-    // Carregar cargo atual do usuário
-    const currentJobTitle = document.getElementById('user-job-title').textContent;
-    const jobTitleInput = document.getElementById('job-title-input');
-    if (jobTitleInput && currentJobTitle !== 'Cargo não informado') {
-        jobTitleInput.value = currentJobTitle;
-    }
+    // Configurar drag & drop quando o modal for aberto
+    setupAvatarUpload();
     
     modal.show();
 }
@@ -2858,94 +2866,110 @@ function openAvatarUpload() {
 
 // Configurar upload de avatar
 function setupAvatarUpload() {
-    const fileInput = document.getElementById('avatar-file-input');
-    const uploadArea = document.getElementById('avatar-upload-area');
+    const fileInput = document.getElementById('avatar-file-input-modal');
+    const uploadArea = document.getElementById('avatar-upload-area-modal');
     const preview = document.getElementById('avatar-preview');
     const uploadBtn = document.getElementById('upload-avatar-btn');
     
+    // Função para prevenir comportamento padrão do navegador
+    const preventDefaultDrag = (e) => {
+        e.preventDefault();
+    };
+    
+    const preventDefaultDrop = (e) => {
+        e.preventDefault();
+    };
+    
+    // Prevenir comportamento padrão do navegador para drag and drop global
+    document.addEventListener('dragover', preventDefaultDrag);
+    document.addEventListener('drop', preventDefaultDrop);
+    
     // Click na área de upload
-    uploadArea.addEventListener('click', () => {
+    uploadArea.addEventListener('click', (e) => {
+        e.preventDefault();
         fileInput.click();
     });
     
     // Drag and drop
     uploadArea.addEventListener('dragover', (e) => {
         e.preventDefault();
+        e.stopPropagation();
         uploadArea.classList.add('dragover');
     });
     
-    uploadArea.addEventListener('dragleave', () => {
+    uploadArea.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
         uploadArea.classList.remove('dragover');
     });
     
     uploadArea.addEventListener('drop', (e) => {
         e.preventDefault();
+        e.stopPropagation();
         uploadArea.classList.remove('dragover');
         const files = e.dataTransfer.files;
         if (files.length > 0) {
-            handleFileSelect(files[0]);
+            handleAvatarFileSelect(files[0]);
         }
     });
     
     // Seleção de arquivo
     fileInput.addEventListener('change', (e) => {
         if (e.target.files.length > 0) {
-            handleFileSelect(e.target.files[0]);
+            handleAvatarFileSelect(e.target.files[0]);
         }
     });
     
-    function handleFileSelect(file) {
-        // Validar tipo de arquivo
-        if (!file.type.startsWith('image/')) {
-            alert('Por favor, selecione apenas arquivos de imagem.');
-            return;
-        }
-        
-        // Validar tamanho (2MB)
-        if (file.size > 2 * 1024 * 1024) {
-            alert('O arquivo deve ter no máximo 2MB.');
-            return;
-        }
-        
-        selectedAvatarFile = file;
-        
-        // Mostrar preview
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            preview.src = e.target.result;
-        };
-        reader.readAsDataURL(file);
+    // Limpar event listeners quando o modal for fechado
+    const modal = document.getElementById('avatarUploadModal');
+    if (modal) {
+        modal.addEventListener('hidden.bs.modal', () => {
+            document.removeEventListener('dragover', preventDefaultDrag);
+            document.removeEventListener('drop', preventDefaultDrop);
+        });
     }
 }
 
-// Upload do avatar e atualização do cargo
-function uploadAvatar() {
-    const jobTitleInput = document.getElementById('job-title-input');
-    const jobTitle = jobTitleInput ? jobTitleInput.value.trim() : '';
-    
-    // Atualizar cargo na sidebar
-    const sidebarJobTitle = document.getElementById('user-job-title');
-    if (sidebarJobTitle) {
-        sidebarJobTitle.textContent = jobTitle || 'Cargo não informado';
+// Função global para lidar com seleção de arquivo no modal de upload
+function handleAvatarFileSelect(file) {
+    // Validar tipo de arquivo
+    if (!file.type.startsWith('image/')) {
+        alert('Por favor, selecione apenas arquivos de imagem.');
+        return;
     }
     
-    // Salvar cargo no localStorage
-    localStorage.setItem('user_job_title', jobTitle);
+    // Validar tamanho (2MB)
+    if (file.size > 2 * 1024 * 1024) {
+        alert('O arquivo deve ter no máximo 2MB.');
+        return;
+    }
     
-    // Simular atualização no banco de dados
-    updateUserJobTitle(jobTitle);
+    selectedAvatarFile = file;
     
+    // Mostrar preview
+    const preview = document.getElementById('avatar-preview');
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        if (preview) {
+            preview.src = e.target.result;
+        }
+    };
+    reader.readAsDataURL(file);
+}
+
+// Upload do avatar
+function uploadAvatar() {
     if (!selectedAvatarFile) {
-        // Se não há arquivo, apenas atualizar o cargo
+        // Se não há arquivo, apenas fechar o modal
         const modal = bootstrap.Modal.getInstance(document.getElementById('avatarUploadModal'));
         if (modal) {
             modal.hide();
         }
         
         if (typeof FeedbackManager !== 'undefined' && FeedbackManager.showSuccess) {
-            FeedbackManager.showSuccess('Informações do perfil atualizadas com sucesso!');
+            FeedbackManager.showSuccess('Nenhuma foto selecionada.');
         } else {
-            console.log('Informações do perfil atualizadas com sucesso!');
+            console.log('Nenhuma foto selecionada.');
         }
         return;
     }
@@ -2982,14 +3006,14 @@ function uploadAvatar() {
         
         // Mostrar sucesso
         if (typeof FeedbackManager !== 'undefined' && FeedbackManager.showSuccess) {
-            FeedbackManager.showSuccess('Foto de perfil e informações atualizadas com sucesso!');
+            FeedbackManager.showSuccess('Foto de perfil atualizada com sucesso!');
         } else {
-            console.log('Foto de perfil e informações atualizadas com sucesso!');
+            console.log('Foto de perfil atualizada com sucesso!');
         }
         
         // Limpar seleção
         selectedAvatarFile = null;
-        document.getElementById('avatar-file-input').value = '';
+        document.getElementById('avatar-file-input-modal').value = '';
     }, 1500);
 }
 
@@ -3140,9 +3164,6 @@ document.addEventListener('DOMContentLoaded', async function() {
     
     // Mostrar seção do colaborador (apenas na home)
     showUserProfileSection();
-    
-    // Configurar upload de avatar
-    setupAvatarUpload();
     
     // Inicializar animações
     initScrollAnimations();
