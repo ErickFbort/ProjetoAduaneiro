@@ -35,6 +35,9 @@ const SidebarManager = {
         const currentPath = window.location.pathname;
         const module = this.getCurrentModule(currentPath);
         
+        // Controlar área de usuário - mostrar apenas na home
+        this.toggleUserProfileSection(currentPath);
+        
         if (module) {
             this.renderModuleMenu(sidebarLinks, module, currentPath);
         } else {
@@ -43,11 +46,31 @@ const SidebarManager = {
         
         this.attachNavListeners();
     },
+    
+    toggleUserProfileSection(currentPath) {
+        const userProfileSection = document.getElementById('user-profile-section');
+        if (!userProfileSection) return;
+        
+        // Controlar classe no body para CSS
+        const body = document.body;
+        if (currentPath === '/dashboard' || currentPath === '/') {
+            body.classList.add('home-page');
+            body.classList.remove('module-page');
+            userProfileSection.style.display = 'block';
+            console.log('Área de usuário exibida na home');
+        } else {
+            body.classList.add('module-page');
+            body.classList.remove('home-page');
+            userProfileSection.style.display = 'none';
+            console.log('Área de usuário oculta em:', currentPath);
+        }
+    },
 
     getCurrentModule(path) {
         if (path.startsWith('/cadastros')) return 'cadastros';
         if (path.startsWith('/relatorios')) return 'relatorios';
         if (path.startsWith('/web-clientes')) return 'web_clientes';
+        if (path.startsWith('/faturamento')) return 'faturamento';
         return null;
     },
 
@@ -70,7 +93,7 @@ const SidebarManager = {
         container.innerHTML = `
             <li><a href="/dashboard" class="nav-link ${currentPath === '/dashboard' ? 'active' : ''}"><i class="fas fa-home"></i> <span>Home</span></a></li>
             <li><a href="#operacional" class="nav-link"><i class="fas fa-tasks"></i> <span>Operacional</span></a></li>
-            <li><a href="#faturamento" class="nav-link"><i class="fas fa-file-invoice-dollar"></i> <span>Faturamento</span></a></li>
+            <li><a href="/faturamento" class="nav-link ${currentPath.startsWith('/faturamento') ? 'active' : ''}"><i class="fas fa-calculator"></i> <span>Faturamento</span></a></li>
             <li><a href="/web-clientes" class="nav-link ${currentPath === '/web-clientes' ? 'active' : ''}"><i class="fas fa-user-tie"></i> <span>Web Cliente</span></a></li>
             <li><a href="#portal-adm" class="nav-link"><i class="fas fa-user-shield"></i> <span>Portal ADM</span></a></li>
             <li><a href="/cadastros" class="nav-link"><i class="fas fa-edit"></i> <span>Cadastros</span></a></li>
@@ -280,6 +303,23 @@ const FormManager = {
 document.addEventListener('DOMContentLoaded', function() {
     SidebarManager.init();
     
+    // Garantir que a área de usuário seja controlada corretamente
+    const currentPath = window.location.pathname;
+    const userProfileSection = document.getElementById('user-profile-section');
+    const body = document.body;
+    
+    if (userProfileSection) {
+        if (currentPath === '/dashboard' || currentPath === '/') {
+            body.classList.add('home-page');
+            body.classList.remove('module-page');
+            userProfileSection.style.display = 'block';
+        } else {
+            body.classList.add('module-page');
+            body.classList.remove('home-page');
+            userProfileSection.style.display = 'none';
+        }
+    }
+    
     // Auto-dismiss alerts após 5 segundos
     setTimeout(() => {
         const alerts = document.querySelectorAll('.alert');
@@ -297,3 +337,24 @@ function logoutUser() {
         window.location.href = '/logout';
     }
 }
+
+// Verificação adicional quando a página carregar completamente
+window.addEventListener('load', function() {
+    const currentPath = window.location.pathname;
+    const userProfileSection = document.getElementById('user-profile-section');
+    const body = document.body;
+    
+    if (userProfileSection) {
+        if (currentPath === '/dashboard' || currentPath === '/') {
+            body.classList.add('home-page');
+            body.classList.remove('module-page');
+            userProfileSection.style.display = 'block';
+            console.log('Área de usuário confirmada como visível na home');
+        } else {
+            body.classList.add('module-page');
+            body.classList.remove('home-page');
+            userProfileSection.style.display = 'none';
+            console.log('Área de usuário confirmada como oculta em:', currentPath);
+        }
+    }
+});

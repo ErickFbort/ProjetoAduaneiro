@@ -38,6 +38,15 @@ const AppConfig = {
                 { path: '/web-clientes/perdimento', name: 'Perdimento', icon: 'fas fa-exclamation-triangle' },
                 { path: '/web-clientes/ordem-servico', name: 'Ordem de Serviço', icon: 'fas fa-clipboard-list' }
             ]
+        },
+        faturamento: {
+            name: 'Faturamento',
+            icon: 'fas fa-calculator',
+            routes: [
+                { path: '/faturamento/processo', name: 'Processo', icon: 'fas fa-file-invoice' },
+                { path: '/faturamento/guias', name: 'Guias', icon: 'fas fa-receipt' },
+                { path: '/faturamento/descontos', name: 'Descontos', icon: 'fas fa-percentage' }
+            ]
         }
     },
 

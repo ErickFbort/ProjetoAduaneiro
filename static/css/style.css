@@ -8282,3 +8282,63 @@ td:last-child {
 .section-tabs-left .section-tab-btn i {
     font-size: 0.9rem;
 }
+
+/* Barra de Navegação dos Submódulos */
+.submodule-nav {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    padding: 10px;
+}
+
+.submodule-nav .nav-pills {
+    gap: 5px;
+}
+
+.submodule-nav .nav-link {
+    color: #6c757d;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 10px 20px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.submodule-nav .nav-link:hover {
+    color: #495057;
+    background-color: #f8f9fa;
+    border-color: #adb5bd;
+}
+
+.submodule-nav .nav-link.active {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: #fff;
+}
+
+.submodule-nav .nav-link i {
+    margin-right: 8px;
+}
+
+/* Responsividade para barra de submódulos */
+@media (max-width: 768px) {
+    .submodule-nav .nav-pills {
+        flex-direction: column;
+    }
+    
+    .submodule-nav .nav-link {
+        text-align: center;
+        margin-bottom: 5px;
+    }
+}
+
+/* Garantir que a área de usuário seja oculta em módulos específicos */
+body:not(.home-page) .user-profile-section {
+    display: none !important;
+}
+
+/* Garantir que a área de usuário seja visível apenas na home */
+body.home-page .user-profile-section {
+    display: block !important;
+}

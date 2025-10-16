@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+
+{% block title %}Faturamento - Processo{% endblock %}
+
+{% block body_class %}main-body{% endblock %}
+
+{% block content %}
+{% include 'partials/sidebar.html' %}
+
+<main class="content main-content--shifted">
+    <div class="content-section active">
+        <div class="container-fluid">
+            <!-- Cabeçalho da Página -->
+            <div class="page-header">
+                <div class="header-content">
+                    <div class="header-title d-flex align-items-center">
+                        <i class="fas fa-file-invoice fa-2x me-3"></i>
+                        <div>
+                            <h2 class="mb-0">Processo de Faturamento</h2>
+                            <p class="header-subtitle mb-0">Gestão de processos de faturamento e controle de documentos</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Barra de Pesquisa e Filtros -->
+            <div class="search-section">
+                <div class="search-input-group">
+                    <form method="GET" class="search-form">
+                        <div class="input-group">
+                            <input type="text" 
+                                   name="search" 
+                                   value="{{ search or '' }}" 
+                                   class="form-control search-input" 
+                                   placeholder="Pesquisar por número do processo, cliente ou documento...">
+                            <button type="submit" class="btn btn-primary search-btn">
+                                <i class="fas fa-search"></i>
+                            </button>
+                            {% if search %}
+                            <a href="{{ url_for('faturamento.faturamento_processo') }}" class="btn btn-outline-secondary clear-btn">
+                                <i class="fas fa-times"></i>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </form>
+                    <button class="btn btn-outline-info filter-toggle" onclick="toggleAdvancedFilters()">
+                        <i class="fas fa-filter"></i> Filtros Avançados
+                    </button>
+                </div>
+
+                <!-- Filtros Avançados -->
+                <div class="advanced-filters" id="advancedFilters" style="display: none;">
+                    <form method="GET" class="filters-form">
+                        <input type="hidden" name="search" value="{{ search or '' }}">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label class="form-label">Status</label>
+                                <select name="status" class="form-select">
+                                    <option value="">Todos os status</option>
+                                    <option value="pendente">Pendente</option>
+                                    <option value="em_andamento">Em Andamento</option>
+                                    <option value="concluido">Concluído</option>
+                                    <option value="cancelado">Cancelado</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Tipo</label>
+                                <select name="tipo" class="form-select">
+                                    <option value="">Todos os tipos</option>
+                                    <option value="importacao">Importação</option>
+                                    <option value="exportacao">Exportação</option>
+                                    <option value="transito">Trânsito</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Data Início</label>
+                                <input type="date" name="data_inicio" class="form-control">
+                            </div>
+                            <div class="col-md-3 d-flex align-items-end gap-2">
+                                <button type="submit" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-check"></i> Aplicar
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary btn-sm" onclick="clearFilters()">
+                                    <i class="fas fa-times"></i> Limpar
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Ações da Tabela -->
+            <div class="table-actions">
+                <div class="actions-left">
+                    <div class="btn-group">
+                        <button class="btn btn-outline-success" onclick="faturamentoProcessosManager.exportProcesses()" title="Exportar para Excel">
+                            <i class="fas fa-file-excel"></i> Exportar
+                        </button>
+                        <button class="btn btn-outline-primary" onclick="faturamentoProcessosManager.importProcesses()" title="Importar do CSV">
+                            <i class="fas fa-file-import"></i> Importar
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" onclick="refreshTable()" title="Atualizar">
+                            <i class="fas fa-sync-alt"></i> Atualizar
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabela de Processos -->
+            <div class="table-container">
+                <div class="table-responsive">
+                    <table class="table table-hover processes-table">
+                        <thead class="table-header">
+                            <tr>
+                                <th>Número</th>
+                                <th>Cliente</th>
+                                <th>Tipo</th>
+                                <th>Status</th>
+                                <th>Data Criação</th>
+                                <th>Valor</th>
+                                <th class="text-center">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Dados de exemplo - será substituído por dados reais -->
+                            <tr>
+                                <td colspan="7" class="text-center py-5">
+                                    <div class="empty-state">
+                                        <i class="fas fa-file-invoice fa-3x text-muted mb-3"></i>
+                                        <h5 class="text-muted">Nenhum processo encontrado</h5>
+                                        <p class="text-muted">Os processos de faturamento serão exibidos aqui quando disponíveis.</p>
+                                        <p class="text-muted small">Para cadastrar novos processos, acesse o módulo <strong>Web Clientes</strong>.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+
+<!-- Input oculto para importação -->
+<input type="file" id="importFile" accept=".csv" style="display: none;">
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/faturamento_processos.js') }}"></script>
+{% endblock %}

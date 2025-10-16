@@ -888,6 +888,10 @@ function controlarVisibilidadeMensagem(abaAtiva) {
     const mensagemNaturezaOperacaoCadastro = document.getElementById('mensagemNaturezaOperacaoCadastro');
     const naturezaOperacaoCadastro = document.getElementById('naturezaOperacaoCadastro');
     
+    // Obter modo da URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const modo = urlParams.get('modo') || 'cadastro';
+    
     // Controlar mensagem da aba Documentos (apenas em modo edição/visualização)
     if (mensagemNaturezaOperacao && (modo === 'edicao' || modo === 'visualizacao')) {
         if (abaAtiva === 'documentos-content') {
@@ -920,7 +924,7 @@ function carregarServicos() {
     
     // Se servicosData estiver vazio, inicializar com dados simulados
     if (servicosData.length === 0) {
-        servicosData = [
+        servicosData.push(
             {
                 id: 1,
                 servico: 'GRIS',
@@ -945,7 +949,7 @@ function carregarServicos() {
                 horaInicio: '',
                 horaConclusao: ''
             }
-        ];
+        );
     }
     
     const servicos = servicosData;
@@ -1028,9 +1032,9 @@ function configurarCamposServicos() {
 }
 
 // Variáveis globais para controle do modal de serviços
-let servicosData = [];
-let servicoAtual = null;
-let modoServico = 'edicao'; // 'edicao' ou 'visualizacao'
+var servicosData = servicosData || [];
+var servicoAtual = null;
+var modoServico = 'edicao'; // 'edicao' ou 'visualizacao'
 
 // Função para editar serviço
 function editarServico(servicoId) {

@@ -1067,6 +1067,35 @@ let favoriteModules = {
         }
     },
     
+    // Módulo Faturamento
+    'faturamento': {
+        name: 'Faturamento',
+        icon: 'fas fa-calculator',
+        url: "{{ url_for('faturamento.faturamento') }}",
+        description: 'Módulo completo de faturamento',
+        type: 'main_module',
+        submodules: {
+            'processo': {
+                name: 'Processo',
+                icon: 'fas fa-file-invoice',
+                url: "{{ url_for('faturamento.faturamento_processo') }}",
+                description: 'Gestão de processos de faturamento'
+            },
+            'guias': {
+                name: 'Guias',
+                icon: 'fas fa-receipt',
+                url: "{{ url_for('faturamento.faturamento_guias') }}",
+                description: 'Gestão de guias de faturamento'
+            },
+            'descontos': {
+                name: 'Descontos',
+                icon: 'fas fa-percentage',
+                url: "{{ url_for('faturamento.faturamento_descontos') }}",
+                description: 'Gestão de descontos e promoções'
+            }
+        }
+    },
+    
     // Módulos Marítimos
     'sse_stc': {
         name: 'SSE/STC',
@@ -1153,7 +1182,7 @@ let favoriteModules = {
     }
 };
 
-let currentFavorites = ['cadastro', 'relatorios', 'web_cliente'];
+let currentFavorites = ['cadastro', 'relatorios', 'web_cliente', 'faturamento'];
 
 // Carregar favoritos salvos
 function loadFavorites() {
@@ -1179,7 +1208,7 @@ function loadFavorites() {
         // Se houve mudanças na estrutura, limpar favoritos inválidos
         if (validFavorites.length !== savedFavorites.length) {
             console.log('Favoritos antigos detectados, limpando...');
-            currentFavorites = ['cadastro', 'relatorios', 'web_cliente']; // Valores padrão
+            currentFavorites = ['cadastro', 'relatorios', 'web_cliente', 'faturamento']; // Valores padrão
             localStorage.setItem('dashboard_favorites', JSON.stringify(currentFavorites));
         } else {
             currentFavorites = validFavorites;
@@ -3046,7 +3075,7 @@ function initializeFavorites() {
     // Verificar se currentFavorites foi carregado corretamente
     if (!currentFavorites || currentFavorites.length === 0) {
         console.log('currentFavorites vazio após loadFavorites, usando valores padrão');
-        currentFavorites = ['cadastro', 'relatorios', 'web_cliente'];
+        currentFavorites = ['cadastro', 'relatorios', 'web_cliente', 'faturamento'];
         localStorage.setItem('dashboard_favorites', JSON.stringify(currentFavorites));
     }
     
@@ -3064,6 +3093,15 @@ function initializeFavorites() {
     }, 500);
 }
 
+// Função para forçar atualização dos favoritos (pode ser chamada no console)
+function forceUpdateFavorites() {
+    console.log('Forçando atualização dos favoritos...');
+    currentFavorites = ['cadastro', 'relatorios', 'web_cliente', 'faturamento'];
+    localStorage.setItem('dashboard_favorites', JSON.stringify(currentFavorites));
+    renderFavorites();
+    console.log('Favoritos atualizados!');
+}
+
 // Inicializar página
 document.addEventListener('DOMContentLoaded', async function() {
     updateCurrentTime();
@@ -3073,6 +3111,13 @@ document.addEventListener('DOMContentLoaded', async function() {
     
     // Inicializar favoritos
     loadFavorites();
+    
+    // Garantir que o módulo de Faturamento esteja nos favoritos padrão
+    if (!currentFavorites.includes('faturamento')) {
+        currentFavorites.push('faturamento');
+        localStorage.setItem('dashboard_favorites', JSON.stringify(currentFavorites));
+        console.log('Módulo de Faturamento adicionado aos favoritos padrão');
+    }
     
     // Forçar renderização após um pequeno delay para garantir que o DOM está pronto
     setTimeout(() => {
