@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && python update_static_references.py",
+    "build:only": "vite build",
+    "update-refs": "python update_static_references.py",
     "preview": "vite preview",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
