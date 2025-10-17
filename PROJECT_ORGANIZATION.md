@@ -125,11 +125,10 @@ docs/              # Documentação
 
 ### **🎯 Próximos Passos Sugeridos:**
 
-1. **Migrar ScrollFloat** para React
-2. **Implementar FloatingDock** em React
-3. **Adicionar testes** automatizados
-4. **Implementar sistema de estado** global
-5. **Migrar dashboard** completo para React
+1. **Implementar FloatingDock** em React
+2. **Adicionar testes** automatizados
+3. **Implementar sistema de estado** global
+4. **Migrar dashboard** completo para React
 
 ### **✨ Benefícios Alcançados:**
 

@@ -64,8 +64,11 @@
             </div>
         </div>
 
-        <!-- Cards de Estatísticas -->
-        <div class="stats-grid">
+        <!-- Cards de Estatísticas - React Component -->
+        <div id="react-stats-container"></div>
+        
+        <!-- Fallback para estatísticas (oculto quando React carregar) -->
+        <div class="stats-grid" id="stats-fallback" style="display: none;">
             <div class="stat-card animate-on-scroll fade-in-left delay-1 stat-progress">
                 <div class="stat-icon">
                     <i class="fas fa-users pulse"></i>
@@ -3414,8 +3417,8 @@ document.addEventListener('click', (e) => {
 </div>
 
     <!-- React Components Integration -->
-    <script type="module" src="{{ url_for('static', filename='dist/assets/main-BS1bHjMS.js') }}"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='dist/assets/main-BlsHRgjF.css') }}">
+    <script type="module" src="{{ url_for('static', filename='dist/assets/main-Ctyh3Q89.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='dist/assets/main-CXx5leeM.css') }}">
 
 {% endblock %}
 

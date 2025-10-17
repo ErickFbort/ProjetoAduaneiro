@@ -309,7 +309,6 @@ A migração do NewsTabs foi um **sucesso total**! O componente agora:
 
 - ✅ **CardSwap** - Animação 3D de cards
 - ✅ **NewsTabs** - Sistema de notícias com abas
-- 🔄 **ScrollFloat** - Próximo na fila
 - 🔄 **FloatingDock** - Planejado
 
-**Progresso: 2/4 componentes migrados (50%)** 🎉
+**Progresso: 2/3 componentes migrados (67%)** 🎉

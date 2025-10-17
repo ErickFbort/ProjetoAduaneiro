@@ -100,7 +100,6 @@ npm run build
 ### Componentes React
 - **CardSwap**: Animação 3D de cards de terminais
 - **NewsTabs**: Sistema de notícias com abas e rotação automática
-- **ScrollFloat**: Animação de texto baseada em scroll
 - **FloatingDock**: Dock flutuante para favoritos
 
 ### Recursos Avançados
@@ -138,7 +137,6 @@ O projeto está em processo de migração gradual para React:
 
 - ✅ **CardSwap**: Migrado com sucesso
 - ✅ **NewsTabs**: Migrado com sucesso
-- 🔄 **ScrollFloat**: Em desenvolvimento
 - 🔄 **FloatingDock**: Planejado
 - 🔄 **Dashboard**: Planejado
 
