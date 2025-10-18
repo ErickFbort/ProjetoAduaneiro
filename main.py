@@ -5,6 +5,7 @@ Sistema Aduaneiro - Aplicação Principal
 
 from app import create_app, db
 from app.utils.database import init_database
+from app.utils.database_optimization import create_database_indexes
 from flask_login import LoginManager
 
 # Criar aplicação
@@ -27,6 +28,8 @@ def init_app():
     """Inicializa a aplicação"""
     with app.app_context():
         init_database()
+        # Criar índices para otimização
+        create_database_indexes()
 
 if __name__ == '__main__':
     # Executar aplicação

@@ -1,9 +1,5 @@
 import { createRoot } from 'react-dom/client';
-import React, { useState, useEffect } from 'react';
-import { CardSwap } from './components/Cards';
-import { NewsTabs } from './components/News';
-import { UserProfileCard } from './components/UserProfile';
-import { StatsGrid } from './components/Stats';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { Terminal } from './types/terminal';
 import { UserProfile, UserProfileUpdate } from './types/user';
 import { StatsData } from './types/stats';
@@ -14,7 +10,14 @@ import { ANIMATION_CONFIG } from './config';
 import { useUserIntegration } from './stores';
 import { GlobalStateProvider } from './components/GlobalStateProvider';
 import { FavoritesManager } from './components/FavoritesManager';
+import { LazyWrapper } from './components/LazyWrapper';
 import { runAllTests } from './utils/testGlobalState';
+
+// Lazy loading dos componentes para otimizar performance
+const CardSwap = lazy(() => import('./components/Cards').then(module => ({ default: module.CardSwap })));
+const NewsTabs = lazy(() => import('./components/News').then(module => ({ default: module.NewsTabs })));
+const UserProfileCard = lazy(() => import('./components/UserProfile').then(module => ({ default: module.UserProfileCard })));
+const StatsGrid = lazy(() => import('./components/Stats').then(module => ({ default: module.StatsGrid })));
 
 // Função para lidar com clique no terminal
 const handleTerminalClick = (terminal: Terminal) => {
@@ -140,7 +143,7 @@ const UserProfileRoot: React.FC<{ initialUser: UserProfile }> = ({ initialUser }
   );
 };
 
-// Função para inicializar o CardSwap React
+// Função para inicializar o CardSwap React com lazy loading
 export const initCardSwapReact = (containerId: string) => {
   const container = document.getElementById(containerId);
   if (!container) {
@@ -151,17 +154,21 @@ export const initCardSwapReact = (containerId: string) => {
   const root = createRoot(container);
   
   root.render(
-    <CardSwap
-      terminals={TERMINALS_DATA}
-      onCardClick={handleTerminalClick}
-      options={ANIMATION_CONFIG.cardSwap.defaultOptions}
-    />
+    <LazyWrapper fallback={<div className="card-swap-loading">Carregando terminais...</div>}>
+      <Suspense fallback={<div className="card-swap-loading">Carregando terminais...</div>}>
+        <CardSwap
+          terminals={TERMINALS_DATA}
+          onCardClick={handleTerminalClick}
+          options={ANIMATION_CONFIG.cardSwap.defaultOptions}
+        />
+      </Suspense>
+    </LazyWrapper>
   );
 
   console.log('CardSwap React inicializado com sucesso!');
 };
 
-// Função para inicializar o NewsTabs React
+// Função para inicializar o NewsTabs React com lazy loading
 export const initNewsTabsReact = (containerId: string) => {
   console.log('Tentando inicializar NewsTabs React...');
   const container = document.getElementById(containerId);
@@ -176,12 +183,16 @@ export const initNewsTabsReact = (containerId: string) => {
   const root = createRoot(container);
   
   root.render(
-    <NewsTabs
-      data={NEWS_DATA}
-      onRefresh={handleNewsRefresh}
-      onForceRefreshLinkedIn={handleForceRefreshLinkedIn}
-      autoRotateInterval={8000}
-    />
+    <LazyWrapper fallback={<div className="news-loading">Carregando notícias...</div>}>
+      <Suspense fallback={<div className="news-loading">Carregando notícias...</div>}>
+        <NewsTabs
+          data={NEWS_DATA}
+          onRefresh={handleNewsRefresh}
+          onForceRefreshLinkedIn={handleForceRefreshLinkedIn}
+          autoRotateInterval={8000}
+        />
+      </Suspense>
+    </LazyWrapper>
   );
 
   console.log('NewsTabs React inicializado com sucesso!');
@@ -221,7 +232,7 @@ const handleStatClick = (statId: string) => {
   }
 };
 
-// Função para inicializar o StatsGrid React
+// Função para inicializar o StatsGrid React com lazy loading
 export const initStatsGridReact = (containerId: string, statsData?: StatsData) => {
   const container = document.getElementById(containerId);
   if (!container) {
@@ -235,17 +246,21 @@ export const initStatsGridReact = (containerId: string, statsData?: StatsData) =
   const data = statsData || DEFAULT_STATS_DATA;
   
   root.render(
-    <StatsGrid
-      data={data}
-      onStatClick={handleStatClick}
-      animated={true}
-    />
+    <LazyWrapper fallback={<div className="stats-loading">Carregando estatísticas...</div>}>
+      <Suspense fallback={<div className="stats-loading">Carregando estatísticas...</div>}>
+        <StatsGrid
+          data={data}
+          onStatClick={handleStatClick}
+          animated={true}
+        />
+      </Suspense>
+    </LazyWrapper>
   );
 
   console.log('StatsGrid React inicializado com sucesso!');
 };
 
-// Função para inicializar o UserProfileCard React
+// Função para inicializar o UserProfileCard React com lazy loading
 export const initUserProfileReact = (containerId: string, userData: UserProfile) => {
   const container = document.getElementById(containerId);
   if (!container) {
@@ -256,24 +271,87 @@ export const initUserProfileReact = (containerId: string, userData: UserProfile)
   const root = createRoot(container);
   
   root.render(
-    <GlobalStateProvider>
-      <UserProfileRoot initialUser={userData} />
-    </GlobalStateProvider>
+    <LazyWrapper fallback={<div className="user-profile-loading">Carregando perfil...</div>}>
+      <Suspense fallback={<div className="user-profile-loading">Carregando perfil...</div>}>
+        <GlobalStateProvider>
+          <UserProfileRoot initialUser={userData} />
+        </GlobalStateProvider>
+      </Suspense>
+    </LazyWrapper>
   );
 
-  // Ocultar fallback e mostrar React imediatamente
-  setTimeout(() => {
-    // Ocultar fallback
-    const fallbackContainer = document.getElementById('user-profile-fallback');
-    if (fallbackContainer) {
-      fallbackContainer.classList.remove('show-fallback');
-    }
-    
-    // Mostrar React
-    container.classList.add('react-loaded');
-  }, 50);
+  // Ocultar fallback e mostrar React imediatamente (sem setTimeout)
+  const fallbackContainer = document.getElementById('user-profile-fallback');
+  if (fallbackContainer) {
+    fallbackContainer.classList.remove('show-fallback');
+  }
+  
+  // Mostrar React
+  container.classList.add('react-loaded');
 
   console.log('UserProfileCard React inicializado com sucesso!');
+};
+
+// Função otimizada para inicialização de componentes
+const initializeComponents = () => {
+  // Executar testes em modo de desenvolvimento (sem setTimeout)
+  if (process.env.NODE_ENV === 'development' || window.location.hostname === 'localhost') {
+    console.log('🧪 Modo de desenvolvimento detectado, executando testes...');
+    runAllTests();
+  }
+  
+  // Inicializar CardSwap se necessário
+  if (document.querySelector('.terminals-section')) {
+    initCardSwapReact('react-card-swap-container');
+  }
+  
+  // Inicializar NewsTabs se necessário
+  const newsSection = document.querySelector('.news-section');
+  const newsContainer = document.getElementById('react-news-container');
+  
+  if (newsSection && newsContainer) {
+    console.log('Seção de notícias encontrada, inicializando React...');
+    try {
+      initNewsTabsReact('react-news-container');
+      console.log('NewsTabs React inicializado com sucesso!');
+    } catch (error) {
+      console.error('Erro ao inicializar NewsTabs React:', error);
+    }
+  }
+  
+  // Inicializar StatsGrid se necessário
+  if (document.querySelector('.stats-grid') || document.querySelector('.dashboard-container') || window.location.pathname === '/') {
+    // Buscar dados das estatísticas do DOM existente ou usar dados padrão
+    const usersElement = document.getElementById('total-users');
+    const vehiclesElement = document.getElementById('total-vehicles');
+    const entitiesElement = document.getElementById('total-entities');
+    const processesElement = document.getElementById('total-processes');
+    
+    const statsData: StatsData = {
+      users: usersElement ? parseInt(usersElement.textContent || '0') : DEFAULT_STATS_DATA.users,
+      vehicles: vehiclesElement ? parseInt(vehiclesElement.textContent || '0') : DEFAULT_STATS_DATA.vehicles,
+      entities: entitiesElement ? parseInt(entitiesElement.textContent || '0') : DEFAULT_STATS_DATA.entities,
+      processes: processesElement ? parseInt(processesElement.textContent || '0') : DEFAULT_STATS_DATA.processes
+    };
+    
+    initStatsGridReact('react-stats-container', statsData);
+  }
+  
+  // Inicializar UserProfile se necessário
+  if (document.querySelector('.user-profile-section') || document.querySelector('.dashboard-container') || window.location.pathname === '/') {
+    // Criar dados do usuário a partir do DOM ou localStorage
+    const userData: UserProfile = {
+      id: '1',
+      name: document.querySelector('.user-name')?.textContent || 'Usuário',
+      email: 'usuario@exemplo.com',
+      jobTitle: localStorage.getItem('user_job_title') || undefined,
+      avatar: localStorage.getItem('user_avatar') || undefined,
+      department: localStorage.getItem('user_department') || undefined,
+      lastLogin: new Date().toISOString()
+    };
+    
+    initUserProfileReact('react-user-profile-container', userData);
+  }
 };
 
 // Auto-inicializar se estiver no dashboard
@@ -281,93 +359,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // Inicializar sistema de estado global
   console.log('Inicializando sistema de estado global...');
   
-  // Executar testes em modo de desenvolvimento
-  if (process.env.NODE_ENV === 'development' || window.location.hostname === 'localhost') {
-    console.log('🧪 Modo de desenvolvimento detectado, executando testes...');
-    setTimeout(() => {
-      runAllTests();
-    }, 2000);
-  }
-  
-  // Verificar se estamos na página do dashboard
-  if (document.querySelector('.terminals-section')) {
-    // Aguardar um pouco para garantir que o DOM está pronto
-    setTimeout(() => {
-      initCardSwapReact('react-card-swap-container');
-    }, 1000);
-  }
-  
-  // Verificar se estamos na página do dashboard para notícias
-  const newsSection = document.querySelector('.news-section');
-  const newsContainer = document.getElementById('react-news-container');
-  
-  console.log('Verificando seção de notícias...');
-  console.log('newsSection encontrado:', !!newsSection);
-  console.log('newsContainer encontrado:', !!newsContainer);
-  
-  if (newsSection && newsContainer) {
-    console.log('Seção de notícias encontrada, inicializando React...');
-    // Aguardar um pouco para garantir que o DOM está pronto
-    setTimeout(() => {
-      try {
-        initNewsTabsReact('react-news-container');
-        console.log('NewsTabs React inicializado com sucesso!');
-      } catch (error) {
-        console.error('Erro ao inicializar NewsTabs React:', error);
-        // Tentar novamente após um delay
-        setTimeout(() => {
-          try {
-            initNewsTabsReact('react-news-container');
-            console.log('NewsTabs React inicializado na segunda tentativa!');
-          } catch (retryError) {
-            console.error('Erro na segunda tentativa:', retryError);
-          }
-        }, 2000);
-      }
-    }, 500);
-  } else {
-    console.log('Seção de notícias ou container não encontrado');
-  }
-  
-  // Verificar se estamos na página do dashboard para estatísticas
-  if (document.querySelector('.stats-grid') || document.querySelector('.dashboard-container') || window.location.pathname === '/') {
-    // Aguardar um pouco para garantir que o DOM está pronto
-    setTimeout(() => {
-      // Buscar dados das estatísticas do DOM existente ou usar dados padrão
-      const usersElement = document.getElementById('total-users');
-      const vehiclesElement = document.getElementById('total-vehicles');
-      const entitiesElement = document.getElementById('total-entities');
-      const processesElement = document.getElementById('total-processes');
-      
-      const statsData: StatsData = {
-        users: usersElement ? parseInt(usersElement.textContent || '0') : DEFAULT_STATS_DATA.users,
-        vehicles: vehiclesElement ? parseInt(vehiclesElement.textContent || '0') : DEFAULT_STATS_DATA.vehicles,
-        entities: entitiesElement ? parseInt(entitiesElement.textContent || '0') : DEFAULT_STATS_DATA.entities,
-        processes: processesElement ? parseInt(processesElement.textContent || '0') : DEFAULT_STATS_DATA.processes
-      };
-      
-      initStatsGridReact('react-stats-container', statsData);
-    }, 1000);
-  }
-  
-  // Verificar se estamos na página do dashboard para perfil do usuário
-  if (document.querySelector('.user-profile-section') || document.querySelector('.dashboard-container') || window.location.pathname === '/') {
-    // Aguardar um pouco para garantir que o DOM está pronto
-    setTimeout(() => {
-      // Criar dados do usuário a partir do DOM ou localStorage
-      const userData: UserProfile = {
-        id: '1',
-        name: document.querySelector('.user-name')?.textContent || 'Usuário',
-        email: 'usuario@exemplo.com',
-        jobTitle: localStorage.getItem('user_job_title') || undefined,
-        avatar: localStorage.getItem('user_avatar') || undefined,
-        department: localStorage.getItem('user_department') || undefined,
-        lastLogin: new Date().toISOString()
-      };
-      
-      initUserProfileReact('react-user-profile-container', userData);
-    }, 1000);
-  }
+  // Usar requestAnimationFrame para garantir que o DOM está pronto
+  requestAnimationFrame(() => {
+    initializeComponents();
+  });
 });
 
 // Exportar para uso global

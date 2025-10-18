@@ -651,29 +651,49 @@ let newsData = {
 
 // Carregar estatísticas
 async function loadStats() {
+    console.log('Carregando estatísticas...');
+    
+    // Verificar se os elementos existem
+    const usersEl = document.getElementById('total-users');
+    const vehiclesEl = document.getElementById('total-vehicles');
+    const entitiesEl = document.getElementById('total-entities');
+    const processesEl = document.getElementById('total-processes');
+    
+    if (!usersEl || !vehiclesEl || !entitiesEl || !processesEl) {
+        console.error('Elementos de estatísticas não encontrados!');
+        return;
+    }
+    
     try {
         const response = await fetch('/api/stats');
-        const data = await response.json();
+        console.log('Resposta da API:', response.status);
         
-        if (data.success) {
-            document.getElementById('total-users').textContent = data.data.users;
-            document.getElementById('total-vehicles').textContent = data.data.vehicles;
-            document.getElementById('total-entities').textContent = data.data.entities;
-            document.getElementById('total-processes').textContent = data.data.processes;
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log('Dados recebidos:', data);
+        
+        if (data.success && data.data) {
+            console.log('Atualizando elementos com dados da API');
+            usersEl.textContent = data.data.users || 0;
+            vehiclesEl.textContent = data.data.vehicles || 0;
+            entitiesEl.textContent = data.data.entities || 0;
+            processesEl.textContent = data.data.processes || 0;
         } else {
-            // Fallback para dados simulados
-            document.getElementById('total-users').textContent = '12';
-            document.getElementById('total-vehicles').textContent = '45';
-            document.getElementById('total-entities').textContent = '128';
-            document.getElementById('total-processes').textContent = '23';
+            console.log('API retornou erro, usando fallback');
+            usersEl.textContent = '12';
+            vehiclesEl.textContent = '45';
+            entitiesEl.textContent = '128';
+            processesEl.textContent = '23';
         }
     } catch (error) {
         console.error('Erro ao carregar estatísticas:', error);
-        // Fallback para dados simulados
-        document.getElementById('total-users').textContent = '12';
-        document.getElementById('total-vehicles').textContent = '45';
-        document.getElementById('total-entities').textContent = '128';
-        document.getElementById('total-processes').textContent = '23';
+        usersEl.textContent = '12';
+        vehiclesEl.textContent = '45';
+        entitiesEl.textContent = '128';
+        processesEl.textContent = '23';
     }
 }
 
@@ -3131,9 +3151,15 @@ function forceUpdateFavorites() {
 
 // Inicializar página
 document.addEventListener('DOMContentLoaded', async function() {
+    console.log('DOM carregado, inicializando...');
     updateCurrentTime();
-    await loadStats();
-    await loadLinkedInPosts();
+    
+    // Aguardar um pouco para garantir que todos os elementos estejam prontos
+    setTimeout(async () => {
+        await loadStats();
+        await loadLinkedInPosts();
+    }, 100);
+    
     // loadNews() removido - agora usando React NewsTabs
     
     // Inicializar favoritos
@@ -3417,8 +3443,8 @@ document.addEventListener('click', (e) => {
 </div>
 
     <!-- React Components Integration -->
-    <script type="module" src="{{ url_for('static', filename='dist/assets/main-Ctyh3Q89.js') }}"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='dist/assets/main-CXx5leeM.css') }}">
+    <script type="module" src="{{ url_for('static', filename='dist/assets/main-DAJ21yQ6.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='dist/assets/cards-D4uiH8l8.css') }}">
 
 {% endblock %}
 

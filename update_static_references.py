@@ -15,19 +15,23 @@ def find_latest_assets():
     assets_dir = Path("static/dist/assets")
     
     if not assets_dir.exists():
-        print("❌ Diretório static/dist/assets não encontrado!")
+        print("ERRO: Diretorio static/dist/assets nao encontrado!")
         return None, None
     
     # Encontrar arquivos JS e CSS
     js_files = list(assets_dir.glob("main-*.js"))
     css_files = list(assets_dir.glob("main-*.css"))
     
+    # Se não encontrar main-*.css, procurar por qualquer arquivo CSS
+    if not css_files:
+        css_files = list(assets_dir.glob("*.css"))
+    
     if not js_files:
-        print("❌ Nenhum arquivo JS encontrado!")
+        print("ERRO: Nenhum arquivo JS encontrado!")
         return None, None
     
     if not css_files:
-        print("❌ Nenhum arquivo CSS encontrado!")
+        print("ERRO: Nenhum arquivo CSS encontrado!")
         return None, None
     
     # Pegar o arquivo mais recente (por timestamp de modificação)
@@ -65,37 +69,37 @@ def update_template_references(js_filename, css_filename):
                 with open(html_file, 'w', encoding='utf-8') as f:
                     f.write(content)
                 updated_files.append(str(html_file))
-                print(f"✅ Atualizado: {html_file}")
+                print(f"Atualizado: {html_file}")
         
         except Exception as e:
-            print(f"❌ Erro ao processar {html_file}: {e}")
+            print(f"ERRO ao processar {html_file}: {e}")
     
     return updated_files
 
 def main():
     """Função principal"""
-    print("🔍 Procurando arquivos estáticos mais recentes...")
+    print("Procurando arquivos estaticos mais recentes...")
     
     js_filename, css_filename = find_latest_assets()
     
     if not js_filename or not css_filename:
-        print("❌ Não foi possível encontrar os arquivos necessários!")
+        print("ERRO: Nao foi possivel encontrar os arquivos necessarios!")
         return 1
     
-    print(f"📄 Arquivo JS encontrado: {js_filename}")
-    print(f"🎨 Arquivo CSS encontrado: {css_filename}")
+    print(f"Arquivo JS encontrado: {js_filename}")
+    print(f"Arquivo CSS encontrado: {css_filename}")
     
-    print("\n🔄 Atualizando referências nos templates...")
+    print("\nAtualizando referencias nos templates...")
     updated_files = update_template_references(js_filename, css_filename)
     
     if updated_files:
-        print(f"\n✅ {len(updated_files)} arquivo(s) atualizado(s):")
+        print(f"\n{len(updated_files)} arquivo(s) atualizado(s):")
         for file in updated_files:
             print(f"   - {file}")
     else:
-        print("\n⚠️  Nenhum arquivo foi atualizado.")
+        print("\nAVISO: Nenhum arquivo foi atualizado.")
     
-    print("\n🎉 Processo concluído!")
+    print("\nProcesso concluido!")
     return 0
 
 if __name__ == "__main__":

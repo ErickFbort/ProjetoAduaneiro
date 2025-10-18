@@ -17,6 +17,9 @@
 </head>
 <body class="{% block body_class %}{% endblock %}">
     
+    <!-- CSRF Token para JavaScript -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    
     {% block content %}{% endblock %}
     
     <!-- Bootstrap JS -->

@@ -1,0 +1,127 @@
+{
+	"info": {
+		"_postman_id": "12345678-1234-1234-1234-123456789abc",
+		"name": "Projeto Aduaneiro API",
+		"description": "Coleção completa para testar a API do Projeto Aduaneiro",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Teste Simples",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/simple/test",
+					"host": ["{{base_url}}"],
+					"path": ["simple", "test"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Estatísticas Básicas",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/stats/",
+					"host": ["{{base_url}}"],
+					"path": ["stats", ""]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Estatísticas Detalhadas",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/stats/detailed",
+					"host": ["{{base_url}}"],
+					"path": ["stats", "detailed"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Estatísticas de Usuários",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/stats/users",
+					"host": ["{{base_url}}"],
+					"path": ["stats", "users"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Estatísticas de Veículos",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/stats/vehicles",
+					"host": ["{{base_url}}"],
+					"path": ["stats", "vehicles"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LinkedIn Posts",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/linkedin/posts?limit=5",
+					"host": ["{{base_url}}"],
+					"path": ["linkedin", "posts"],
+					"query": [
+						{
+							"key": "limit",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LinkedIn Company Info",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/linkedin/company",
+					"host": ["{{base_url}}"],
+					"path": ["linkedin", "company"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LinkedIn Analytics",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/linkedin/analytics",
+					"host": ["{{base_url}}"],
+					"path": ["linkedin", "analytics"]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:5000/api",
+			"type": "string"
+		}
+	]
+}
