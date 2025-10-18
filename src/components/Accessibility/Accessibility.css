@@ -1,0 +1,318 @@
+/* Skip Link */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: #000;
+  color: #fff;
+  padding: 8px;
+  text-decoration: none;
+  border-radius: 4px;
+  z-index: 10000;
+  font-size: 14px;
+  font-weight: 600;
+  transition: top 0.3s ease;
+}
+
+.skip-link:focus {
+  top: 6px;
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+/* Focus indicators */
+.focus-visible {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+.focus-visible:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .focus-visible:focus {
+    outline: 3px solid;
+    outline-offset: 3px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .skip-link {
+    transition: none;
+  }
+}
+
+/* Screen reader only content */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Skip to content link */
+.skip-to-content {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: #007bff;
+  color: #fff;
+  padding: 12px 16px;
+  text-decoration: none;
+  border-radius: 4px;
+  z-index: 10000;
+  font-size: 16px;
+  font-weight: 600;
+  transition: top 0.3s ease;
+}
+
+.skip-to-content:focus {
+  top: 6px;
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+/* ARIA live regions */
+.aria-live {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* Focus trap */
+.focus-trap {
+  position: relative;
+}
+
+.focus-trap::before,
+.focus-trap::after {
+  content: '';
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Keyboard navigation indicators */
+.keyboard-nav .focus-visible:focus {
+  box-shadow: 0 0 0 2px #007bff;
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .keyboard-nav .focus-visible:focus {
+    box-shadow: 0 0 0 3px currentColor;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .skip-link,
+  .skip-to-content {
+    background: #fff;
+    color: #000;
+  }
+  
+  .skip-link:focus,
+  .skip-to-content:focus {
+    outline-color: #000;
+  }
+}
+
+/* Print styles */
+@media print {
+  .skip-link,
+  .skip-to-content {
+    display: none;
+  }
+}
+
+/* Focus management for modals */
+.modal-focus-trap {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+}
+
+.modal-focus-trap:focus {
+  outline: none;
+}
+
+/* Accessible button styles */
+.btn-accessible {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 44px; /* Minimum touch target size */
+  min-width: 44px;
+}
+
+.btn-accessible:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+.btn-accessible:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Accessible form controls */
+.form-control-accessible {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  transition: border-color 0.2s ease;
+  min-height: 44px;
+}
+
+.form-control-accessible:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.form-control-accessible:invalid {
+  border-color: #dc3545;
+}
+
+.form-control-accessible:invalid:focus {
+  box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.25);
+}
+
+/* Error states */
+.error-message {
+  color: #dc3545;
+  font-size: 14px;
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.error-message::before {
+  content: '⚠';
+  font-size: 16px;
+}
+
+/* Success states */
+.success-message {
+  color: #28a745;
+  font-size: 14px;
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.success-message::before {
+  content: '✓';
+  font-size: 16px;
+}
+
+/* Loading states for screen readers */
+.loading-announcement {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* Accessible table */
+.table-accessible {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+}
+
+.table-accessible th,
+.table-accessible td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.table-accessible th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+}
+
+.table-accessible tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.table-accessible tbody tr:focus-within {
+  background-color: #e3f2fd;
+  outline: 2px solid #007bff;
+  outline-offset: -2px;
+}
+
+/* Accessible navigation */
+.nav-accessible {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 8px;
+}
+
+.nav-accessible li {
+  margin: 0;
+}
+
+.nav-accessible a {
+  display: block;
+  padding: 12px 16px;
+  text-decoration: none;
+  color: #333;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+
+.nav-accessible a:hover,
+.nav-accessible a:focus {
+  background-color: #f8f9fa;
+  outline: 2px solid #007bff;
+  outline-offset: -2px;
+}
+
+.nav-accessible a[aria-current="page"] {
+  background-color: #007bff;
+  color: #fff;
+}

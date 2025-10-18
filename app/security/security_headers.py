@@ -40,7 +40,7 @@ def security_headers(app: Flask):
         if app.config.get('HTTPS_ENABLED', False):
             response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
         
-        # Permissions Policy
+        # Permissions Policy - Removido 'speaker' que não é reconhecido
         response.headers['Permissions-Policy'] = (
             "geolocation=(), "
             "microphone=(), "
@@ -48,8 +48,7 @@ def security_headers(app: Flask):
             "payment=(), "
             "usb=(), "
             "magnetometer=(), "
-            "gyroscope=(), "
-            "speaker=()"
+            "gyroscope=()"
         )
         
         return response

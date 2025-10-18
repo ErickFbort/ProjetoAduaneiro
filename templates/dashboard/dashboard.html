@@ -69,7 +69,32 @@
         
         <!-- Fallback para estatísticas (oculto quando React carregar) -->
         <div class="stats-grid" id="stats-fallback" style="display: none;">
-            <div class="stat-card animate-on-scroll fade-in-left delay-1 stat-progress">
+            <!-- Loading State -->
+            <div class="stats-loading" id="stats-loading">
+                <div class="skeleton-card">
+                    <div class="skeleton skeleton-avatar" style="margin-bottom: 12px;"></div>
+                    <div class="skeleton skeleton-text skeleton-text--long" style="margin-bottom: 8px;"></div>
+                    <div class="skeleton skeleton-text skeleton-text--short"></div>
+                </div>
+                <div class="skeleton-card">
+                    <div class="skeleton skeleton-avatar" style="margin-bottom: 12px;"></div>
+                    <div class="skeleton skeleton-text skeleton-text--long" style="margin-bottom: 8px;"></div>
+                    <div class="skeleton skeleton-text skeleton-text--short"></div>
+                </div>
+                <div class="skeleton-card">
+                    <div class="skeleton skeleton-avatar" style="margin-bottom: 12px;"></div>
+                    <div class="skeleton skeleton-text skeleton-text--long" style="margin-bottom: 8px;"></div>
+                    <div class="skeleton skeleton-text skeleton-text--short"></div>
+                </div>
+                <div class="skeleton-card">
+                    <div class="skeleton skeleton-avatar" style="margin-bottom: 12px;"></div>
+                    <div class="skeleton skeleton-text skeleton-text--long" style="margin-bottom: 8px;"></div>
+                    <div class="skeleton skeleton-text skeleton-text--short"></div>
+                </div>
+            </div>
+            
+            <!-- Actual Stats Cards -->
+            <div class="stat-card animate-on-scroll fade-in-left delay-1 stat-progress" id="stat-card-users" style="display: none;">
                 <div class="stat-icon">
                     <i class="fas fa-users pulse"></i>
                 </div>
@@ -78,7 +103,7 @@
                     <p>Usuários Ativos</p>
                 </div>
             </div>
-            <div class="stat-card animate-on-scroll fade-in-left delay-2 stat-progress">
+            <div class="stat-card animate-on-scroll fade-in-left delay-2 stat-progress" id="stat-card-vehicles" style="display: none;">
                 <div class="stat-icon">
                     <i class="fas fa-truck pulse"></i>
                 </div>
@@ -87,7 +112,7 @@
                     <p>Veículos Cadastrados</p>
                 </div>
             </div>
-            <div class="stat-card animate-on-scroll fade-in-right delay-3 stat-progress">
+            <div class="stat-card animate-on-scroll fade-in-right delay-3 stat-progress" id="stat-card-entities" style="display: none;">
                 <div class="stat-icon">
                     <i class="fas fa-building pulse"></i>
                 </div>
@@ -96,7 +121,7 @@
                     <p>Entidades Cadastradas</p>
                 </div>
             </div>
-            <div class="stat-card animate-on-scroll fade-in-right delay-4 stat-progress">
+            <div class="stat-card animate-on-scroll fade-in-right delay-4 stat-progress" id="stat-card-processes" style="display: none;">
                 <div class="stat-icon">
                     <i class="fas fa-chart-line pulse"></i>
                 </div>
@@ -653,7 +678,8 @@ let newsData = {
 async function loadStats() {
     console.log('Carregando estatísticas...');
     
-    // Verificar se os elementos existem
+    // Mostrar loading state
+    const loadingEl = document.getElementById('stats-loading');
     const usersEl = document.getElementById('total-users');
     const vehiclesEl = document.getElementById('total-vehicles');
     const entitiesEl = document.getElementById('total-entities');
@@ -663,6 +689,18 @@ async function loadStats() {
         console.error('Elementos de estatísticas não encontrados!');
         return;
     }
+    
+    // Mostrar loading state
+    if (loadingEl) {
+        loadingEl.style.display = 'flex';
+    }
+    
+    // Ocultar cards de estatísticas
+    const statCards = ['stat-card-users', 'stat-card-vehicles', 'stat-card-entities', 'stat-card-processes'];
+    statCards.forEach(id => {
+        const card = document.getElementById(id);
+        if (card) card.style.display = 'none';
+    });
     
     try {
         const response = await fetch('/api/stats');
@@ -674,6 +712,17 @@ async function loadStats() {
         
         const data = await response.json();
         console.log('Dados recebidos:', data);
+        
+        // Ocultar loading state
+        if (loadingEl) {
+            loadingEl.style.display = 'none';
+        }
+        
+        // Mostrar cards de estatísticas
+        statCards.forEach(id => {
+            const card = document.getElementById(id);
+            if (card) card.style.display = 'block';
+        });
         
         if (data.success && data.data) {
             console.log('Atualizando elementos com dados da API');
@@ -688,12 +737,31 @@ async function loadStats() {
             entitiesEl.textContent = '128';
             processesEl.textContent = '23';
         }
+        
+        // Animar contadores
+        animateCounters();
+        
     } catch (error) {
         console.error('Erro ao carregar estatísticas:', error);
+        
+        // Ocultar loading state
+        if (loadingEl) {
+            loadingEl.style.display = 'none';
+        }
+        
+        // Mostrar cards de estatísticas com fallback
+        statCards.forEach(id => {
+            const card = document.getElementById(id);
+            if (card) card.style.display = 'block';
+        });
+        
         usersEl.textContent = '12';
         vehiclesEl.textContent = '45';
         entitiesEl.textContent = '128';
         processesEl.textContent = '23';
+        
+        // Animar contadores
+        animateCounters();
     }
 }
 
@@ -3445,6 +3513,93 @@ document.addEventListener('click', (e) => {
     <!-- React Components Integration -->
     <script type="module" src="{{ url_for('static', filename='dist/assets/main-DAJ21yQ6.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='dist/assets/cards-D4uiH8l8.css') }}">
+    
+    <!-- Loading States CSS -->
+    <style>
+        .stats-loading {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        
+        .skeleton-card {
+            flex: 1;
+            min-width: 200px;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e0e0e0;
+        }
+        
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: 4px;
+        }
+        
+        @keyframes loading {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
+        
+        .skeleton-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            margin-bottom: 12px;
+        }
+        
+        .skeleton-text {
+            height: 16px;
+            margin-bottom: 8px;
+        }
+        
+        .skeleton-text:last-child {
+            margin-bottom: 0;
+        }
+        
+        .skeleton-text--short {
+            width: 60%;
+        }
+        
+        .skeleton-text--medium {
+            width: 80%;
+        }
+        
+        .skeleton-text--long {
+            width: 100%;
+        }
+        
+        /* Fade in animation for stats cards */
+        .stat-card {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+        
+        .stat-card.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .stats-loading {
+                flex-direction: column;
+            }
+            
+            .skeleton-card {
+                min-width: 100%;
+            }
+        }
+    </style>
 
 {% endblock %}
 
