@@ -7,7 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_caching import Cache
 from flask_compress import Compress
-from config import config
+from config.base import config
 from app.utils.cache import cache_manager
 from app.security import csrf, limiter, security_headers
 import os

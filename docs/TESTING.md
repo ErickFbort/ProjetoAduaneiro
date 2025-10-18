@@ -14,7 +14,7 @@ O projeto possui três tipos de testes:
 
 ### Executar Todos os Testes
 ```bash
-python run_tests.py
+python scripts/run_tests.py
 ```
 
 ### Executar Testes Específicos

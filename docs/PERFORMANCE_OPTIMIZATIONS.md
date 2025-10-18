@@ -197,7 +197,7 @@ Cria índices e otimiza o banco de dados.
 - ✅ **Otimizações de imagens**
 
 ### **4.2 Otimizações de Assets**
-- `optimize_assets.py` - Script de otimização
+- `scripts/optimize_assets.py` - Script de otimização
 
 #### **Funcionalidades:**
 - ✅ **Compressão GZIP** de CSS/JS
@@ -261,7 +261,7 @@ npm run build
 gunicorn -w 4 -b 0.0.0.0:5000 main:app
 
 # Otimizar assets
-python optimize_assets.py
+python scripts/optimize_assets.py
 ```
 
 ### **6.3 Monitoramento**
